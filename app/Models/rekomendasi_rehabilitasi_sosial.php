@@ -1,0 +1,105 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class rekomendasi_rehabilitasi_sosial  extends Model
+{
+    public $table = 'rekomendasi_rehabilitasi_sosials';
+
+    public $fillable = [
+        // 'file_ktp_terlapor_resos',
+        'no_pendaftaran_resos',
+        'id_provinsi_resos',
+        'id_kabkot_resos',
+        'id_kecamatan_resos',
+        'id_kelurahan_resos',
+        'jenis_pelapor_resos',
+        'ada_nik_resos',
+        'no_kk_resos',
+        'nama_resos',
+        'tempat_lahir_resos',
+        'tgl_lahir_resos',
+        'jenis_kelamin_resos',
+        'telp_resos',
+        'email_resos',
+        'alamat_resos',
+        'status_dtks_resos',
+        'file_ktp_terlapor_resos',
+        'file_kk_terlapor_resos',
+        'file_keterangan_dtks_resos',
+        'file_pendukung_resos',
+        'ttd_kepala_dinas',
+        'tujuan_resos',
+        'Nomer_Surat',
+        'validasi_surat',
+        'status_aksi_resos',
+        'petugas_resos',
+        'createdby_resos',
+        'updatedby_resos',
+        'created_at',
+        'updated_at',
+    ];
+    protected $casts = [
+        'no_pendaftaran_resos'=> 'string',
+        'id_provinsi_resos'=> 'string',
+        'id_kabkot_resos'=> 'string',
+        'id_kecamatan_resos'=> 'string',
+        'id_kelurahan_resos'=> 'string',
+        'jenis_pelapor_resos'=> 'string',
+        'ada_nik_resos'=> 'string',
+        'nik_resos'=> 'string',
+        'no_kk_resos'=> 'string',
+        'nama_resos'=> 'string',
+        'tempat_lahir_resos'=> 'string',
+        'tgl_lahir_resos'=> 'string',
+        'jenis_kelamin_resos'=> 'string',
+        'telp_resos'=> 'string',
+        'email_resos'=>'string',
+        'alamat_resos'=> 'string',
+        'status_dtks_resos'=>'string',
+        'file_ktp_terlapor_resos'=> 'string',
+        'file_kk_terlapor_resos'=> 'string',
+        'file_keterangan_dtks_resos'=> 'string',
+        'file_pendukung_resos'=> 'string',
+        'tujuan_resos'=> 'string',
+        'status_aksi_resos'=> 'string',
+        'petugas_resos'=> 'string',
+        'createdby_resos'=> 'string',
+        'updatedby_resos'=> 'string',
+        'created_at'=> 'string',
+        'updated_at'=> 'string'
+    ];
+
+    public static array $rules = [
+        'no_pendaftaran_resos'=>'required',
+        'id_provinsi_resos'=>'required',
+        'id_kabkot_resos'=>'required',
+        'id_kecamatan_resos'=>'required',
+        'id_kelurahan_resos'=>'required',
+        'jenis_pelapor_resos'=>'required',
+        'ada_nik_resos'=>'required',
+        'nik_resos'=>'required',
+        'no_kk_resos'=>'required',
+        'nama_resos'=>'required',
+        'tempat_lahir_resos'=>'required',
+        'tgl_lahir_resos'=>'required',
+        'jenis_kelamin_resos'=>'required',
+        'telp_resos'=>'required',
+        'email_resos'=>'required',
+        'alamat_resos'=>'required',
+        'status_dtks_resos'=>'required',
+        'file_ktp_terlapor_resos'=>'required',
+        'file_kk_terlapor_resos'=>'required',
+        'file_keterangan_dtks_resos'=>'required',
+        'file_pendukung_resos'=>'required',
+        'tujuan_resos'=>'required',
+        'status_aksi_resos'=>'required',
+        'petugas_resos'=>'required',
+        'createdby_resos'=>'required',
+        'updatedby_resos'=>'required',
+        'created_at'=>'required',
+        'updated_at'=>'required'
+    ];
+}

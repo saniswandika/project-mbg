@@ -1,0 +1,108 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class rekomendasi_biaya_perawatan extends Model
+{
+    public $table = 'rekomendasi_biaya_perawatans';
+
+    public $fillable = [
+        'validasi_surat',
+        'Nomor_Surat',
+        'nama_rumah_sakit',
+        'yth_biper',
+        'kab_kota_rumah_sakit',
+        // 'file_ktp_terlapor_biper',
+        'no_pendaftaran_biper',
+        'id_provinsi_biper',
+        'id_kabkot_biper',
+        'id_kecamatan_biper',
+        'id_kelurahan_biper',
+        'jenis_pelapor_biper',
+        'ada_nik_biper',
+        'nik_biper',
+        'no_kk_biper',
+        'nama_biper',
+        'tempat_lahir_biper',
+        'tgl_lahir_biper',
+        'jenis_kelamin_biper',
+        'telp_biper',
+        'email_biper',
+        'alamat_biper',
+        'status_dtks_biper',
+        'file_ktp_terlapor_biper',
+        'file_kk_terlapor_biper',
+        'file_keterangan_dtks_biper',
+        'file_pendukung_biper',
+        'tujuan_biper',
+        'status_aksi_biper',
+        'petugas_biper',
+        'createdby_biper',
+        'updatedby_biper',
+        'created_at',
+        'updated_at',
+    ];
+    protected $casts = [
+        'no_pendaftaran_biper'=> 'string',
+        'id_provinsi_biper'=> 'string',
+        'id_kabkot_biper'=> 'string',
+        'id_kecamatan_biper'=> 'string',
+        'id_kelurahan_biper'=> 'string',
+        'jenis_pelapor_biper'=> 'string',
+        'ada_nik_biper'=> 'string',
+        'nik_biper'=> 'string',
+        'no_kk_biper'=> 'string',
+        'nama_biper'=> 'string',
+        'tempat_lahir_biper'=> 'string',
+        'tgl_lahir_biper'=> 'string',
+        'jenis_kelamin_biper'=> 'string',
+        'telp_biper'=> 'string',
+        'email_biper'=>'string',
+        'alamat_biper'=> 'string',
+        'status_dtks_biper'=>'string',
+        'file_ktp_terlapor_biper'=> 'string',
+        'file_kk_terlapor_biper'=> 'string',
+        'file_keterangan_dtks_biper'=> 'string',
+        'file_pendukung_biper'=> 'string',
+        'tujuan_biper'=> 'string',
+        'status_aksi_biper'=> 'string',
+        'petugas_biper'=> 'string',
+        'createdby_biper'=> 'string',
+        'updatedby_biper'=> 'string',
+        'created_at'=> 'string',
+        'updated_at'=> 'string'
+    ];
+
+    public static array $rules = [
+        'no_pendaftaran_biper'=>'required',
+        'id_provinsi_biper'=>'required',
+        'id_kabkot_biper'=>'required',
+        'id_kecamatan_biper'=>'required',
+        'id_kelurahan_biper'=>'required',
+        'jenis_pelapor_biper'=>'required',
+        'ada_nik_biper'=>'required',
+        'nik_biper'=>'required',
+        'no_kk_biper'=>'required',
+        'nama_biper'=>'required',
+        'tempat_lahir_biper'=>'required',
+        'tgl_lahir_biper'=>'required',
+        'jenis_kelamin_biper'=>'required',
+        'telp_biper'=>'required',
+        'email_biper'=>'required',
+        'alamat_biper'=>'required',
+        'status_dtks_biper'=>'required',
+        'file_ktp_terlapor_biper'=>'required',
+        'file_kk_terlapor_biper'=>'required',
+        'file_keterangan_dtks_biper'=>'required',
+        'file_pendukung_biper'=>'required',
+        'tujuan_biper'=>'required',
+        'status_aksi_biper'=>'required',
+        'petugas_biper'=>'required',
+        'createdby_biper'=>'required',
+        'updatedby_biper'=>'required',
+        'created_at'=>'required',
+        'updated_at'=>'required'
+    ];
+}
