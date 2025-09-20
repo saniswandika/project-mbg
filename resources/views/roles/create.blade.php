@@ -84,42 +84,42 @@
                 <!-- Bagian lain dari struktur HTML -->
                 <div class="row">
                     <div class="col-md-10 mx-auto">
-                        <div class="accordion" id="accordionRental">
-                            @foreach($permissions as $group => $groupPermissions)
-                                <div class="accordion-item mb-3">
-                                    <h5 class="accordion-header" id="heading{{ $group }}">
-                                        <button class="accordion-button border-bottom font-weight-bold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $group }}" aria-expanded="false" aria-controls="collapse{{ $group }}">
-                                            {{ ucfirst($group) }}
-                                            <i class="collapse-close fa fa-plus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
-                                            <i class="collapse-open fa fa-minus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
-                                        </button>
-                                    </h5>
-                                    <div id="collapse{{ $group }}" class="accordion-collapse collapse" aria-labelledby="heading{{ $group }}" data-bs-parent="#accordionRental">
-                                        <div class="accordion-body text-sm">
-                                            <div class="card-body">              
-                                                <div class="row">
-                                                    @foreach($groupPermissions as $permission)
-                                                        <div class="col-sm-3 mt-4">
-                                                            <div class="content">
-                                                                <ul class="list-group">
-                                                                    <li class="list-group-item">  
-                                                                        <label>                                   
-                                                                            {{ Form::checkbox('permission[]', $permission->id, false, ['class' => 'name']) }}
-                                                                            {{ $permission->name }}
-                                                                        </label>
-                                                                        <br/>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
+                 <div class="accordion" id="accordionRental">
+                        @foreach($permissions as $group => $groupPermissions)
+                            <div class="accordion-item mb-3">
+                                <h5 class="accordion-header" id="heading{{ $group }}">
+                                    <button class="accordion-button border-bottom font-weight-bold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $group }}" aria-expanded="false" aria-controls="collapse{{ $group }}">
+                                        {{ ucfirst($group) }}
+                                        <i class="collapse-close fa fa-plus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                                        <i class="collapse-open fa fa-minus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                                    </button>
+                                </h5>
+                                <div id="collapse{{ $group }}" class="accordion-collapse collapse" aria-labelledby="heading{{ $group }}" data-bs-parent="#accordionRental">
+                                    <div class="accordion-body text-sm">
+                                        <div class="card-body">              
+                                            <div class="row">
+                                                @foreach($groupPermissions as $permission)
+                                                    <div class="col-sm-3 mt-4">
+                                                        <div class="content">
+                                                            <ul class="list-group">
+                                                                <li class="list-group-item">  
+                                                                    <label>                                   
+                                                                        {{ Form::checkbox('permission[]', $permission->id, false, ['class' => 'name']) }}
+                                                                        {{ $permission->name }}
+                                                                    </label>
+                                                                </li>
+                                                            </ul>
                                                         </div>
-                                                    @endforeach
-                                                </div>
+                                                    </div>
+                                                @endforeach
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            @endforeach
-                        </div>
+                            </div>
+                        @endforeach
+                    </div>
+
                     </div>
                 </div>
                 <ul class="list-group list-group-unbordered mb-3 center">

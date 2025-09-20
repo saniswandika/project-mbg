@@ -30,14 +30,18 @@
         
         <div class="card-body">
             <div class="text-center">
-                <img class="profile-user-img img-fluid img-circle" src="{{ asset('images/pp.png') }}" alt="User profile picture">
+                <img class="w-10 border-radius-lg shadow-sm" src="{{ asset('assets/img/pp.jpeg') }}" alt="User profile picture">
             </div>
             <h3 class="profile-username text-center">Role {{ $role->name }}</h3>
-            <div class="form-group">
-                <strong>Role :</strong>
-                <input class="form-control" name="name" placeholder="Masukan Nama" value="{{ $role->name }}">
-            </div>
             
+            <label for="name" class="form-label d-block"><strong>Role :</strong></label>
+
+            <div class="input-group input-group-outline mb-3">
+                <input type="text" id="name" name="name" 
+                    class="form-control" 
+                    placeholder="Masukan Nama"
+                    value="{{ $role->name ?? '' }}">
+            </div>
             <div class="accordion" id="permissionAccordion">
                 @foreach($groupedPermissions as $groupName => $permissions)
                     <div class="accordion-item mt-4">

@@ -1,91 +1,60 @@
+ <!-- Dashboard Menu -->
+    <li class="nav-item">
+        <a class="nav-link  text-dark {{ request()->is('home') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('home') }}">
+          <i class="material-symbols-rounded opacity-5">dashboard</i>
+        <span class="nav-link-text ms-1">Dashboard</span>
+      </a>
+    </li>
 
-<li class="nav-item">
-    <a href="{{ route('jadwals.index') }}" class="nav-link {{ Request::is('jadwals*') ? 'active' : '' }}">
-        <i class="nav-icon fas fa-home"></i>
-        <p>Jadwals</p>
-    </a>
-</li>
+    <hr class="horizontal dark mt-0">
 
-<li class="nav-item">
-    <a href="{{ route('rekom-dtks.index') }}" class="nav-link {{ Request::is('rekomDtks*') ? 'active' : '' }}">
-        <i class="nav-icon fas fa-home"></i>
-        <p>Rekom Dtks</p>
-    </a>
-</li>
+    <li class="nav-item mt-3">
+      <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Barang & Peminjaman</h6>
+    </li>
 
-<li class="nav-item">
-    <a href="{{ route('suketDtks.index') }}" class="nav-link {{ Request::is('suketDtks*') ? 'active' : '' }}">
-        <i class="nav-icon fas fa-home"></i>
-        <p>Suket Dtks</p>
-    </a>
-</li>
+    <!-- Barang Section -->
+    <li class="nav-item">
+      <a class="nav-link text-dark {{ request()->is('Barang') ? 'active bg-gradient-dark text-white' : '' }} " href="#collapseExample" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample">
+         <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Logistik</span>
+      </a>
+    </li>
+    <div class="collapse sm-2" id="collapseExample">
+      @can('bahan-olahan-list')
+      <li class="nav-item">
+        <a class="nav-link text-dark {{ request()->is('bahan_olahan') ? 'active bg-gradient-dark text-white' : '' }}" href="" style="margin-left: 30px;">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Bahan Olahan</span>
+        </a>
+      </li>
+      @endcan
+    </div>
 
-<li class="nav-item">
-    <a href="{{ route('rekomendasiPengangkatanAnaks.index') }}" class="nav-link {{ Request::is('rekomendasiPengangkatanAnaks*') ? 'active' : '' }}">
-        <i class="nav-icon fas fa-home"></i>
-        <p>Rekomendasi Pengangkatan Anaks</p>
-    </a>
-</li>
+    <!-- Pengaturan Akun dan Hak Akses Section -->
+    @if(auth('web')->check() && (auth('web')->user()->can('user-list') || auth('web')->user()->can('role-list')))
+      <hr class="horizontal dark mt-0">
+      <li class="nav-item mt-3">
+        <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6 text-wrap">Pengaturan Akun dan Hak Akses</h6>
+      </li>
+      <hr class="horizontal dark mt-0">
+    @endif
 
-<li class="nav-item">
-    <a href="{{ route('rekomendasiTerdaftarYayasans.index') }}" class="nav-link {{ Request::is('rekomendasiTerdaftarYayasans*') ? 'active' : '' }}">
-        <i class="nav-icon fas fa-home"></i>
-        <p>Rekomendasi Terdaftar Yayasans</p>
-    </a>
-</li>
+    <!-- Management Role User -->
+    @can('user-list')
+      <li class="nav-item">
+        <a class="nav-link text-dark {{ request()->is('roles') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('roles.index') }}">
+          <i class="material-symbols-rounded opacity-5">person</i>
+          <span class="nav-link-text ms-1">Management Role User</span>
+        </a>
+      </li>
+    @endcan
 
-<li class="nav-item">
-    <a href="{{ route('rekomendasiPengumpulanUndianBerhadiahs.index') }}" class="nav-link {{ Request::is('rekomendasiPengumpulanUndianBerhadiahs*') ? 'active' : '' }}">
-        <i class="nav-icon fas fa-home"></i>
-        <p>Rekomendasi Pengumpulan Undian Berhadiahs</p>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a href="{{ route('rekomendasiBantuanPendidikans.index') }}" class="nav-link {{ Request::is('rekomendasiBantuanPendidikans*') ? 'active' : '' }}">
-        <i class="nav-icon fas fa-home"></i>
-        <p>Rekomendasi Bantuan Pendidikans</p>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a href="{{ route('rekomendasiRekativasiPbiJks.index') }}" class="nav-link {{ Request::is('rekomendasiRekativasiPbiJks*') ? 'active' : '' }}">
-        <i class="nav-icon fas fa-home"></i>
-        <p>Rekomendasi Rekativasi Pbi Jks</p>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a href="{{ route('rekomendasiAdminKependudukans.index') }}" class="nav-link {{ Request::is('rekomendasiAdminKependudukans*') ? 'active' : '' }}">
-        <i class="nav-icon fas fa-home"></i>
-        <p>Rekomendasi Admin Kependudukans</p>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a href="{{ route('rekomendasiRehabilitasiSosials.index') }}" class="nav-link {{ Request::is('rekomendasiRehabilitasiSosials*') ? 'active' : '' }}">
-        <i class="nav-icon fas fa-home"></i>
-        <p>Rekomendasi Rehabilitasi Sosials</p>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a href="{{ route('rekomendasiTerdaftarDtks.index') }}" class="nav-link {{ Request::is('rekomendasiTerdaftarDtks*') ? 'active' : '' }}">
-        <i class="nav-icon fas fa-home"></i>
-        <p>Rekomendasi Terdaftar Dtks</p>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a href="{{ route('rekomendasiBiayaPerawatans.index') }}" class="nav-link {{ Request::is('rekomendasiBiayaPerawatans*') ? 'active' : '' }}">
-        <i class="nav-icon fas fa-home"></i>
-        <p>Rekomendasi Biaya Perawatans</p>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a href="{{ route('rekomendasiKeringananPbbs.index') }}" class="nav-link {{ Request::is('rekomendasiKeringananPbbs*') ? 'active' : '' }}">
-        <i class="nav-icon fas fa-home"></i>
-        <p>Rekomendasi Keringanan Pbbs</p>
-    </a>
-</li>
+    <!-- Management Akun -->
+    @can('user-list')
+      <li class="nav-item">
+        <a class="nav-link text-dark {{ request()->is('users') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('users.index') }}">
+          <i class="material-symbols-rounded opacity-5">person</i>
+          <span class="nav-link-text ms-1">Management Akun</span>
+        </a>
+      </li>
+    @endcan
