@@ -58,9 +58,43 @@
       </a>
     </li>
     <div class="collapse sm-2" id="collapseExample">
+<!-- admin dan superadmin -->
       @can('rekomendasi-dtks-list')
       <li class="nav-item">
-        <a class="nav-link text-dark {{ request()->is('bahan_olahan') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('rekomendasi_terdaftar_dtks.index') }}" style="margin-left: 30px;">
+        <a class="nav-link text-dark {{ request()->is('logistik/master_barang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('master_barang') }}" style="margin-left: 30px;">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Master Barang</span>
+        </a>
+      </li>
+      @endcan
+    </div>
+<!-- All Role -->
+    <div class="collapse sm-2" id="collapseExample">
+      @can('rekomendasi-dtks-list')
+      <li class="nav-item">
+        <a class="nav-link text-dark {{ request()->is('logistik/pengajuan_barang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('pengajuan_barang') }}" style="margin-left: 30px;">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Pengajuan Barang</span>
+        </a>
+      </li>
+      @endcan
+    </div>
+<!-- All Role -->
+    <div class="collapse sm-2" id="collapseExample">
+      @can('rekomendasi-dtks-list')
+      <li class="nav-item">
+        <a class="nav-link text-dark {{ request()->is('logistik/list_barang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('list_barang') }}" style="margin-left: 30px;">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">List Barang</span>
+        </a>
+      </li>
+      @endcan
+    </div>
+<!-- All Role -->
+    <div class="collapse sm-2" id="collapseExample">
+      @can('rekomendasi-dtks-list')
+      <li class="nav-item">
+        <a class="nav-link text-dark {{ request()->is('bahan_olahan') ? 'active bg-gradient-dark text-white' : '' }}" href="" style="margin-left: 30px;">
             <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Bahan Olahan</span>
         </a>

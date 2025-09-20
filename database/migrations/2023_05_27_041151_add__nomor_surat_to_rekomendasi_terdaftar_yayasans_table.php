@@ -6,29 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
-        Schema::table('rekomendasi_terdaftar_yayasans', function (Blueprint $table) {
-            $table->String('Nomor_Surat')->nullable();
+        Schema::create('rekomendasi_terdaftar_yayasans', function (Blueprint $table) {
+            $table->id();
+            $table->string('Nomor_Surat')->nullable();
             $table->boolean('validasi_surat')->nullable()->default(false);
-            $table->String('jenis_kesos')->nullable();
+            $table->string('jenis_kesos')->nullable();
+            $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::table('rekomendasi_terdaftar_yayasans', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('rekomendasi_terdaftar_yayasans');
     }
 };

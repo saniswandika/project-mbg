@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\GrafikController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\LogistikController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\PengaduanController;
@@ -83,3 +84,12 @@ Route::group(['middleware' => ['auth']],function(){
     Route::post('profilenama', [ProfileController::class, 'name_action'])->name('nama.action');
     Route::post('profileemail', [ProfileController::class, 'email_action'])->name('email.action');
 });
+
+
+// Logistik
+Route::get('/logistik/master_barang', [LogistikController::class, 'master_barang'])->name('master_barang');
+Route::get('/logistik/tambah_master_barang', [LogistikController::class, 'tambah_master_barang'])->name('tambah_master_barang');
+Route::get('/logistik/proses_tambah_barang_master', [LogistikController::class, 'proses_tambah_barang_master'])->name('proses_tambah_barang_master');
+// list stok
+Route::get('/logistik/list_barang', [LogistikController::class, 'index'])->name('list_barang');
+Route::get('/logistik/pengajuan_barang', [LogistikController::class, 'pengajuan_barang'])->name('pengajuan_barang');
