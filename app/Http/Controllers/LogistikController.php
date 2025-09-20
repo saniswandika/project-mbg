@@ -23,7 +23,7 @@ class LogistikController extends Controller
         // Ambil semua data logistik
         $userid = Auth::id();
         $role_id = $this->get_role($userid);
-        $barangPengajuan = DB::table('pengajuan_barangs')->get();
+        $barangPengajuan = DB::table('master_barangs')->get();
         
         return view('logistik.master_barang', compact('barangPengajuan', 'role_id', 'userid'));
     }
@@ -40,8 +40,53 @@ class LogistikController extends Controller
         }
     }
 
-     // Fungsi untuk memproses penyimpanan barang
-    public function proses_tambah_barang_master(Request $request)
+// Fungsi untuk memproses penyimpanan barang
+public function proses_tambah_barang_master(Request $request)
+{
+    // Validasi input
+    $request->validate([
+        'nama' => 'required|string|max:255',
+        'merk' => 'required|string|max:255',
+        'deskripsi' => 'nullable|string',
+        'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    // Persiapkan data yang akan dimasukkan ke database
+    $data = [
+        'nama_barang' => $request->nama,
+        'merk_barang' => $request->merk,
+        'deskripsi' => $request->deskripsi,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ];
+
+    // Handle file upload jika ada
+    if ($request->hasFile('foto')) {
+        $file = $request->file('foto');
+        $filename = time() . '.' . $file->getClientOriginalExtension(); // Menggunakan ekstensi asli
+        // Simpan file di storage dan simpan nama file ke data
+        $path = $file->storeAs('public/master_barang', $filename);
+        $data['foto'] = $filename; // Masukkan nama file dengan ekstensi ke array data
+    }
+
+    // Insert data ke database tanpa model
+    DB::table('master_barangs')->insert($data);
+
+    return redirect()->route('logistik.master_barang')
+                     ->with('success', 'Master barang berhasil ditambahkan!');
+}
+
+
+        // Fungsi untuk menampilkan halaman edit
+    public function edit_master_barang($id)
+    {
+        $barang = DB::table('master_barangs')->where('id', $id)->first(); // Ambil data barang berdasarkan ID
+        // dd($barang)->All();
+        return view('logistik.edit', compact('barang')); // Tampilkan form edit dengan data barang
+    }
+
+    // Fungsi untuk memperbarui data barang
+    public function update_master_barang(Request $request, $id)
     {
         // Validasi input
         $request->validate([
@@ -51,29 +96,69 @@ class LogistikController extends Controller
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Persiapkan data yang akan dimasukkan ke database
+        // Ambil data barang berdasarkan ID
+        $barang = DB::table('master_barangs')->where('id', $id)->first();
+
+        // Persiapkan data yang akan diperbarui
         $data = [
-            'nama' => $request->nama,
-            'merk' => $request->merk,
+            'nama_barang' => $request->nama,
+            'merk_barang' => $request->merk,
             'deskripsi' => $request->deskripsi,
-            'created_at' => now(),
             'updated_at' => now(),
         ];
 
-        // Handle file upload jika ada
+        // Handle file upload jika ada foto baru
         if ($request->hasFile('foto')) {
+            // Hapus foto lama jika ada
+            if ($barang->foto) {
+                $oldImagePath = public_path('storage/master_barang/' . $barang->foto);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath); // Hapus foto lama dari storage
+                }
+            }
+
+            // Simpan foto baru
             $file = $request->file('foto');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            // Simpan file di storage dan simpan nama file ke data
-            $path = $file->storeAs('public/master_barang', $filename);
-            $data['foto'] = $filename; // Masukkan nama file ke array data
+            $filename = time() . '.' . $file->getClientOriginalExtension(); // Nama file baru dengan ekstensi
+            $path = $file->storeAs('public/master_barang', $filename); // Simpan file
+
+            $data['foto'] = $filename; // Masukkan nama file foto baru
         }
 
-        // Insert data ke database tanpa model
-        DB::table('master_barangs')->insert($data);
+        // Update data barang di database
+        DB::table('master_barangs')->where('id', $id)->update($data);
 
-        return redirect()->route('tambah_master_barang')
-                         ->with('success', 'Master barang berhasil ditambahkan!');
+        return redirect()->route('logistik.master_barang')
+                         ->with('success', 'Master barang berhasil diperbarui!');
+    }
+
+
+    // Fungsi untuk menghapus barang berdasarkan ID
+    public function destroy_master_barang($id)
+    {
+        // Ambil data barang berdasarkan ID
+        $barang = DB::table('master_barangs')->where('id', $id)->first();
+
+        if ($barang) {
+            // Menghapus file gambar dari storage jika ada
+            if ($barang->foto) {
+                $imagePath = public_path('storage/master_barang/' . $barang->foto);
+                if (file_exists($imagePath)) {
+                    unlink($imagePath); // Menghapus gambar dari server
+                }
+            }
+
+            // Menghapus data barang dari database
+            DB::table('master_barangs')->where('id', $id)->delete();
+
+            // Redirect dengan pesan sukses
+            return redirect()->route('logistik.master_barang')
+                             ->with('success', 'Master barang berhasil dihapus!');
+        } else {
+            // Jika barang tidak ditemukan
+            return redirect()->route('logistik.master_barang')
+                             ->with('error', 'Barang tidak ditemukan!');
+        }
     }
 
 
@@ -83,14 +168,41 @@ class LogistikController extends Controller
         $userid = Auth::id();
         $role = auth()->user()->role;
         $role_id = $this->get_role($userid);
-        // kepala dapur
+        // kepala dapur    // Menampilkan form pengajuan barang
+        $masterBarang = DB::table('master_barangs')->get(); // Ambil semua barang dari master_barangs
+        // return view('logistik.pengajuan_barang', compact('masterBarang'));
+    
         $barangPengajuan = DB::table('pengajuan_barangs')->get();
-        // dd($barangPengajuan);
-        // akuntansi
+        return view('logistik.pengajuan_barang.index', compact('barangPengajuan', 'masterBarang'));
+    }
 
-        // Menampilkan daftar pengajuan barang
-        // $barangPengajuan = pengajuan_barang::all();
-        return view('logistik.pengajuan_barang', compact('barangPengajuan'));
+        // Proses pengajuan barang
+    public function proses_pengajuan_barang(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'barang_ids' => 'required|array|min:1',
+            'jumlah_stok' => 'required|array|min:1',
+        ]);
+
+        // Loop melalui barang yang diajukan
+        foreach ($request->barang_ids as $barang_id) {
+            // Pastikan ada jumlah stok untuk setiap barang yang dipilih
+            if (isset($request->jumlah_stok[$barang_id])) {
+                $jumlahStok = $request->jumlah_stok[$barang_id];
+
+                // Simpan pengajuan barang ke tabel pengajuan_barangs
+                DB::table('pengajuan_barangs')->insert([
+                    'barang_id' => $barang_id,
+                    'jumlah_stok' => $jumlahStok,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+        }
+
+        return redirect()->route('logistik.pengajuan_barang')
+                         ->with('success', 'Pengajuan stok barang berhasil!');
     }
 
     public function create()

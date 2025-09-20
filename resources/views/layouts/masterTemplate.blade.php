@@ -61,7 +61,7 @@
 <!-- admin dan superadmin -->
       @can('rekomendasi-dtks-list')
       <li class="nav-item">
-        <a class="nav-link text-dark {{ request()->is('logistik/master_barang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('master_barang') }}" style="margin-left: 30px;">
+        <a class="nav-link text-dark {{ request()->routeIs('logistik.master_barang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('logistik.master_barang') }}" style="margin-left: 30px;">
             <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Master Barang</span>
         </a>
@@ -72,7 +72,7 @@
     <div class="collapse sm-2" id="collapseExample">
       @can('rekomendasi-dtks-list')
       <li class="nav-item">
-        <a class="nav-link text-dark {{ request()->is('logistik/pengajuan_barang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('pengajuan_barang') }}" style="margin-left: 30px;">
+        <a class="nav-link text-dark {{ request()->routeIs('logistik.pengajuan_barang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('logistik.pengajuan_barang') }}" style="margin-left: 30px;">
             <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Pengajuan Barang</span>
         </a>
@@ -83,7 +83,7 @@
     <div class="collapse sm-2" id="collapseExample">
       @can('rekomendasi-dtks-list')
       <li class="nav-item">
-        <a class="nav-link text-dark {{ request()->is('logistik/list_barang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('list_barang') }}" style="margin-left: 30px;">
+        <a class="nav-link text-dark {{ request()->routeIs('logistik.list_barang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('logistik.list_barang') }}" style="margin-left: 30px;">
             <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">List Barang</span>
         </a>

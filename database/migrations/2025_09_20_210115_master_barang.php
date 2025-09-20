@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('master_barangs', function (Blueprint $table) {
             $table->id();
-            $table->integer('nama_barang');              // lebih tepat integer
+            $table->string('nama_barang');              // lebih tepat integer
             $table->string('merk_barang');
             $table->text('deskripsi')->nullable();         // opsional
             $table->text('foto')->nullable();         // opsional

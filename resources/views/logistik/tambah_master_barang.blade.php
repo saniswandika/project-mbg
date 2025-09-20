@@ -21,7 +21,7 @@
                 <h2>Add Master Barang</h2>
             </div>
             <div class="pull-right">
-                <a class="btn btn-primary" href="{{ route('tambah_master_barang') }}"> Back</a>
+                <a class="btn btn-primary" href="{{ route('logistik.master_barang') }}"> Back</a>
             </div>
         </div>
     </div>
@@ -37,7 +37,7 @@
         </div>
     @endif
 
-    <form action="{{ route('proses_tambah_barang_master') }}" method="POST" enctype="multipart/form-data" id="masterBarangForm">
+    <form action="{{ route('logistik.proses_tambah_barang_master') }}" method="POST" enctype="multipart/form-data" id="masterBarangForm">
         @csrf
 
         <div class="row">
@@ -91,20 +91,26 @@
 
 @endsection
 
-@section('scripts')
     <script>
         function previewImage() {
             const image = document.querySelector('#foto'); // Ambil elemen input file
             const imgPreview = document.querySelector('#fotoPreview'); // Ambil elemen img untuk preview
-        
-            imgPreview.style.display = 'block'; // Tampilkan gambar preview
-        
+
+            // Debugging: Cek apakah file dipilih
+            console.log(image.files.length);
+            if (image.files.length > 0) {
+                imgPreview.style.display = 'block'; // Tampilkan gambar preview
+            } else {
+                imgPreview.style.display = 'none'; // Sembunyikan gambar preview jika tidak ada file
+            }
+
             const oFReader = new FileReader(); // Membaca file gambar
             oFReader.readAsDataURL(image.files[0]);
             oFReader.onload = function(oFREvent) {
                 imgPreview.src = oFREvent.target.result; // Set source untuk gambar preview
             }
         }
+
 
         // Optional: Form validation on submit
         document.getElementById('masterBarangForm').addEventListener('submit', function(event) {
@@ -115,4 +121,3 @@
             }
         });
     </script>
-@endsection

@@ -86,10 +86,19 @@ Route::group(['middleware' => ['auth']],function(){
 });
 
 
-// Logistik
-Route::get('/logistik/master_barang', [LogistikController::class, 'master_barang'])->name('master_barang');
-Route::get('/logistik/tambah_master_barang', [LogistikController::class, 'tambah_master_barang'])->name('tambah_master_barang');
-Route::get('/logistik/proses_tambah_barang_master', [LogistikController::class, 'proses_tambah_barang_master'])->name('proses_tambah_barang_master');
-// list stok
-Route::get('/logistik/list_barang', [LogistikController::class, 'index'])->name('list_barang');
-Route::get('/logistik/pengajuan_barang', [LogistikController::class, 'pengajuan_barang'])->name('pengajuan_barang');
+Route::prefix('logistik')->name('logistik.')->group(function () {
+    // Logistik
+    Route::get('/master_barang', [LogistikController::class, 'master_barang'])->name('master_barang');
+    Route::get('/tambah_master_barang', [LogistikController::class, 'tambah_master_barang'])->name('tambah_master_barang');
+    Route::post('tambah_master_barang', [LogistikController::class, 'proses_tambah_barang_master'])->name('proses_tambah_barang_master');
+    // list stok
+    Route::get('/list_barang', [LogistikController::class, 'index'])->name('list_barang');
+    Route::get('/pengajuan_barang', [LogistikController::class, 'pengajuan_barang'])->name('pengajuan_barang');
+    Route::post('/pengajuan_barang', [LogistikController::class, 'proses_pengajuan_barang'])->name('proses_pengajuan_barang');
+    // edit
+    // Route::get('/', [LogistikController::class, 'index'])->name('index');
+    Route::get('/edit/{id}', [LogistikController::class, 'edit_master_barang'])->name('edit_master_barang');
+    Route::put('/update/{id}', [LogistikController::class, 'update_master_barang'])->name('update_master_barang'); // Menggunakan PUT untuk update
+    //delete
+    Route::delete('/destroy/{id}', [LogistikController::class, 'destroy_master_barang'])->name('destroy_master_barang');
+});
