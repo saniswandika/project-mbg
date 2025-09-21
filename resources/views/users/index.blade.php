@@ -6,17 +6,21 @@
 @section('content')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-
 <div class="container">
-  @if ($message = Session::get('success'))
-  <div class="alert alert-success">
-    <p>{{ $message }}</p>
-  </div>
+  @if ($message = Session::get('masuk'))
+    <div class="alert alert-success alert-dismissible text-white fade show" role="alert">
+      <span class="alert-text"><strong>Sukses!</strong> {{ $message }}</span>
+      <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
   @endif
+
   <div class="card text-center">
     <div class="card-header">
       <h2>Users Management</h2>
     </div>
+    
     <div class="card-body">
       <div class="row">
         <div class="col-lg-12 margin-tb">
@@ -40,33 +44,39 @@
                     <div class="modal-body">
                       {!! Form::open(array('route' => 'users.store','method'=>'POST')) !!}
                           <div class="row">
+                            
                               <div class="col-xs-12 col-sm-12 col-md-12">
-                                  <div class="form-group">
-                                      <strong>Name:</strong>
+
+                                  <div class="input-group input-group-outline mb-3">
                                       {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
                                   </div>
                               </div>
+                              <strong>Email:</strong>
                               <div class="col-xs-12 col-sm-12 col-md-12">
-                                  <div class="form-group">
-                                      <strong>Email:</strong>
+
+                                  <div class="input-group input-group-outline mb-3">
                                       {!! Form::text('email', null, array('placeholder' => 'Email','class' => 'form-control')) !!}
                                   </div>
                               </div>
+                              <strong>Password:</strong>
+
                               <div class="col-xs-12 col-sm-12 col-md-12">
-                                  <div class="form-group">
-                                      <strong>Password:</strong>
+
+                                  <div class="input-group input-group-outline mb-3">
                                       {!! Form::password('password', array('placeholder' => 'Password','class' => 'form-control')) !!}
                                   </div>
                               </div>
                               <div class="col-xs-12 col-sm-12 col-md-12">
-                                  <div class="form-group">
-                                      <strong>Confirm Password:</strong>
+                                  <strong>Confirm Password:</strong>
+
+                                  <div class="input-group input-group-outline mb-3">
                                       {!! Form::password('confirm-password', array('placeholder' => 'Confirm Password','class' => 'form-control')) !!}
                                   </div>
                               </div>
                               <div class="col-xs-12 col-sm-12 col-md-12">
-                                <div class="form-group">
+                                <div class="input-group input-group-outline mb-3">
                                     <strong>Role:</strong>
+
                                     <select class="form-control" name="roles" id="exampleFormControlSelect1">
                                       <option selected>
                                         {{-- @if(!empty($user->getRoleNames()))
@@ -123,9 +133,7 @@
                   <div class="modal-content">
                     <div class="modal-header">
                       <h5 class="modal-title" id="exampleModalLabel">Akun {{ $user->name }}</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
+               
                     </div>
                     <div class="modal-body text-left">
                       {!! Form::model($user, ['method' => 'PATCH','route' => ['users.update', $user->id]]) !!}
@@ -144,9 +152,11 @@
                                   {{-- {!! Form::text('email', null, array('placeholder' => 'Email','class' => 'form-control')) !!} --}}
                               </div>
                           </div>
-                          {{-- <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                              <button type="submit" class="btn btn-primary">Submit</button>
-                          </div> --}}
+                          <div class="col-xs-12 col-sm-12 col-md-12 text-center mt-4">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">tutup</span>
+                              </button>
+                          </div>
                       </div>
                       
                       {!! Form::close() !!}
@@ -162,34 +172,36 @@
                   <div class="modal-content">
                     <div class="modal-header">
                       <h5 class="modal-title" id="exampleModalLabel">Edit Akun {{ $user->name }}</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
+                  
                     </div>
+                  
                     <div class="modal-body text-left">
                       {!! Form::model($user, ['method' => 'PATCH','route' => ['users.update', $user->id]]) !!}
                       <div class="row">
                           <div class="col-xs-12 col-sm-12 col-md-12">
-                              <div class="form-group">
-                                  <strong>Name:</strong>
+                              <strong>Name:</strong>
+                                <div class="input-group input-group-outline mb-3">
+
                                   {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
                               </div>
                           </div>
                           <div class="col-xs-12 col-sm-12 col-md-12">
-                              <div class="form-group">
-                                  <strong>Email:</strong>
+                            <strong>Email:</strong>
+                              <div class="input-group input-group-outline mb-3">
                                   {!! Form::text('email', null, array('placeholder' => 'Email','class' => 'form-control')) !!}
                               </div>
                           </div>
                           <div class="col-xs-12 col-sm-12 col-md-12">
-                              <div class="form-group">
-                                  <strong>Password:</strong>
+                              <strong>Password:</strong>
+
+                              <div class="input-group input-group-outline mb-3">
                                   {!! Form::password('password', array('placeholder' => 'Password','class' => 'form-control')) !!}
                               </div>
                           </div>
                           <div class="col-xs-12 col-sm-12 col-md-12">
-                              <div class="form-group">
-                                  <strong>Confirm Password:</strong>
+                              <strong>Confirm Password:</strong>
+
+                                <div class="input-group input-group-outline mb-3">
                                   {!! Form::password('confirm-password', array('placeholder' => 'Confirm Password','class' => 'form-control')) !!}
                               </div>
                           </div>
@@ -211,7 +223,10 @@
                             {{-- {!! Form::select('roles[]', $roles,[], array('class' => 'form-control','option')) !!} --}}
                         </div>
                           <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                              <button type="submit" class="btn btn-primary">Submit</button>
+                              <button type="submit" class="btn btn-primary">kirim</button>
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">tutup</span>
+                              </button>
                           </div>
                       </div>
                       {!! Form::close() !!}
@@ -226,15 +241,6 @@
       </div>
     </div>
     {!! $data->render() !!}
-    <div class="card-footer text-muted">
-      2 days ago
-    </div>
-    
   </div>
 </div>
-
-
-
-
-<p class="text-center text-primary"><small>Tutorial by ItSolutionStuff.com</small></p>
 @endsection
