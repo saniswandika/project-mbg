@@ -26,7 +26,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('rekomendasi_admin_kependudukans', function (Blueprint $table) {
-            $table->timestamp('tgl_lahir_minkep')->change();
+            $table->date('tgl_lahir_minkep')->change();
         });
     }
 };
