@@ -7,6 +7,13 @@
     <div class="row">
         <div class="ms-3">
             <h1 class="text-3xl font-semibold mb-4">Pengajuan Stok Barang</h1>
+@if(session('success'))
+    <div class="alert alert-success">{{ session('success') }}</div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger">{{ session('error') }}</div>
+@endif
 
             <form action="{{ route('logistik.proses_pengajuan_barang') }}" method="POST" class="p-6 bg-white shadow-md rounded-lg border border-gray-200">
                 @csrf
@@ -61,11 +68,169 @@
                     <button type="submit" class="btn btn-success">Ajukan Stok</button>
                 </div>
             </form>
+            
+            <h1 class="text-3xl font-semibold mb-4">Daftar Pengajuan Barang</h1>
+            <div class="p-6 bg-white shadow-md rounded-lg border border-gray-200">
+                <table class="display table table-striped" id="barangTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Pengajuan</th>
+                            <th>Tanggal</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($pengajuanBarang as $row)
+                        @php 
+                            // Format tanggal
+                            $date = $row->created_at;
+                            $formattedDate = \Carbon\Carbon::parse($date)->format('d F Y G:i');
+                            
+                            // Membagi ID barang
+                            $array_barang = explode('^', $row->id_barang);
+
+                            // Status
+                            if($row->status == 1){
+                                $status = 'Akutansi';
+                            } elseif($row->status == 2) {
+                                $status = 'Admin';
+                            } elseif($row->status == 3) {
+                                $status = 'Superadmin';
+                            }
+                        @endphp
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>
+                                <!-- Menampilkan tabel barang -->
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Nama barang</th>
+                                            <th>Jumlah barang</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($array_barang as $barang)
+                                        @php 
+                                            // Ambil data barang dan jumlahnya
+                                            $id_barang = (new App\Models\PengajuanBarang)->getIdBarang($barang);
+                                            $nama_barang = (new App\Models\PengajuanBarang)->getNamaBarang($id_barang->id_barang);
+                                        @endphp
+                                        <tr>
+                                            <td>{{ $nama_barang }}</td>
+                                            <td>{{ $id_barang->jumlah }}</td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td>{{ $formattedDate }}</td>
+                            <td><span style="color:green">{{ $status }}</span></td>
+                            <td>
+                            @php
+                                // Menentukan kondisi untuk masing-masing status dan peran
+                                $canApprove = false;
+                                $canReject = false;
+                                $canDetail = false;
+
+                                if (($row->status == '1' && $id_barang->id_akutansi == $userid) ||  $id_barang->id_superadmin == $userid) {
+                                    $canDetail = true;
+                                    $canApprove = true;
+                                    $canReject = true;
+                                } elseif (($row->status == '2' && $id_barang->id_admin == $userid) ||  $id_barang->id_superadmin == $userid) {
+                                    $canDetail = true;
+                                    $canApprove = true;
+                                    $canReject = true;
+                                } elseif (($row->status == '3' && $id_barang->id_superadmin == $userid) ||  $id_barang->id_superadmin == $userid) {
+                                    $canDetail = true;
+                                    $canApprove = true;
+                                    $canReject = true;
+                                }
+                            @endphp
+
+                            <!-- Tombol Detail -->
+                            @if($canDetail)
+                                <a href="{{ route('logistik.detail_pengajuan_barang', ['id' => $row->id]) }}">
+                                    <button class="btn btn-primary">Detail</button>
+                                </a>
+                            @endif
+
+                            <!-- Tombol Approve -->
+                            @if($canApprove)
+                            <!-- Tombol Approve -->
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#approveModal{{ $row->id }}">Approve</button>
+
+                            <!-- Modal untuk verifikasi password -->
+                            <div class="modal fade" id="approveModal{{ $row->id }}" tabindex="-1" role="dialog" aria-labelledby="approveModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="approveModalLabel">Verifikasi Password</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Form untuk memverifikasi password -->
+                                            <form action="{{ route('logistik.verify_approve', ['id' => $row->id]) }}" method="POST">
+                                                @csrf
+                                                <div class="form-group">
+                                                    <label for="password">Masukkan Password</label>
+                                                    <input type="password" class="form-control" name="password" id="password" required>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Verifikasi</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @endif
+
+                            <!-- Tombol Reject -->
+                            @if($canReject)
+                                <a href="{{ route('logistik.reject_pengajuan_barang', ['id' => $row->id]) }}">
+                                    <button class="btn btn-danger">Reject</button>
+                                </a>
+                            @endif
+
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
 
+<!-- Bootstrap CSS -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+<!-- jQuery, Popper.js, and Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<style>
+    /* Menambahkan margin untuk memastikan modal berada di tengah */
+.modal-dialog {
+    max-width: 500px;  /* Ukuran modal */
+    margin: 100px auto;  /* Menjaga modal berada di tengah halaman */
+}
 
+/* Menambahkan styling untuk tombol close */
+.modal-header .close {
+    color: #000; /* Warna untuk tombol close */
+    font-size: 30px;
+}
+
+/* Gaya untuk form input */
+.modal-body input[type="password"] {
+    font-size: 18px;
+}
+
+</style>
 <script>
     // Menambahkan barang yang dipilih ke tabel pengajuan
     document.getElementById('addItemButton').addEventListener('click', function() {
