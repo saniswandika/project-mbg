@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\GrafikController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\LogistikController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\PengaduanController;
@@ -82,4 +83,28 @@ Route::group(['middleware' => ['auth']],function(){
     Route::post('profilepassword', [ProfileController::class, 'password_action'])->name('password.action');
     Route::post('profilenama', [ProfileController::class, 'name_action'])->name('nama.action');
     Route::post('profileemail', [ProfileController::class, 'email_action'])->name('email.action');
+});
+
+
+Route::prefix('logistik')->name('logistik.')->group(function () {
+    // Logistik
+    Route::get('/master_barang', [LogistikController::class, 'master_barang'])->name('master_barang');
+    Route::get('/tambah_master_barang', [LogistikController::class, 'tambah_master_barang'])->name('tambah_master_barang');
+    Route::post('tambah_master_barang', [LogistikController::class, 'proses_tambah_barang_master'])->name('proses_tambah_barang_master');
+    // list stok
+    Route::get('/list_barang', [LogistikController::class, 'index'])->name('list_barang');
+    Route::get('/pengajuan_barang', [LogistikController::class, 'pengajuan_barang'])->name('pengajuan_barang');
+    Route::post('/pengajuan_barang', [LogistikController::class, 'proses_pengajuan_barang'])->name('proses_pengajuan_barang');
+    Route::get('/detail_pengajuan_barang/{id}', [LogistikController::class, 'detail_pengajuan_barang'])->name('detail_pengajuan_barang');
+    Route::put('/revisi_pengajuan_barang/{id}', [LogistikController::class, 'revisi_pengajuan_barang'])->name('revisi_pengajuan_barang');
+    Route::put('/approve_pengajuan_barang/{id}', [LogistikController::class, 'approve_pengajuan_barang'])->name('approve_pengajuan_barang');
+    Route::put('/reject_pengajuan_barang/{id}', [LogistikController::class, 'reject_pengajuan_barang'])->name('reject_pengajuan_barang');
+    Route::post('/logistik/verify-approve/{id}', [LogistikController::class, 'verifyApprove'])->name('verify_approve');
+    Route::delete('/hapus_pengajuan_barang/{id}/{id_home}', [LogistikController::class, 'hapus_pengajuan_barang'])->name('hapus_pengajuan_barang');
+    // edit
+    // Route::get('/', [LogistikController::class, 'index'])->name('index');
+    Route::get('/edit/{id}', [LogistikController::class, 'edit_master_barang'])->name('edit_master_barang');
+    Route::put('/update/{id}', [LogistikController::class, 'update_master_barang'])->name('update_master_barang'); // Menggunakan PUT untuk update
+    //delete
+    Route::delete('/destroy/{id}', [LogistikController::class, 'destroy_master_barang'])->name('destroy_master_barang');
 });

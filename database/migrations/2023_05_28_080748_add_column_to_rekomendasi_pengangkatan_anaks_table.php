@@ -6,31 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
-        Schema::table('rekomendasi_pengangkatan_anaks', function (Blueprint $table) {
-            $table->String('Nomor_Surat')->nullable();
-            $table->String('Nama_ibu_angkat')->nullable();
-            $table->String('Nama_Bapak_angkat')->nullable();
+        Schema::create('rekomendasi_pengangkatan_anaks', function (Blueprint $table) {
+            $table->id();
+            $table->string('Nomor_Surat')->nullable();
+            $table->string('Nama_ibu_angkat')->nullable();
+            $table->string('Nama_Bapak_angkat')->nullable();
             $table->boolean('validasi_surat')->nullable()->default(false);
-            $table->String('jenis_kesos')->nullable();
+            $table->string('jenis_kesos')->nullable();
+            $table->timestamps();  // Timestamps untuk created_at dan updated_at
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::table('rekomendasi_pengangkatan_anaks', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('rekomendasi_pengangkatan_anaks');
     }
 };
