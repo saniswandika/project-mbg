@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();                                  // primary key
             $table->string('nama_barang');
             $table->integer('jumlah_barang');              // lebih tepat integer
+            $table->integer('id_master_barang');              // lebih tepat integer
             $table->string('merk_barang');
             $table->enum('status', ['baru', 'bekas'])->default('baru'); // contoh enum
             $table->text('deskripsi')->nullable();         // opsional

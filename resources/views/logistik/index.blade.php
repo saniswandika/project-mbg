@@ -45,8 +45,8 @@
                             <td>{{ $item->updated_at }}</td>
                             <td>{{ $item->deleted_at }}</td>
                             <td>
-                                <a href="{{ route('logistik.edit', $item->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                <form action="{{ route('logistik.destroy', $item->id) }}" method="POST" style="display:inline;">
+                                <a href="{{ route('logistik.edit_master_barang', $item->id_master_barang) }}" class="btn btn-warning btn-sm">Edit</a>
+                                <form action="{{ route('logistik.update_master_barang', $item->id_master_barang) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
