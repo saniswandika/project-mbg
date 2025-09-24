@@ -7,13 +7,13 @@
     <div class="row">
         <div class="ms-3">
             <h1 class="text-3xl font-semibold mb-4">Pengajuan Stok Barang</h1>
-@if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-@endif
+            @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
 
-@if(session('error'))
-    <div class="alert alert-danger">{{ session('error') }}</div>
-@endif
+            @if(session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
+            @endif
 
             <form action="{{ route('logistik.proses_pengajuan_barang') }}" method="POST" class="p-6 bg-white shadow-md rounded-lg border border-gray-200">
                 @csrf
@@ -25,7 +25,7 @@
                             <label for="barang" class="block text-sm font-medium text-gray-700 mb-2">Pilih Barang:</label>
                             <select name="barang_ids[]" id="barang" class="form-control mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                 @foreach ($masterBarang as $item)
-                                    <option value="{{ $item->id }}">{{ $item->nama_barang }} ({{ $item->merk_barang }})</option>
+                                <option value="{{ $item->id }}">{{ $item->nama_barang }} ({{ $item->merk_barang }})</option>
                                 @endforeach
                             </select>
                         </div>
@@ -68,7 +68,7 @@
                     <button type="submit" class="btn btn-success">Ajukan Stok</button>
                 </div>
             </form>
-            
+
             <h1 class="text-3xl font-semibold mb-4">Daftar Pengajuan Barang</h1>
             <div class="p-6 bg-white shadow-md rounded-lg border border-gray-200">
                 <table class="display table table-striped" id="barangTable">
@@ -83,22 +83,28 @@
                     </thead>
                     <tbody>
                         @foreach($pengajuanBarang as $row)
-                        @php 
-                            // Format tanggal
-                            $date = $row->created_at;
-                            $formattedDate = \Carbon\Carbon::parse($date)->format('d F Y G:i');
-                            
-                            // Membagi ID barang
-                            $array_barang = explode('^', $row->id_barang);
+                        @php
+                        // Format tanggal
+                        $date = $row->created_at;
+                        $formattedDate = \Carbon\Carbon::parse($date)->format('d F Y G:i');
 
-                            // Status
-                            if($row->status == 1){
-                                $status = 'Akutansi';
-                            } elseif($row->status == 2) {
-                                $status = 'Admin';
-                            } elseif($row->status == 3) {
-                                $status = 'Superadmin';
-                            }
+                        // Membagi ID barang
+                        $array_barang = explode('^', $row->id_barang);
+
+                        // Status
+                        if($row->status == 1){
+                        $status = 'Akutansi';
+                        } elseif($row->status == 2) {
+                        $status = 'Admin';
+                        } elseif($row->status == 3) {
+                        $status = 'Superadmin';
+                        } elseif($row->status == 4) {
+                        $status = 'admin';
+                        } elseif($row->status == 5) {
+                        $status = 'Superadmin';
+                        } elseif($row->status == 6) {
+                        $status = 'selesai';
+                        }
                         @endphp
                         <tr>
                             <td>{{ $loop->iteration }}</td>
@@ -113,10 +119,10 @@
                                     </thead>
                                     <tbody>
                                         @foreach($array_barang as $barang)
-                                        @php 
-                                            // Ambil data barang dan jumlahnya
-                                            $id_barang = (new App\Models\PengajuanBarang)->getIdBarang($barang);
-                                            $nama_barang = (new App\Models\PengajuanBarang)->getNamaBarang($id_barang->id_barang);
+                                        @php
+                                        // Ambil data barang dan jumlahnya
+                                        $id_barang = (new App\Models\PengajuanBarang)->getIdBarang($barang);
+                                        $nama_barang = (new App\Models\PengajuanBarang)->getNamaBarang($id_barang->id_barang);
                                         @endphp
                                         <tr>
                                             <td>{{ $nama_barang }}</td>
@@ -129,72 +135,113 @@
                             <td>{{ $formattedDate }}</td>
                             <td><span style="color:green">{{ $status }}</span></td>
                             <td>
-                            @php
+                                @php
                                 // Menentukan kondisi untuk masing-masing status dan peran
                                 $canApprove = false;
                                 $canReject = false;
                                 $canDetail = false;
-
-                                if (($row->status == '1' && $id_barang->id_akutansi == $userid) ||  $id_barang->id_superadmin == $userid) {
-                                    $canDetail = true;
-                                    $canApprove = true;
-                                    $canReject = true;
-                                } elseif (($row->status == '2' && $id_barang->id_admin == $userid) ||  $id_barang->id_superadmin == $userid) {
-                                    $canDetail = true;
-                                    $canApprove = true;
-                                    $canReject = true;
-                                } elseif (($row->status == '3' && $id_barang->id_superadmin == $userid) ||  $id_barang->id_superadmin == $userid) {
-                                    $canDetail = true;
-                                    $canApprove = true;
-                                    $canReject = true;
+                                if (($row->status == '1' && $id_barang->id_akutansi == $userid) || ($row->status == '1' && $id_barang->id_superadmin == $userid)) {
+                                $canDetail = true;
+                                $canApprove = true;
+                                $canReject = true;
+                                } elseif (($row->status == '2' && $id_barang->id_admin == $userid) || ($row->status == '2' && $id_barang->id_superadmin == $userid)) {
+                                $canDetail = true;
+                                $canApprove = true;
+                                $canReject = true;
+                                } elseif (($row->status == '3' && $id_barang->id_superadmin == $userid) || ($row->status == '3' && $id_barang->id_superadmin == $userid)) {
+                                $canDetail = true;
+                                $canApprove = true;
+                                $canReject = true;
+                                } elseif (($row->status == '4' && $id_barang->id_admin == $userid) || ($row->status == '4' && $id_barang->id_superadmin == $userid)) {
+                                $canDetail = true;
+                                $canApprove = true;
+                                $canReject = true;
+                                } elseif (($row->status == '5' && $id_barang->id_superadmin == $userid) || ($row->status == '5' && $id_barang->id_superadmin == $userid)) {
+                                $canDetail = true;
+                                $canApprove = true;
+                                $canReject = true;
+                                } else {
+                                $canDetail = false;
+                                $canApprove = false;
+                                $canReject = false;
                                 }
-                            @endphp
+                                @endphp
 
-                            <!-- Tombol Detail -->
-                            @if($canDetail)
+                                <!-- Tombol Detail -->
+                                @if($canDetail)
                                 <a href="{{ route('logistik.detail_pengajuan_barang', ['id' => $row->id]) }}">
                                     <button class="btn btn-primary">Detail</button>
                                 </a>
-                            @endif
+                                @endif
 
-                            <!-- Tombol Approve -->
-                            @if($canApprove)
-                            <!-- Tombol Approve -->
-                            <button class="btn btn-primary" data-toggle="modal" data-target="#approveModal{{ $row->id }}">Approve</button>
+                                <!-- Tombol Approve -->
+                                @if($canApprove)
+                                <!-- Tombol Approve -->
+                                <button class="btn btn-primary" data-toggle="modal" data-target="#approveModal{{ $row->id }}">Approve</button>
 
-                            <!-- Modal untuk verifikasi password -->
-                            <div class="modal fade" id="approveModal{{ $row->id }}" tabindex="-1" role="dialog" aria-labelledby="approveModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="approveModalLabel">Verifikasi Password</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <!-- Form untuk memverifikasi password -->
-                                            <form action="{{ route('logistik.verify_approve', ['id' => $row->id]) }}" method="POST">
-                                                @csrf
-                                                <div class="form-group">
-                                                    <label for="password">Masukkan Password</label>
-                                                    <input type="password" class="form-control" name="password" id="password" required>
-                                                </div>
-                                                <button type="submit" class="btn btn-primary">Verifikasi</button>
-                                            </form>
+                                <!-- Modal untuk verifikasi password -->
+                                <div class="modal fade" id="approveModal{{ $row->id }}" tabindex="-1" role="dialog" aria-labelledby="approveModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="approveModalLabel">Verifikasi Password</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <!-- Form untuk memverifikasi password -->
+                                                <form action="{{ route('logistik.verify_approve', ['id' => $row->id]) }}" method="POST" enctype="multipart/form-data">
+                                                    @csrf
+                                                    <div class="form-group">
+                                                        <label for="password">Masukkan Password</label>
+                                                        <input type="password" class="form-control" name="password" id="password" required>
+                                                    </div>
+
+                                                    @if($row->status == 4)
+                                                    <!-- Upload Bukti Pembayaran dan Struk Pembayaran -->
+                                                    <div class="form-group">
+                                                        <label for="payment_proof">Bukti Pembayaran</label>
+                                                        <input type="file" class="form-control" name="payment_proof" id="payment_proof" required>
+                                                        <div id="payment_proof_preview" style="margin-top: 10px;">
+                                                            <!-- Preview bukti pembayaran -->
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="receipt_proof">Struk Pembayaran</label>
+                                                        <input type="file" class="form-control" name="receipt_proof" id="receipt_proof" required>
+                                                        <div id="receipt_proof_preview" style="margin-top: 10px;">
+                                                            <!-- Preview struk pembayaran -->
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Upload Foto Bukti Barang -->
+                                                    <div class="form-group">
+                                                        <label for="item_photo">Foto Bukti Barang</label>
+                                                        <input type="file" class="form-control" name="item_photo" id="item_photo" required>
+                                                        <div id="item_photo_preview" style="margin-top: 10px;">
+                                                            <!-- Preview foto bukti barang -->
+                                                        </div>
+                                                    </div>
+                                                    @endif
+
+                                                    <button type="submit" class="btn btn-primary">Verifikasi</button>
+                                                </form>
+                                            </div>
+
+
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                                @endif
 
-                            @endif
 
-                            <!-- Tombol Reject -->
-                            @if($canReject)
+                                <!-- Tombol Reject -->
+                                @if($canReject)
                                 <a href="{{ route('logistik.reject_pengajuan_barang', ['id' => $row->id]) }}">
                                     <button class="btn btn-danger">Reject</button>
                                 </a>
-                            @endif
+                                @endif
 
                             </td>
                         </tr>
@@ -214,23 +261,84 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <style>
     /* Menambahkan margin untuk memastikan modal berada di tengah */
-.modal-dialog {
-    max-width: 500px;  /* Ukuran modal */
-    margin: 100px auto;  /* Menjaga modal berada di tengah halaman */
-}
+    .modal-dialog {
+        max-width: 500px;
+        /* Ukuran modal */
+        margin: 100px auto;
+        /* Menjaga modal berada di tengah halaman */
+    }
 
-/* Menambahkan styling untuk tombol close */
-.modal-header .close {
-    color: #000; /* Warna untuk tombol close */
-    font-size: 30px;
-}
+    /* Menambahkan styling untuk tombol close */
+    .modal-header .close {
+        color: #000;
+        /* Warna untuk tombol close */
+        font-size: 30px;
+    }
 
-/* Gaya untuk form input */
-.modal-body input[type="password"] {
-    font-size: 18px;
-}
-
+    /* Gaya untuk form input */
+    .modal-body input[type="password"] {
+        font-size: 18px;
+    }
 </style>
+<script>
+    // Preview Bukti Pembayaran
+    document.getElementById('payment_proof').addEventListener('change', function(event) {
+        var file = event.target.files[0];
+        var preview = document.getElementById('payment_proof_preview');
+
+        // Cek jika file ada dan tipe file adalah gambar
+        if (file && file.type.startsWith('image')) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                preview.innerHTML = '<img src="' + e.target.result + '" class="img-fluid" style="max-height: 200px; max-width: 100%;">';
+            };
+
+            reader.readAsDataURL(file);
+        } else {
+            preview.innerHTML = '<p>File yang dipilih bukan gambar</p>';
+        }
+    });
+
+    // Preview Struk Pembayaran
+    document.getElementById('receipt_proof').addEventListener('change', function(event) {
+        var file = event.target.files[0];
+        var preview = document.getElementById('receipt_proof_preview');
+
+        // Cek jika file ada dan tipe file adalah gambar
+        if (file && file.type.startsWith('image')) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                preview.innerHTML = '<img src="' + e.target.result + '" class="img-fluid" style="max-height: 200px; max-width: 100%;">';
+            };
+
+            reader.readAsDataURL(file);
+        } else {
+            preview.innerHTML = '<p>File yang dipilih bukan gambar</p>';
+        }
+    });
+
+    // Preview Foto Bukti Barang
+    document.getElementById('item_photo').addEventListener('change', function(event) {
+        var file = event.target.files[0];
+        var preview = document.getElementById('item_photo_preview');
+
+        // Cek jika file ada dan tipe file adalah gambar
+        if (file && file.type.startsWith('image')) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                preview.innerHTML = '<img src="' + e.target.result + '" class="img-fluid" style="max-height: 200px; max-width: 100%;">';
+            };
+
+            reader.readAsDataURL(file);
+        } else {
+            preview.innerHTML = '<p>File yang dipilih bukan gambar</p>';
+        }
+    });
+</script>
+
 <script>
     // Menambahkan barang yang dipilih ke tabel pengajuan
     document.getElementById('addItemButton').addEventListener('click', function() {

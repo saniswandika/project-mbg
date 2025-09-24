@@ -3,6 +3,22 @@
 
 
 <head>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
+  <!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link href="https://cdn.jsdelivr.net/npm/datatables@1.10.21/media/css/jquery.dataTables.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/datatables@1.10.21/media/js/jquery.dataTables.min.js"></script>
+  <!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Include Popper.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+
+<!-- Include Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('/assets/img/apple-icon.png') }}">
@@ -34,6 +50,94 @@
       </a>
     </div>
     <hr class="horizontal dark mt-0 mb-2">
+<div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
+  <ul class="navbar-nav">
+    <!-- Dashboard Menu -->
+    <li class="nav-item">
+        <a class="nav-link  text-dark {{ request()->is('home') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('home') }}">
+          <i class="material-symbols-rounded opacity-5">dashboard</i>
+        <span class="nav-link-text ms-1">Dashboard</span>
+      </a>
+    </li>
+
+    <hr class="horizontal dark mt-0">
+
+    <li class="nav-item mt-3">
+      <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Barang & Peminjaman</h6>
+    </li>
+
+    <!-- Barang Section -->
+    <li class="nav-item">
+      <a class="nav-link text-dark {{ request()->is('Barang') ? 'active bg-gradient-dark text-white' : '' }} " href="#collapseExample" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample">
+         <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Logistik</span>
+      </a>
+    </li>
+    <div class="collapse sm-2" id="collapseExample">
+<!-- admin dan superadmin -->
+      @can('rekomendasi-dtks-list')
+      <li class="nav-item">
+        <a class="nav-link text-dark {{ request()->routeIs('logistik.master_barang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('logistik.master_barang') }}" style="margin-left: 30px;">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Master Barang</span>
+        </a>
+      </li>
+      @endcan
+    </div>
+<!-- All Role -->
+    <div class="collapse sm-2" id="collapseExample">
+      @can('rekomendasi-dtks-list')
+      <li class="nav-item">
+        <a class="nav-link text-dark {{ request()->routeIs('logistik.pengajuan_barang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('logistik.pengajuan_barang') }}" style="margin-left: 30px;">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Pengajuan Barang</span>
+        </a>
+      </li>
+      @endcan
+    </div>
+<!-- All Role -->
+    <div class="collapse sm-2" id="collapseExample">
+      @can('rekomendasi-dtks-list')
+      <li class="nav-item">
+        <a class="nav-link text-dark {{ request()->routeIs('logistik.list_barang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('logistik.list_barang') }}" style="margin-left: 30px;">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">List Barang</span>
+        </a>
+      </li>
+      @endcan
+    </div>
+    <div class="collapse sm-2" id="collapseExample">
+      @can('rekomendasi-dtks-list')
+      <li class="nav-item">
+        <a class="nav-link text-dark {{ request()->routeIs('logistik.ambil_barang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('logistik.ambil_barang') }}" style="margin-left: 30px;">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Pengambilan Barang</span>
+        </a>
+      </li>
+      @endcan
+    </div>
+    <div class="collapse sm-2" id="collapseExample">
+      @can('rekomendasi-dtks-list')
+      <li class="nav-item">
+        <a class="nav-link text-dark {{ request()->routeIs('logistik.history_keranjang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('logistik.history_keranjang') }}" style="margin-left: 30px;">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">History pengambilan barang</span>
+        </a>
+      </li>
+      @endcan
+    </div>
+<!-- All Role -->
+    <div class="collapse sm-2" id="collapseExample">
+      @can('rekomendasi-dtks-list')
+      <li class="nav-item">
+        <a class="nav-link text-dark {{ request()->is('bahan_olahan') ? 'active bg-gradient-dark text-white' : '' }}" href="" style="margin-left: 30px;">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Bahan Olahan</span>
+        </a>
+      </li>
+      @endcan
+    </div>
+    
     <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
       <ul class="navbar-nav">
           {{-- file tampilan menu ada di layouts/menu.blade.php --}}
@@ -137,7 +241,14 @@
   <script src="{{ asset('assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
   <script src="{{ asset('assets/js/plugins/chartjs.min.js') }}"></script>
 
-  {{-- <script>
+
+  <script>
+    var canvas = document.getElementById('canvasId');
+    if (canvas) {
+        var ctx = canvas.getContext('2d');
+        // Lakukan operasi pada canvas
+    }
+    // var ctx = document.getElementById("chart-bars").getContext("2d");
     var ctx = document.getElementById("chart-bars").getContext("2d");
 
     new Chart(ctx, {

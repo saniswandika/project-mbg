@@ -20,6 +20,7 @@ class PengajuanBarang extends Model
         // Mengirim data ke view
         return $idBarang;
     }
+
     public function getNamaBarang($id)
     {
         // Mengambil hanya kolom id_barang berdasarkan id
@@ -27,5 +28,23 @@ class PengajuanBarang extends Model
 
         // Mengirim data ke view
         return $NamaBarang;
+    }
+
+    public function getFotoBarang($id)
+    {
+        // Mengambil hanya kolom id_barang berdasarkan id
+        $foto = DB::table('master_barangs')->where('id', $id)->value('foto');
+
+        // Mengirim data ke view
+        return $foto;
+    }
+
+    public function getNamaUser($id)
+    {
+        // Mengambil hanya kolom id_barang berdasarkan id
+        $nama = DB::table('users')->where('id', $id)->value('name');
+
+        // Mengirim data ke view
+        return $nama;
     }
 }
