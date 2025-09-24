@@ -36,6 +36,7 @@ use App\Http\Controllers\rekomendasi_yayasan_provinsiController;
 use App\Models\rekomendasi_pengumpulan_undian_berhadiah;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Contracts\Role;
+use App\Http\Controllers\CheckoutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -105,6 +106,15 @@ Route::prefix('logistik')->name('logistik.')->group(function () {
     // Route::get('/', [LogistikController::class, 'index'])->name('index');
     Route::get('/edit/{id}', [LogistikController::class, 'edit_master_barang'])->name('edit_master_barang');
     Route::put('/update/{id}', [LogistikController::class, 'update_master_barang'])->name('update_master_barang'); // Menggunakan PUT untuk update
+    Route::post('/keranjang/add', [CheckoutController::class, 'addToCart'])->name('add_to_cart');
+    Route::get('/keranjang', [CheckoutController::class, 'showCart'])->middleware('auth')->name('ambil_barang');
+    Route::delete('/keranjang/{id}', [CheckoutController::class, 'removeFromCart'])->name('hapus_keranjang');
+    Route::post('/keranjang/ajukan_pengambilan', [CheckoutController::class, 'ajukan_pengambilan'])->name('ajukan_pengambilan');
+    Route::post('/keranjang/approve_keranjang', [CheckoutController::class, 'approve_keranjang'])->name('approve_keranjang');
+    Route::post('/keranjang/reject_keranjang', [CheckoutController::class, 'reject_keranjang'])->name('reject_keranjang');
+    Route::post('/keranjang/terima_keranjang', [CheckoutController::class, 'terima_keranjang'])->name('terima_keranjang');
+    Route::post('/keranjang/status_change', [CheckoutController::class, 'status_change'])->name('status_change');
+    Route::get('/history_keranjang', [CheckoutController::class, 'history_keranjang'])->middleware('auth')->name('history_keranjang');
     //delete
     Route::delete('/destroy/{id}', [LogistikController::class, 'destroy_master_barang'])->name('destroy_master_barang');
 });

@@ -18,8 +18,9 @@ class LogistikController extends Controller
     {
         // Ambil semua data logistik
         $logistik = Logistik::all();
-        
-        return view('logistik.index', compact('logistik'));
+        $userid = Auth::id();
+        $role_id = $this->get_role($userid);
+        return view('logistik.index', compact('logistik', 'role_id' , 'userid'));
     }
 
     public function master_barang()
@@ -253,6 +254,9 @@ public function proses_tambah_barang_master(Request $request)
             }
             if ($role_id == 'superadmin') {
                 $input = $status + 1;
+            }
+            if($input == 7){
+                $input = 6;
             }
             
             // Proses upload file (hanya jika ada file baru)

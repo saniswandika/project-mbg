@@ -30,6 +30,15 @@ class PengajuanBarang extends Model
         return $NamaBarang;
     }
 
+    public function getFotoBarang($id)
+    {
+        // Mengambil hanya kolom id_barang berdasarkan id
+        $foto = DB::table('master_barangs')->where('id', $id)->value('foto');
+
+        // Mengirim data ke view
+        return $foto;
+    }
+
     public function getNamaUser($id)
     {
         // Mengambil hanya kolom id_barang berdasarkan id
