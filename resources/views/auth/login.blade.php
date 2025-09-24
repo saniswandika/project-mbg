@@ -100,6 +100,22 @@
                   <p class="mb-0">Masukan email untuk masuk</p>
                 </div>
                 <div class="card-body">
+                  {{-- Alert jika gagal login --}}
+                  @if(session('error'))
+                    <div class="alert alert-danger text-white" role="alert">
+                      {{ session('error') }}
+                    </div>
+                  @endif
+
+                  @if ($errors->any())
+                    <div class="alert alert-danger text-white" role="alert">
+                      <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                          <li>{{ $error }}</li>
+                        @endforeach
+                      </ul>
+                    </div>
+                  @endif
                   <form method="POST" action="{{ route('login') }}">
                     @csrf
                     <div class="mb-3">

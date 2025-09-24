@@ -1,12 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\GrafikController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\PengaturanWilayahController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LogistikController;
 use App\Http\Controllers\ProductController;
@@ -48,23 +47,27 @@ use App\Http\Controllers\CheckoutController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::get('/', function () {
     return view('auth.login');
 });
+
 Route::get('pengaduans', function () {
    return view('pengaduans.index');
 });
+
 Route::get('pengaduans/dashboard', function () {
     return view('pengaduans.dashboard');
 });
+
 Auth::routes();
+
 Route::group(['middleware' => ['prevent-back-history','auth','TimeOutLogin']],function(){
-    
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::resource('roles', RoleController::class);
 });
 
-//wilayah
+// Wilayah
 Route::post('/get-kota', [PengaturanWilayahController::class, 'getKota'])->name('getKota');
 Route::get('/kecamatan/getByRegency/{regencyId}', [PengaturanWilayahController::class, 'getKecamatanByRegency']);
 Route::get('/kelurahan/getByRegency/{kelurahanId}', [PengaturanWilayahController::class, 'getKelurahanByRegency']);
@@ -72,15 +75,16 @@ Route::get('/Pengaturan_wilayah', [PengaturanWilayahController::class, 'listwila
 Route::get('/tambah-wilayah', [PengaturanWilayahController::class, 'create'])->name('rubahwilayah');
 Route::get('/status/update', [PengaturanWilayahController::class, 'updateStatus'])->name('users.update.status');
 Route::post('/add-wilayah', [PengaturanWilayahController::class, 'store'])->name('add_wilayah.store');
-//tutup wilayah
-// Route::post('/calendar', [App\Http\Controllers\CalendarController::class, 'index']);
+
+// Events
 Route::post('/events', [App\Http\Controllers\CalendarController::class, 'index']);
+
 Route::group(['middleware' => ['auth']],function(){
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::resource('roles', RoleController::class);
     Route::resource('users', App\Http\Controllers\UserController::class);
 
-    Route::resource('profile', App\Http\Controllers\ProfileController::class);
+    Route::resource('profile', ProfileController::class);
     Route::post('profilepassword', [ProfileController::class, 'password_action'])->name('password.action');
     Route::post('profilenama', [ProfileController::class, 'name_action'])->name('nama.action');
     Route::post('profileemail', [ProfileController::class, 'email_action'])->name('email.action');
