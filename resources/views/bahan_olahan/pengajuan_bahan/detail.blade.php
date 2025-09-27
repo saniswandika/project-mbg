@@ -1,6 +1,6 @@
 @extends('layouts.masterTemplate')
 
-@section('title', 'Pengajuan Barang')
+@section('title', 'Pengajuan Bahan')
 
 @section('content')
 <div class="container mx-auto py-8">
@@ -15,49 +15,49 @@
             @endif
 
 
-            <h1 class="text-3xl font-semibold mb-4">Daftar Pengajuan Barang</h1>
+            <h1 class="text-3xl font-semibold mb-4">Daftar Pengajuan Bahan</h1>
             <div class="p-6 bg-white shadow-md rounded-lg border border-gray-200">
-                <table class="display table table-striped" id="barangTable">
+                <table class="display table table-striped" id="bahanTable">
                     <thead>
                         <tr>
-                            <th>Nama barang</th>
-                            <th>Jumlah barang</th>
+                            <th>Nama bahan</th>
+                            <th>Jumlah bahan</th>
                             <th>Setatus</th>
                             <th>Keterangan</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
-                    @foreach($pengajuanBarang as $row)
+                    @foreach($pengajuanBahan as $row)
                     @php
-                    $array_barang = explode('^', $row->id_barang);
+                    $array_bahan = explode('^', $row->id_bahan);
                     @endphp
                     @endforeach
                     <tbody>
-                        @foreach($array_barang as $barang)
+                        @foreach($array_bahan as $bahan)
                         @php
-                        // Ambil data barang dan jumlahnya
-                        $id_barang = (new App\Models\PengajuanBarang)->getIdBarang($barang);
-                        $nama_barang = (new App\Models\PengajuanBarang)->getNamaBarang($id_barang->id_barang);
+                        // Ambil data bahan dan jumlahnya
+                        $id_bahan = (new App\Models\PengajuanBahan)->getIdBahan($bahan);
+                        $nama_bahan = (new App\Models\PengajuanBahan)->getNamaBahan($id_bahan->id_bahan);
                         $color_ttp = '</span>';
-                        if($id_barang->status == '1'){
+                        if($id_bahan->status == '1'){
                         $text = 'Menunggu Kepastian';
                         $color = '<span style="color:orange">';
-                            }elseif($id_barang->status == '2'){
+                            }elseif($id_bahan->status == '2'){
                             $text = 'Approve Akutansi';
                             $color = '<span style="color:green">';
-                                }elseif($id_barang->status == '3'){
+                                }elseif($id_bahan->status == '3'){
                                 $text = 'Approve Admin';
                                 $color = '<span style="color:green">';
-                                    }elseif($id_barang->status == '4'){
+                                    }elseif($id_bahan->status == '4'){
                                     $text = 'Pembelian Admin';
                                     $color = '<span style="color:red">';
-                                        }elseif($id_barang->status == '5'){
+                                        }elseif($id_bahan->status == '5'){
                                         $text = 'Approve Superadmin';
                                         $color = '<span style="color:red">';
-                                            }elseif($id_barang->status == '5'){
+                                            }elseif($id_bahan->status == '5'){
                                             $text = 'Rejected';
                                             $color = '<span style="color:red">';
-                                                }elseif($id_barang->status == '6'){
+                                                }elseif($id_bahan->status == '6'){
                                                 $text = 'Approved';
                                                 $color = '<span style="color:black">';
                                                 }else{
@@ -66,32 +66,32 @@
                                                     }
                                                 @endphp
                                                 <tr>
-                                                    <td>{{ $nama_barang }}</td>
-                                                    <td>{{ $id_barang->jumlah }}</td>
+                                                    <td>{{ $nama_bahan }}</td>
+                                                    <td>{{ $id_bahan->jumlah }}</td>
                                                     <td><?= $color ?>{{ $text }} <?= $color_ttp ?></td>
-                                                    <td>{{ $id_barang->deskripsi }}</td>
+                                                    <td>{{ $id_bahan->deskripsi }}</td>
                                                     <td>
                                                         <!-- Link untuk Revisi dengan route yang benar -->
-                                                        <button class="btn btn-warning" data-toggle="modal" data-target="#revisiModal{{ $id_barang->id }}">Revisi</button>
+                                                        <button class="btn btn-warning" data-toggle="modal" data-target="#revisiModal{{ $id_bahan->id }}">Revisi</button>
 
-                                                        <!-- Modal untuk revisi jumlah barang -->
-                                                        <div class="modal fade" id="revisiModal{{ $id_barang->id }}" tabindex="-1" role="dialog" aria-labelledby="revisiModalLabel" aria-hidden="true">
+                                                        <!-- Modal untuk revisi jumlah bahan -->
+                                                        <div class="modal fade" id="revisiModal{{ $id_bahan->id }}" tabindex="-1" role="dialog" aria-labelledby="revisiModalLabel" aria-hidden="true">
                                                             <div class="modal-dialog" role="document">
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
-                                                                        <h5 class="modal-title" id="revisiModalLabel">Revisi Jumlah Barang</h5>
+                                                                        <h5 class="modal-title" id="revisiModalLabel">Revisi Jumlah Bahan</h5>
                                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                             <span aria-hidden="true">&times;</span>
                                                                         </button>
                                                                     </div>
                                                                     <div class="modal-body">
-                                                                        <!-- Form untuk mengubah jumlah barang -->
-                                                                        <form action="{{ route('logistik.revisi_pengajuan_barang', ['id' => $id_barang->id]) }}" method="POST">
+                                                                        <!-- Form untuk mengubah jumlah bahan -->
+                                                                        <form action="{{ route('bahan_olahan.revisi_pengajuan_bahan', ['id' => $id_bahan->id]) }}" method="POST">
                                                                             @csrf
                                                                             @method('PUT')
                                                                             <div class="form-group">
-                                                                                <label for="jumlah">Jumlah Barang</label>
-                                                                                <input type="number" class="form-control" name="jumlah" id="jumlah" value="{{ $id_barang->jumlah }}" required>
+                                                                                <label for="jumlah">Jumlah Bahan</label>
+                                                                                <input type="number" class="form-control" name="jumlah" id="jumlah" value="{{ $id_bahan->jumlah }}" required>
                                                                                 <label for="jumlah">Keterangan</label>
                                                                                 <textarea type="number" class="form-control" name="keterangan"></textarea>
                                                                             </div>
@@ -102,24 +102,24 @@
                                                             </div>
                                                         </div>
 
-                                                        <!-- Tombol Hapus Barang -->
-                                                        <button class="btn btn-danger" data-toggle="modal" data-target="#hapusModal{{ $id_barang->id }}">Hapus</button>
+                                                        <!-- Tombol Hapus Bahan -->
+                                                        <button class="btn btn-danger" data-toggle="modal" data-target="#hapusModal{{ $id_bahan->id }}">Hapus</button>
 
                                                         <!-- Modal konfirmasi hapus -->
-                                                        <div class="modal fade" id="hapusModal{{ $id_barang->id }}" tabindex="-1" role="dialog" aria-labelledby="hapusModalLabel" aria-hidden="true">
+                                                        <div class="modal fade" id="hapusModal{{ $id_bahan->id }}" tabindex="-1" role="dialog" aria-labelledby="hapusModalLabel" aria-hidden="true">
                                                             <div class="modal-dialog" role="document">
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
-                                                                        <h5 class="modal-title" id="hapusModalLabel">Konfirmasi Penghapusan Barang</h5>
+                                                                        <h5 class="modal-title" id="hapusModalLabel">Konfirmasi Penghapusan Bahan</h5>
                                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                             <span aria-hidden="true">&times;</span>
                                                                         </button>
                                                                     </div>
                                                                     <div class="modal-body">
-                                                                        Apakah Anda yakin ingin menghapus barang ini?
+                                                                        Apakah Anda yakin ingin menghapus bahan ini?
                                                                     </div>
                                                                     <div class="modal-footer">
-                                                                        <form action="{{ route('logistik.hapus_pengajuan_barang', ['id' => $id_barang->id, 'id_home' => $id]) }}" method="POST">
+                                                                        <form action="{{ route('bahan_olahan.hapus_pengajuan_bahan', ['id' => $id_bahan->id, 'id_home' => $id]) }}" method="POST">
                                                                             @csrf
                                                                             @method('DELETE')
                                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
@@ -137,18 +137,18 @@
             </div>
             <div class="p-6 bg-white shadow-md rounded-lg border border-gray-200">
                 <?php
-                // var_dump($pengajuanBarang);die();
-                $model = (new App\Models\PengajuanBarang);
-                foreach ($pengajuanBarang as $value) {
+                // var_dump($pengajuanBahan);die();
+                $model = (new App\Models\PengajuanBahan);
+                foreach ($pengajuanBahan as $value) {
                     $status = $value->status;
-                    $id_barang = explode('^', $value->id_barang);
-                    foreach ($id_barang as $key) {
-                        $barangId = $key;
+                    $id_bahan = explode('^', $value->id_bahan);
+                    foreach ($id_bahan as $key) {
+                        $bahanId = $key;
                     }
-                    $pengajuan_barangs = $model->getIdBarang($barangId);
-                    $id_akutansi = $pengajuan_barangs->id_akutansi;
-                    $id_admin = $pengajuan_barangs->id_admin;
-                    $id_superadmin = $pengajuan_barangs->id_superadmin;
+                    $pengajuan_bahans = $model->getIdBahan($bahanId);
+                    $id_akutansi = $pengajuan_bahans->id_akutansi;
+                    $id_admin = $pengajuan_bahans->id_admin;
+                    $id_superadmin = $pengajuan_bahans->id_superadmin;
                     $approve = '';
                     if ($status == '1') {
                         if ($id_akutansi != NULL) {
@@ -194,16 +194,16 @@
                         <tr>
                             <th>Bukti Pembayaran</th>
                             <th>Struk Pembayaran</th>
-                            <th>Foto Bukti Barang</th>
+                            <th>Foto Bukti Bahan</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($pengajuanBarang as $barang)
+                        @foreach($pengajuanBahan as $bahan)
                         <tr>
                             <td>
-                                @if($barang->payment_proof)
-                                <button class="btn btn-info" data-toggle="modal" data-target="#paymentProofModal{{ $barang->id }}">
+                                @if($bahan->payment_proof)
+                                <button class="btn btn-info" data-toggle="modal" data-target="#paymentProofModal{{ $bahan->id }}">
                                     Lihat Bukti Pembayaran
                                 </button>
                                 @else
@@ -211,8 +211,8 @@
                                 @endif
                             </td>
                             <td>
-                                @if($barang->receipt_proof)
-                                <button class="btn btn-info" data-toggle="modal" data-target="#receiptProofModal{{ $barang->id }}">
+                                @if($bahan->receipt_proof)
+                                <button class="btn btn-info" data-toggle="modal" data-target="#receiptProofModal{{ $bahan->id }}">
                                     Lihat Struk Pembayaran
                                 </button>
                                 @else
@@ -220,9 +220,9 @@
                                 @endif
                             </td>
                             <td>
-                                @if($barang->item_photo)
-                                <button class="btn btn-info" data-toggle="modal" data-target="#itemPhotoModal{{ $barang->id }}">
-                                    Lihat Foto Bukti Barang
+                                @if($bahan->item_photo)
+                                <button class="btn btn-info" data-toggle="modal" data-target="#itemPhotoModal{{ $bahan->id }}">
+                                    Lihat Foto Bukti Bahan
                                 </button>
                                 @else
                                 <span>Belum Ada</span>
@@ -234,23 +234,23 @@
                                 $canApprove = false;
                                 $canReject = false;
                                 $canDetail = false;
-                                if (($row->status == '1' && $pengajuan_barangs->id_akutansi == $userid) || ($row->status == '1' && $pengajuan_barangs->id_superadmin == $userid)) {
+                                if (($row->status == '1' && $pengajuan_bahans->id_akutansi == $userid) || ($row->status == '1' && $pengajuan_bahans->id_superadmin == $userid)) {
                                 $canDetail = true;
                                 $canApprove = true;
                                 $canReject = true;
-                                } elseif (($row->status == '2' && $pengajuan_barangs->id_admin == $userid) || ($row->status == '2' && $pengajuan_barangs->id_superadmin == $userid)) {
+                                } elseif (($row->status == '2' && $pengajuan_bahans->id_admin == $userid) || ($row->status == '2' && $pengajuan_bahans->id_superadmin == $userid)) {
                                 $canDetail = true;
                                 $canApprove = true;
                                 $canReject = true;
-                                } elseif (($row->status == '3' && $pengajuan_barangs->id_superadmin == $userid) || ($row->status == '3' && $pengajuan_barangs->id_superadmin == $userid)) {
+                                } elseif (($row->status == '3' && $pengajuan_bahans->id_superadmin == $userid) || ($row->status == '3' && $pengajuan_bahans->id_superadmin == $userid)) {
                                 $canDetail = true;
                                 $canApprove = true;
                                 $canReject = true;
-                                } elseif (($row->status == '4' && $pengajuan_barangs->id_admin == $userid) || ($row->status == '4' && $pengajuan_barangs->id_superadmin == $userid)) {
+                                } elseif (($row->status == '4' && $pengajuan_bahans->id_admin == $userid) || ($row->status == '4' && $pengajuan_bahans->id_superadmin == $userid)) {
                                 $canDetail = true;
                                 $canApprove = true;
                                 $canReject = true;
-                                } elseif (($row->status == '5' && $pengajuan_barangs->id_superadmin == $userid) || ($row->status == '5' && $pengajuan_barangs->id_superadmin == $userid)) {
+                                } elseif (($row->status == '5' && $pengajuan_bahans->id_superadmin == $userid) || ($row->status == '5' && $pengajuan_bahans->id_superadmin == $userid)) {
                                 $canDetail = true;
                                 $canApprove = true;
                                 $canReject = true;
@@ -278,7 +278,7 @@
                                             </div>
                                             <div class="modal-body">
                                                 <!-- Form untuk memverifikasi password -->
-                                                <form action="{{ route('logistik.verify_approve', ['id' => $row->id]) }}" method="POST" enctype="multipart/form-data">
+                                                <form action="{{ route('bahan_olahan.verify_approve', ['id' => $row->id]) }}" method="POST" enctype="multipart/form-data">
                                                     @csrf
                                                     <div class="form-group">
                                                         <label for="password">Masukkan Password</label>
@@ -302,12 +302,12 @@
                                                         </div>
                                                     </div>
 
-                                                    <!-- Upload Foto Bukti Barang -->
+                                                    <!-- Upload Foto Bukti Bahan -->
                                                     <div class="form-group">
-                                                        <label for="item_photo">Foto Bukti Barang</label>
+                                                        <label for="item_photo">Foto Bukti Bahan</label>
                                                         <input type="file" class="form-control" name="item_photo" id="item_photo" required>
                                                         <div id="item_photo_preview" style="margin-top: 10px;">
-                                                            <!-- Preview foto bukti barang -->
+                                                            <!-- Preview foto bukti bahan -->
                                                         </div>
                                                     </div>
                                                     @endif
@@ -325,7 +325,7 @@
 
                                 <!-- Tombol Reject -->
                                 @if($canReject)
-                                <a href="{{ route('logistik.reject_pengajuan_barang', ['id' => $row->id]) }}">
+                                <a href="{{ route('bahan_olahan.reject_pengajuan_bahan', ['id' => $row->id]) }}">
                                     <button class="btn btn-danger">Reject</button>
                                 </a>
                                 @endif
@@ -334,18 +334,18 @@
                         </tr>
 
                         <!-- Modal untuk Lihat Bukti Pembayaran -->
-                        @if($barang->payment_proof)
-                        <div class="modal fade" id="paymentProofModal{{ $barang->id }}" tabindex="-1" role="dialog" aria-labelledby="paymentProofModalLabel{{ $barang->id }}" aria-hidden="true">
+                        @if($bahan->payment_proof)
+                        <div class="modal fade" id="paymentProofModal{{ $bahan->id }}" tabindex="-1" role="dialog" aria-labelledby="paymentProofModalLabel{{ $bahan->id }}" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="paymentProofModalLabel{{ $barang->id }}">Bukti Pembayaran</h5>
+                                        <h5 class="modal-title" id="paymentProofModalLabel{{ $bahan->id }}">Bukti Pembayaran</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <img src="{{ asset('storage/' . $barang->payment_proof) }}" class="img-fluid" alt="Bukti Pembayaran">
+                                        <img src="{{ asset('storage/' . $bahan->payment_proof) }}" class="img-fluid" alt="Bukti Pembayaran">
                                     </div>
                                 </div>
                             </div>
@@ -353,37 +353,37 @@
                         @endif
 
                         <!-- Modal untuk Lihat Struk Pembayaran -->
-                        @if($barang->receipt_proof)
-                        <div class="modal fade" id="receiptProofModal{{ $barang->id }}" tabindex="-1" role="dialog" aria-labelledby="receiptProofModalLabel{{ $barang->id }}" aria-hidden="true">
+                        @if($bahan->receipt_proof)
+                        <div class="modal fade" id="receiptProofModal{{ $bahan->id }}" tabindex="-1" role="dialog" aria-labelledby="receiptProofModalLabel{{ $bahan->id }}" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="receiptProofModalLabel{{ $barang->id }}">Struk Pembayaran</h5>
+                                        <h5 class="modal-title" id="receiptProofModalLabel{{ $bahan->id }}">Struk Pembayaran</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <img src="{{ asset('storage/' . $barang->receipt_proof) }}" class="img-fluid" alt="Struk Pembayaran">
+                                        <img src="{{ asset('storage/' . $bahan->receipt_proof) }}" class="img-fluid" alt="Struk Pembayaran">
                                     </div>
                                 </div>
                             </div>
                         </div>
                         @endif
 
-                        <!-- Modal untuk Lihat Foto Bukti Barang -->
-                        @if($barang->item_photo)
-                        <div class="modal fade" id="itemPhotoModal{{ $barang->id }}" tabindex="-1" role="dialog" aria-labelledby="itemPhotoModalLabel{{ $barang->id }}" aria-hidden="true">
+                        <!-- Modal untuk Lihat Foto Bukti Bahan -->
+                        @if($bahan->item_photo)
+                        <div class="modal fade" id="itemPhotoModal{{ $bahan->id }}" tabindex="-1" role="dialog" aria-labelledby="itemPhotoModalLabel{{ $bahan->id }}" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="itemPhotoModalLabel{{ $barang->id }}">Foto Bukti Barang</h5>
+                                        <h5 class="modal-title" id="itemPhotoModalLabel{{ $bahan->id }}">Foto Bukti Bahan</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <img src="{{ asset('storage/' . $barang->item_photo) }}" class="img-fluid" alt="Foto Bukti Barang">
+                                        <img src="{{ asset('storage/' . $bahan->item_photo) }}" class="img-fluid" alt="Foto Bukti Bahan">
                                     </div>
                                 </div>
                             </div>
