@@ -70,72 +70,74 @@
     <li class="nav-item">
       <a class="nav-link text-dark {{ request()->is('Barang') ? 'active bg-gradient-dark text-white' : '' }} " href="#collapseExample" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample">
          <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Logistik</span>
+            <span class="nav-link-text ms-1">Barang</span>
       </a>
-    </li>
+    </li>    
     <div class="collapse sm-2" id="collapseExample">
-<!-- admin dan superadmin -->
-      @can('rekomendasi-dtks-list')
+      <!-- admin dan superadmin -->
       <li class="nav-item">
         <a class="nav-link text-dark {{ request()->routeIs('logistik.master_barang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('logistik.master_barang') }}" style="margin-left: 30px;">
             <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Master Barang</span>
         </a>
       </li>
-      @endcan
     </div>
 <!-- All Role -->
     <div class="collapse sm-2" id="collapseExample">
-      @can('rekomendasi-dtks-list')
       <li class="nav-item">
         <a class="nav-link text-dark {{ request()->routeIs('logistik.pengajuan_barang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('logistik.pengajuan_barang') }}" style="margin-left: 30px;">
             <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Pengajuan Barang</span>
         </a>
       </li>
-      @endcan
     </div>
 <!-- All Role -->
     <div class="collapse sm-2" id="collapseExample">
-      @can('rekomendasi-dtks-list')
       <li class="nav-item">
         <a class="nav-link text-dark {{ request()->routeIs('logistik.list_barang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('logistik.list_barang') }}" style="margin-left: 30px;">
             <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">List Barang</span>
         </a>
       </li>
-      @endcan
     </div>
     <div class="collapse sm-2" id="collapseExample">
-      @can('rekomendasi-dtks-list')
       <li class="nav-item">
         <a class="nav-link text-dark {{ request()->routeIs('logistik.ambil_barang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('logistik.ambil_barang') }}" style="margin-left: 30px;">
             <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Pengambilan Barang</span>
         </a>
       </li>
-      @endcan
     </div>
     <div class="collapse sm-2" id="collapseExample">
-      @can('rekomendasi-dtks-list')
       <li class="nav-item">
         <a class="nav-link text-dark {{ request()->routeIs('logistik.history_keranjang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('logistik.history_keranjang') }}" style="margin-left: 30px;">
             <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">History pengambilan barang</span>
         </a>
       </li>
-      @endcan
     </div>
 <!-- All Role -->
-    <div class="collapse sm-2" id="collapseExample">
-      @can('rekomendasi-dtks-list')
+    <li class="nav-item">
+      <a class="nav-link text-dark {{ request()->is('Barang') ? 'active bg-gradient-dark text-white' : '' }} " href="#collapseExample1" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample">
+         <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Bahan Olahan</span>
+      </a>
+    </li>
+    <div class="collapse sm-2" id="collapseExample1">
       <li class="nav-item">
-        <a class="nav-link text-dark {{ request()->is('bahan_olahan') ? 'active bg-gradient-dark text-white' : '' }}" href="" style="margin-left: 30px;">
+        <a class="nav-link text-dark {{ request()->routeIs('bahan_olahan.bahan_olahan') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('bahan_olahan.bahan_olahan') }}" style="margin-left: 30px;">
             <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Bahan Olahan</span>
         </a>
       </li>
-      @endcan
+    </div>
+    <div class="collapse sm-2" id="collapseExample1">
+      <li class="nav-item">
+        <a class="nav-link text-dark {{ request()->routeIs('bahan_olahan.pengajuan_bahan') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('bahan_olahan.pengajuan_bahan') }}" style="margin-left: 30px;">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Pengajuan pembelian</span>
+        </a>
+      </li>
     </div>
 
     <!-- Pengaturan Akun dan Hak Akses Section -->

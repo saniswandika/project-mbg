@@ -177,10 +177,15 @@ public function proses_tambah_barang_master(Request $request)
         $pengajuanBarang = DB::table('list_pengajuans')
                             ->where('id_pengaju', $userid)
                             ->get();
-                            // ->where('status', 'NOT LIKE', '5')
-        // return view('logistik.pengajuan_barang', compact('masterBarang'));
     
-        $barangPengajuan = DB::table('pengajuan_barangs')->get();
+        $barangPengajuan = DB::table('pengajuan_barangs')
+            ->where(function ($query) use ($userid) {
+                $query->where('id_pengaju', $userid)
+                    ->orWhere('id_akutansi', $userid)
+                    ->orWhere('id_admin', $userid)
+                    ->orWhere('id_superadmin', $userid);
+            })
+            ->get();
         return view('logistik.pengajuan_barang.index', compact('barangPengajuan', 'masterBarang','pengajuanBarang', 'userid', 'role'));
     }
 
