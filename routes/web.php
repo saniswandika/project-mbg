@@ -35,6 +35,7 @@ use App\Models\rekomendasi_pengumpulan_undian_berhadiah;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Contracts\Role;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CheckoutBahanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -142,14 +143,14 @@ Route::prefix('bahan_olahan')->name('bahan_olahan.')->group(function () {
     Route::delete('/hapus_pengajuan_bahan/{id}/{id_home}', [BahanOlahanController::class, 'hapus_pengajuan_bahan'])->name('hapus_pengajuan_bahan');
     // edit
     // Route::get('/', [BahanOlahanController::class, 'index'])->name('index');
-    Route::post('/keranjang/add', [CheckoutController::class, 'addToCart'])->name('add_to_cart');
-    Route::get('/keranjang', [CheckoutController::class, 'showCart'])->middleware('auth')->name('ambil_barang');
-    Route::delete('/keranjang/{id}', [CheckoutController::class, 'removeFromCart'])->name('hapus_keranjang');
-    Route::post('/keranjang/ajukan_pengambilan', [CheckoutController::class, 'ajukan_pengambilan'])->name('ajukan_pengambilan');
-    Route::post('/keranjang/approve_keranjang', [CheckoutController::class, 'approve_keranjang'])->name('approve_keranjang');
-    Route::post('/keranjang/reject_keranjang', [CheckoutController::class, 'reject_keranjang'])->name('reject_keranjang');
-    Route::post('/keranjang/terima_keranjang', [CheckoutController::class, 'terima_keranjang'])->name('terima_keranjang');
-    Route::post('/keranjang/status_change', [CheckoutController::class, 'status_change'])->name('status_change');
-    Route::get('/history_keranjang', [CheckoutController::class, 'history_keranjang'])->middleware('auth')->name('history_keranjang');
+    Route::post('/keranjang/add', [CheckoutBahanController::class, 'addToCart'])->name('add_to_cart');
+    Route::get('/keranjang', [CheckoutBahanController::class, 'showCart'])->middleware('auth')->name('ambil_bahan');
+    Route::delete('/keranjang/{id}', [CheckoutBahanController::class, 'removeFromCart'])->name('hapus_keranjang');
+    Route::post('/keranjang/ajukan_pengambilan', [CheckoutBahanController::class, 'ajukan_pengambilan'])->name('ajukan_pengambilan');
+    Route::post('/keranjang/approve_keranjang', [CheckoutBahanController::class, 'approve_keranjang'])->name('approve_keranjang');
+    Route::post('/keranjang/reject_keranjang', [CheckoutBahanController::class, 'reject_keranjang'])->name('reject_keranjang');
+    Route::post('/keranjang/terima_keranjang', [CheckoutBahanController::class, 'terima_keranjang'])->name('terima_keranjang');
+    Route::post('/keranjang/status_change', [CheckoutBahanController::class, 'status_change'])->name('status_change');
+    Route::get('/history_keranjang', [CheckoutBahanController::class, 'history_keranjang'])->middleware('auth')->name('history_keranjang');
     //delete
 });

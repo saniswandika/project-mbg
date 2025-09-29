@@ -139,7 +139,30 @@
         </a>
       </li>
     </div>
-    
+    <div class="collapse sm-2" id="collapseExample1">
+      <li class="nav-item">
+        <a class="nav-link text-dark {{ request()->routeIs('bahan_olahan.list_bahan') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('bahan_olahan.list_bahan') }}" style="margin-left: 30px;">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">List Bahan Olahan</span>
+        </a>
+      </li>
+    </div>
+    <div class="collapse sm-2" id="collapseExample1">
+      <li class="nav-item">
+        <a class="nav-link text-dark {{ request()->routeIs('bahan_olahan.ambil_bahan') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('bahan_olahan.ambil_bahan') }}" style="margin-left: 30px;">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Pengambilan Bahan</span>
+        </a>
+      </li>
+    </div>
+    <div class="collapse sm-2" id="collapseExample1">
+      <li class="nav-item">
+        <a class="nav-link text-dark {{ request()->routeIs('bahan_olahan.history_keranjang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('bahan_olahan.history_keranjang') }}" style="margin-left: 30px;">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">History pengambilan Bahan</span>
+        </a>
+      </li>
+    </div>
     <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
       <ul class="navbar-nav">
           {{-- file tampilan menu ada di layouts/menu.blade.php --}}

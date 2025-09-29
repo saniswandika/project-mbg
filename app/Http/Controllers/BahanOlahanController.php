@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\OlahanDapur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -11,9 +12,15 @@ use App\Models\PengajuanBahan;
 
 class BahanOlahanController extends Controller
 {    
+    public function __construct()
+    {
+        // contoh pasang middleware untuk semua method
+        // $this->middleware('auth');
+        $PengajuanBahan = (new PengajuanBahan);
+    }
+
     public function bahan_olahan()
     {
-        // Ambil semua data logistik
         $userid = Auth::id();
         $role_id = $this->get_role($userid);
         $bahanPengajuan = DB::table('bahan_olahans')->get();
@@ -23,7 +30,6 @@ class BahanOlahanController extends Controller
 
     public function tambah_bahan_olahan()
     {
-        // Ambil semua data logistik
         $userid = Auth::id();
         $role_id = $this->get_role($userid);
         if($role_id == 'superadmin' || $role_id == 'admin'){
@@ -424,19 +430,16 @@ class BahanOlahanController extends Controller
                     'item_photo' => $item_photo_path,
                 ]);
 
-            // Jika status menjadi 5, insert data ke tabel logistik
             if ($input == 6) {
                 foreach ($array_id_bahan as $a) {
-                    // Ambil data bahan terkait untuk dimasukkan ke logistik
                     $bahan_data = DB::table('pengajuan_bahans')->where('id', $a)->first();
                     $id_bahan = $bahan_data->id_bahan;  // ID Barang dari pengajuan_bahans
                     
                     // Mendapatkan nama bahan berdasarkan ID
                     $pengajuanBarang = new PengajuanBahan();
-                    $namaBarang = $pengajuanBarang->getNamaBarang($id_bahan);  // Memanggil method untuk mendapatkan nama bahan
+                    $namaBarang = $pengajuanBarang->getNamaBahan($id_bahan);  // Memanggil method untuk mendapatkan nama bahan
 
-                    // Mengecek apakah bahan sudah ada di logistik
-                    $cek_bahan = DB::table('logistiks')->where('id_master_bahan', $id_bahan)->first();
+                    $cek_bahan = DB::table('olahan_dapurs')->where('id_master_bahan', $id_bahan)->first();
 
                     // Menghitung jumlah bahan yang akan dimasukkan
                     if (!empty($cek_bahan)) {
@@ -445,9 +448,8 @@ class BahanOlahanController extends Controller
                         $jumlah = $bahan_data->jumlah;  // Jika bahan belum ada, pakai jumlah yang baru
                     }
 
-                    // Jika data bahan ditemukan, masukkan ke tabel logistik
                     if ($bahan_data) {
-                        DB::table('logistiks')->insert([
+                        DB::table('olahan_dapurs')->insert([
                             'nama_bahan' => $namaBarang,  // Nama bahan yang diambil dari master_bahans
                             'jumlah_bahan' => $jumlah,  // Jumlah bahan
                             'id_master_bahan' => $id_bahan,  // ID Barang yang sesuai dengan master_bahans
@@ -475,6 +477,14 @@ class BahanOlahanController extends Controller
             // Jika password salah
             return redirect()->back()->with('error', 'Password salah. Aksi tidak dapat dilanjutkan.');
         }
+    }
+
+    public function index()
+    {
+        $logistik = OlahanDapur::all();
+        $userid = Auth::id();
+        $role_id = $this->get_role($userid);
+        return view('bahan_olahan.index', compact('logistik', 'role_id' , 'userid'));
     }
 
     private function get_role(int $userid){

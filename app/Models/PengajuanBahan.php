@@ -37,4 +37,13 @@ class PengajuanBahan extends Model
         // Mengirim data ke view
         return $nama;
     }
+
+    public function getFotoBahan($id)
+    {
+        // Mengambil hanya kolom id_barang berdasarkan id
+        $foto = DB::table('bahan_olahans')->where('id', $id)->value('foto');
+
+        // Mengirim data ke view
+        return $foto;
+    }
 }
