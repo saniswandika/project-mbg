@@ -5,44 +5,106 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\URL;
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
-
-    use AuthenticatesUsers;
+    use AuthenticatesUsers, ThrottlesLogins;
 
     /**
-     * Where to redirect users after login.
+     * Redirect setelah login
      *
      * @var string
      */
     protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
-     * Create a new controller instance.
+     * Batas percobaan login gagal
      *
-     * @return void
+     * @var int
+     */
+    protected $maxAttempts = 5; // 5 kali percobaan
+
+    /**
+     * Waktu lockout (menit) setelah gagal login
+     *
+     * @var int
+     */
+    protected $decayMinutes = 2; // 2 menit
+
+    /**
+     * Constructor
      */
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-        // Session::put('backUrl', URL::previous());
+
+        // Paksa HTTPS
+        $this->middleware(function ($request, $next) {
+            if (!$request->isSecure() && app()->environment('production')) {
+                return redirect()->secure($request->getRequestUri());
+            }
+            return $next($request);
+        });
     }
+
+    /**
+     * Validasi input login
+     */
+    protected function validateLogin(Request $request)
+    {
+        $request->validate([
+            $this->username() => 'required|string|email',
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'regex:/[A-Z]/',      // minimal 1 huruf besar
+                'regex:/[a-z]/',      // minimal 1 huruf kecil
+                'regex:/[0-9]/',      // minimal 1 angka
+                'regex:/[@$!%*?&#]/', // minimal 1 simbol
+            ],
+        ]);
+    }
+
+    /**
+     * Regenerasi session setelah login
+     */
+    protected function authenticated(Request $request, $user)
+    {
+        $request->session()->regenerate();
+
+        // Simpan waktu login untuk session timeout
+        Session::put('lastActivityTime', time());
+    }
+
+    /**
+     * Logout user
+     */
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/login')->with('status', 'You have been logged out.');
+    }
+
+    /**
+     * Redirect setelah login berhasil
+     */
     public function redirectTo()
     {
-        return Session::get('backUrl') ? Session::get('backUrl') :   $this->redirectTo;
+        return Session::get('backUrl') ? Session::get('backUrl') : $this->redirectTo;
+    }
+
+    /**
+     * Username field (email / username)
+     */
+    public function username()
+    {
+        return 'email';
     }
 }
