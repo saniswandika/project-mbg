@@ -92,6 +92,11 @@
         </a>
       </li>
     @endcan
-
+      <li class="nav-item">
+        <a class="nav-link text-dark {{ request()->is('pegawai') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('pegawai.index') }}">
+          <i class="material-symbols-rounded opacity-5">person</i>
+          <span class="nav-link-text ms-1">Management Pegawai</span>
+        </a>
+      </li>
     <!-- Barang Section -->
    

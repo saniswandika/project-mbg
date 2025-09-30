@@ -7,7 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
-use DB;
+use Illuminate\Support\Facades\DB;
+
 use Hash;
 use Illuminate\Support\Arr;
     
@@ -21,8 +22,11 @@ class ProfileController extends Controller
     public function index(Request $request)
     {
         $data = User::orderBy('id','DESC')->first();
-       
-        return view('profile.index',compact('data'))
+        $userid = Auth::id();
+
+        $role_id = $this->get_role($userid);
+
+        return view('profile.index',compact('data','role_id'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
     
@@ -140,5 +144,16 @@ class ProfileController extends Controller
         User::find($id)->delete();
         return redirect()->route('profile.index')
                         ->with('success','User deleted successfully');
+    }
+
+    private function get_role(int $userid){
+        $collection = DB::table('model_has_roles')
+            ->leftJoin('roles', 'roles.id', '=', 'model_has_roles.role_id')
+            ->where('model_id', $userid)
+            ->get();
+
+        // Ambil role_id dari koleksi
+        $role_id = $collection->pluck('name')->first();
+        return $role_id;
     }
 }

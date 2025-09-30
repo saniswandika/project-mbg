@@ -123,24 +123,24 @@
                 <i class="material-symbols-rounded">account_circle</i>
               </a>
               <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
-                {{-- <li class="mb-2">
-                  <a class="dropdown-item border-radius-md" href="javascript:;">
+                <li class="mb-2">
+                  <a  href="  {{ route('profile.index') }}  " class="dropdown-item border-radius-md" href="javascript:;">
                     <div class="d-flex py-1">
                       <div class="my-auto">
                         <img src="../assets/img/team-2.jpg" class="avatar avatar-sm  me-3 ">
                       </div>
                       <div class="d-flex flex-column justify-content-center">
                         <h6 class="text-sm font-weight-normal mb-1">
-                          <span class="font-weight-bold">New message</span> from Laur
+                          <span class="font-weight-bold">Setting Profile</span> 
                         </h6>
                         <p class="text-xs text-secondary mb-0">
                           <i class="fa fa-clock me-1"></i>
-                          13 minutes ago
+                          {{ Auth::user()->name }}
                         </p>
                       </div>
                     </div>
                   </a>
-                </li> --}}
+                </li>
                <li class="mb-2">
                   <form action="{{ route('logout') }}" method="POST">
                     @csrf

@@ -71,15 +71,17 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|same:confirm-password',
-            'roles' => 'required'
+            'roles' => 'required',
+            // 'id_pegawai' => 'required'
+
         ]);
         $input['email'] = $request->input('email');
 
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
+        // dd($input);
 
         $user = User::create($input);
-        // dd($user);
         $user->assignRole($request->input('roles'));
       
         if ($user) {

@@ -8,7 +8,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PengaturanWilayahController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LogistikController;
-
+use App\Http\Controllers\PegawaiController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -60,6 +60,17 @@ Route::group(['middleware' => ['auth']],function(){
     Route::post('profilepassword', [ProfileController::class, 'password_action'])->name('password.action');
     Route::post('profilenama', [ProfileController::class, 'name_action'])->name('nama.action');
     Route::post('profileemail', [ProfileController::class, 'email_action'])->name('email.action');
+
+    Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
+    Route::get('/pegawai/create', [PegawaiController::class, 'create'])->name('pegawai.create');
+    Route::post('/pegawai', [PegawaiController::class, 'store'])->name('pegawai.store');
+    Route::post('/tambah_akun_store', [PegawaiController::class, 'tambah_akun_store'])->name('pegawai.tambah_akun_store');
+    Route::get('/pegawai/{id}/tambah_akun', [PegawaiController::class, 'tambah_akun'])->name('pegawai.tambah_akun');
+    Route::get('/pegawai/{id}/edit', [PegawaiController::class, 'edit'])->name('pegawai.edit');
+    Route::get('/pegawai/{id}/show', [PegawaiController::class, 'show'])->name('pegawai.show');
+    Route::put('/pegawai/{id}', [PegawaiController::class, 'update'])->name('pegawai.update');
+    Route::delete('/pegawai/{id}', [PegawaiController::class, 'destroy'])->name('pegawai.destroy');
+
 });
 
 

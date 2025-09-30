@@ -8,7 +8,7 @@
   <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('/assets/img/apple-icon.png') }}">
   <link rel="icon" type="image/png" href="{{ asset('/assets/img/favicon.png') }}">
   <title>
-    Material Dashboard 3 by Creative Tim
+    MBG - Indihiang
   </title>
   <!--     Fonts and icons     -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
@@ -22,6 +22,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
   <!-- CSS Files -->
   <link id="pagestyle" href="{{ asset('/assets/css/material-dashboard.css?v=3.2.0') }}" rel="stylesheet" />
+  <link id="pagestyle" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.css" rel="stylesheet" />
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -383,5 +384,139 @@
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="{{ asset('assets/js/material-dashboard.min.js?v=3.2.0') }}"></script>
+  <script src="https://cdn.datatables.net/2.3.4/js/dataTables.js"></script>
+  {{-- user datatable --}}
+    <script>
+        // Inisialisasi DataTables
+        var table = new DataTable('#userTable', {
+            ajax: {
+                url: 'http://127.0.0.1:8000/api/users', // Endpoint untuk API users
+                dataSrc: 'data' // Ambil data dari key "data"
+            },
+            processing: true,
+            serverSide: true,
+            columns: [
+                { data: 'id' },        // Menampilkan kolom ID
+                { data: 'name' },      // Menampilkan kolom Name
+                { data: 'email' },     // Menampilkan kolom Email
+                {
+                    data: null,
+                    render: function(data, type, row) {
+                        return `
+                            <button class="btn btn-info" data-toggle="modal" data-target="#ShowModal" data-id="${data.id}" data-name="${data.name}" data-email="${data.email}">
+                                Show
+                            </button>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#editUser${data.id}" data-id="${data.id}">
+                                Edit
+                            </button>
+                        `;
+                    }
+                } // Tombol Show dan Edit
+            ]
+        });
+
+        // Menampilkan data modal Show
+        $('#userTable').on('click', '[data-target="#ShowModal"]', function() {
+            var userId = $(this).data('id');
+            var userName = $(this).data('name');
+            var userEmail = $(this).data('email');
+
+            // Isi modal dengan data pengguna
+            $('#userName').text(userName);
+            $('#userEmail').text(userEmail);
+        });
+
+        // Menampilkan data modal Edit (sama seperti Show)
+        $('#userTable').on('click', '[data-target^="#editUserModal"]', function() {
+            var userId = $(this).data('id');
+            // Kamu bisa menambahkan AJAX untuk menampilkan data dan mengisi form edit di sini jika diperlukan
+        });
+    </script>
+    {{-- user datatatable --}}
+    {{-- Role datatable --}}
+    <script>
+      // Inisialisasi DataTables
+      var table = new DataTable('#RoleTable', {
+        ajax: {
+          url: 'http://127.0.0.1:8000/api/roles', // Endpoint untuk API roles
+          dataSrc: 'data' // Ambil data dari key "data"
+        },
+        processing: true,
+        serverSide: true,
+        columns: [
+          { data: 'id' },  // Menampilkan kolom ID
+          { data: 'name' },  // Menampilkan kolom Name
+          { 
+            data: 'created_at', // Menampilkan kolom Created At
+            render: function(data, type, row) {
+              var date = new Date(data); // Convert the date string to a Date object
+              return date.toLocaleDateString(); // Format the date to a readable format (e.g., "MM/DD/YYYY")
+            }
+          },
+          { 
+            data: 'updated_at', // Menampilkan kolom Updated At
+            render: function(data, type, row) {
+              var date = new Date(data); // Convert the date string to a Date object
+              return date.toLocaleDateString(); // Format the date to a readable format
+            }
+          },
+          {
+            data: null,
+            render: function(data, type, row) {
+              return `
+                <a class="btn btn-info" href="/roles/${data.id}">Show</a>
+                {{-- @can('role-edit') --}}
+                  <a class="btn btn-primary" href="/roles/${data.id}/edit">Edit</a>
+                {{-- @endcan --}}
+                {{-- @can('role-delete') --}}
+                  <form action="/roles/${data.id}" method="POST" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                  </form>
+                {{-- @endcan --}}
+              `;
+            }
+          } // Tombol Show, Edit, Delete
+        ]
+      });
+    </script>
+    {{-- Role datatable --}}
+        {{-- Role datatable --}}
+    <script>
+      // Inisialisasi DataTables
+      var table = new DataTable('#PegawaiTable', {
+        ajax: {
+          url: 'http://127.0.0.1:8000/api/pegawai', // Endpoint untuk API pegawai
+          dataSrc: 'data' // Ambil data dari key "data"
+        },
+        processing: true,
+        serverSide: true,
+        columns: [
+          { data: 'id' },  // Menampilkan kolom ID
+          { data: 'nama_lengkap' },  // Menampilkan kolom Name
+          { data: 'nik' },  // Menampilkan kolom NIK
+          { data: 'no_kk' },  // Menampilkan kolom No Kartu Keluarga
+          { data: 'alamat' },  // Menampilkan kolom Alamat
+          {
+            data: null,
+            render: function(data, type, row) {
+              return `
+                <a class="btn btn-info" href="/pegawai/${data.id}/show">Show</a>
+                  <a class="btn btn-primary" href="/pegawai/${data.id}/edit">Edit</a>
+                  <a class="btn btn-primary" href="/pegawai/${data.id}/tambah_akun">Tambah akun</a>
+                  <form action="/pegawai/${data.id}" method="POST" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                  </form>
+              `;
+            }
+          } // Tombol Show, Edit, Delete
+        ]
+      });
+    </script>
+    {{-- Role datatable --}}
+
 </body>
 </html>

@@ -1,6 +1,6 @@
 @extends('layouts.masterTemplate')
 
-@section('title', 'management Role User')
+@section('title', 'Pegawai')
 
 
 @section('content')
@@ -15,7 +15,7 @@
 <div class="container-fluid">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Table Role</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Table Pegawai</h6>
         </div>
         <div class="card-body">
             <div class="row">
@@ -24,7 +24,7 @@
                         <div class="d-sm-flex align-items-center justify-content-between mb-4">
                             <h1 class="h3 mb-0 text-gray-800"></h1>
                             {{-- @can('pemakaian-create') --}}
-                                <a class="btn btn-success" href="{{ route('roles.create') }}"> Create New Role </a>
+                                <a class="btn btn-success" href="{{ route('pegawai.create') }}"> Tambah Pegawai </a>
                             {{-- @endcan --}}
                         </div>
                     
@@ -32,14 +32,15 @@
                 </div>
             </div>
             <div class="table-responsive">
-               <table id="RoleTable" class="display">
+               <table id="PegawaiTable" class="display">
                     <thead>
                         <tr>
-                        <th>no</th>
-                        <th>name</th>
-                        <th>tanggal buat</th>
-                        <th>tanggal update</th>
-                        <th>action</th>
+                            <th>no</th>
+                            <th>Nama Lengkap</th>
+                            <th>Nik</th>
+                            <th>No Kartu Keluarga</th>
+                            <th>Alamat</th>
+                            <th>action</th>
                         </tr>
                     </thead>
                 </table>

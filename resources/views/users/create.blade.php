@@ -33,6 +33,7 @@
                 <div class="input-group input-group-outline mb-3">
                     {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
                 </div>
+                    {!! Form::hidden('id_pegawai', $id ?? '') !!}
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <strong>Email:</strong>
