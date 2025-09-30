@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use App\Models\PengajuanBarang;
+use Carbon\Carbon;
 
 class LogistikController extends Controller
 {
@@ -15,8 +18,9 @@ class LogistikController extends Controller
     {
         // Ambil semua data logistik
         $logistik = Logistik::all();
-        
-        return view('logistik.index', compact('logistik'));
+        $userid = Auth::id();
+        $role_id = $this->get_role($userid);
+        return view('logistik.index', compact('logistik', 'role_id' , 'userid'));
     }
 
     public function master_barang()
@@ -171,14 +175,70 @@ public function proses_tambah_barang_master(Request $request)
         $role_id = $this->get_role($userid);
         $masterBarang = DB::table('master_barangs')->get(); // Ambil semua barang dari master_barangs
         $pengajuanBarang = DB::table('list_pengajuans')
+                            ->where('status', '!=', '6')
+                            ->whereNull('deleted_at') 
                             ->where('id_pengaju', $userid)
                             ->get();
-                            // ->where('status', 'NOT LIKE', '5')
-        // return view('logistik.pengajuan_barang', compact('masterBarang'));
     
-        $barangPengajuan = DB::table('pengajuan_barangs')->get();
+        $barangPengajuan = DB::table('pengajuan_barangs')
+            ->where(function ($query) use ($userid) {
+                $query->where('id_pengaju', $userid)
+                    ->where('status', '!=', '6')
+                    ->whereNull('deleted_at') 
+                    ->orWhere('id_akutansi', $userid)
+                    ->orWhere('id_admin', $userid)
+                    ->orWhere('id_superadmin', $userid);
+            })
+            ->get();
         return view('logistik.pengajuan_barang.index', compact('barangPengajuan', 'masterBarang','pengajuanBarang', 'userid', 'role'));
     }
+
+    public function log_pengajuan_barang(Request $request)
+    {        
+        // Mengatur default tanggal mulai dan selesai
+        $startDate = $request->has('start_date') ? $request->input('start_date') . ' 00:00:00' : now()->subMonth()->format('Y-m-d') . ' 00:00:00';
+        $endDate = $request->has('end_date') ? $request->input('end_date') . ' 23:59:59' : now()->format('Y-m-d') . ' 23:59:59';
+        $old_start = $request->has('start_date') ? $request->input('start_date') : now()->subMonth()->format('Y-m-d');
+        $old_end = $request->has('end_date') ? $request->input('end_date') : now()->format('Y-m-d');
+
+        // Mendapatkan ID pengguna yang sedang login
+        $userid = Auth::id();
+        $role = auth()->user()->role;
+        $role_id = $this->get_role($userid);
+        
+        // Ambil semua barang dari master_barangs
+        $masterBarang = DB::table('master_barangs')->get();
+
+        if($role_id == 'superadmin'){
+            // Ambil pengajuan barang untuk pengguna yang sedang login
+            $pengajuanBarang = DB::table('list_pengajuans')
+                                ->whereBetween('created_at', [$startDate, $endDate])
+                                ->get();
+        }else{
+            // Ambil pengajuan barang untuk pengguna yang sedang login
+            $pengajuanBarang = DB::table('list_pengajuans')
+                                ->where('id_pengaju', $userid)
+                                ->whereBetween('created_at', [$startDate, $endDate])
+                                ->get();
+        }
+        
+        if($role_id == 'superadmin'){
+            // Query untuk mengambil data barang pengajuan berdasarkan rentang tanggal
+            $barangPengajuan = DB::table('pengajuan_barangs')
+                ->whereBetween('created_at', [$startDate, $endDate]) // Filter berdasarkan tanggal
+                ->get();
+        }else{
+            // Query untuk mengambil data barang pengajuan berdasarkan rentang tanggal
+            $barangPengajuan = DB::table('pengajuan_barangs')
+                ->where('id_pengaju', $userid)
+                ->whereBetween('created_at', [$startDate, $endDate]) // Filter berdasarkan tanggal
+                ->get();
+        }
+        
+        // Return ke view dengan data yang telah difilter
+        return view('logistik.pengajuan_barang.log_index', compact('barangPengajuan', 'masterBarang', 'pengajuanBarang', 'userid', 'role', 'startDate', 'endDate', 'old_start', 'old_end'));
+    }
+
 
     public function detail_pengajuan_barang($id)
     {
@@ -190,7 +250,7 @@ public function proses_tambah_barang_master(Request $request)
                             ->where('id', $id)
                             ->get();
         $barangPengajuan = DB::table('pengajuan_barangs')->get();
-        return view('logistik.pengajuan_barang.detail', compact('barangPengajuan','pengajuanBarang', 'userid', 'id'));
+        return view('logistik.pengajuan_barang.detail', compact('barangPengajuan','pengajuanBarang', 'userid', 'id', 'role_id'));
     }
 
 // Method untuk revisi jumlah barang
@@ -215,7 +275,6 @@ public function proses_tambah_barang_master(Request $request)
         return redirect()->back()->with('error', 'Barang tidak ditemukan.');
     }
 
-    // Method untuk verifikasi password dan approve
     public function verifyApprove(Request $request, $id)
     {
         // Ambil data pengajuan barang berdasarkan ID
@@ -226,6 +285,21 @@ public function proses_tambah_barang_master(Request $request)
             return redirect()->back()->with('error', 'Barang tidak ditemukan.');
         }
 
+        // Validasi file yang di-upload (Bukti Pembayaran, Struk Pembayaran, dan Foto Bukti Barang)
+        $validated = $request->validate([
+            'password' => 'required',
+            'id_barang' => 'required|array', // Validasi agar harga diterima dalam bentuk array
+            'id_barang.*' => 'required|numeric', // Setiap harga harus berupa angka
+            'harga' => 'required|array', // Validasi agar harga diterima dalam bentuk array
+            'harga.*' => 'required|numeric', // Setiap harga harus berupa angka
+            'payment_proof' => 'nullable|array',
+            'payment_proof.*' => 'nullable|image|mimes:jpg,jpeg,png,pdf|max:2048',
+            'receipt_proof' => 'nullable|array',
+            'receipt_proof.*' => 'nullable|image|mimes:jpg,jpeg,png,pdf|max:2048',
+            'item_photo' => 'nullable|array',
+            'item_photo.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
         // Verifikasi password (gunakan Auth untuk mendapatkan user saat ini)
         if (Hash::check($request->password, Auth::user()->password)) {
             $status = $barang->status;
@@ -233,26 +307,130 @@ public function proses_tambah_barang_master(Request $request)
             $userid = Auth::id();
             $role_id = $this->get_role($userid);
             $input = 1;
-            if($role_id == 'akutansi'){
+
+            // Menentukan status berdasarkan role
+            if ($role_id == 'akutansi') {
                 $input = 2;
             }
-            if($role_id == 'admin'){
+            if ($role_id == 'admin') {
                 $input = 3;
             }
-            if($role_id == 'superadmin'){
+            if ($role_id == 'superadmin') {
                 $input = $status + 1;
             }
+            if($input == 7){
+                $input = 6;
+            }
+
+            // Proses upload file (hanya jika ada file baru)
+            $payment_proof_paths = $barang->payment_proof ? explode(',', $barang->payment_proof) : []; // Menggunakan file lama jika tidak ada file baru
+            $receipt_proof_paths = $barang->receipt_proof ? explode(',', $barang->receipt_proof) : []; // Menggunakan file lama jika tidak ada file baru
+            $item_photo_paths = $barang->item_photo ? explode(',', $barang->item_photo) : []; // Menggunakan file lama jika tidak ada file baru
+
+            // Jika ada file Bukti Pembayaran baru
+            if ($request->hasFile('payment_proof')) {
+                // Hapus file lama jika ada
+                foreach ($payment_proof_paths as $oldFile) {
+                    Storage::delete('public/' . $oldFile);
+                }
+
+                $payment_proof_paths = []; // Reset array untuk menyimpan file baru
+                foreach ($request->file('payment_proof') as $file) {
+                    $payment_proof_paths[] = $file->store('uploads/payment_proofs', 'public');
+                }
+            }
+
+            // Jika ada file Struk Pembayaran baru
+            if ($request->hasFile('receipt_proof')) {
+                // Hapus file lama jika ada
+                foreach ($receipt_proof_paths as $oldFile) {
+                    Storage::delete('public/' . $oldFile);
+                }
+
+                $receipt_proof_paths = []; // Reset array untuk menyimpan file baru
+                foreach ($request->file('receipt_proof') as $file) {
+                    $receipt_proof_paths[] = $file->store('uploads/receipt_proofs', 'public');
+                }
+            }
+
+            // Jika ada file Foto Bukti Barang baru
+            if ($request->hasFile('item_photo')) {
+                // Hapus file lama jika ada
+                foreach ($item_photo_paths as $oldFile) {
+                    Storage::delete('public/' . $oldFile);
+                }
+
+                $item_photo_paths = []; // Reset array untuk menyimpan file baru
+                foreach ($request->file('item_photo') as $file) {
+                    $item_photo_paths[] = $file->store('uploads/item_photos', 'public');
+                }
+            }
+
+            // Mengupdate status pengajuan barang
             $array_id_barang = explode('^', $barang->id_barang);
             DB::table('list_pengajuans')
                 ->where('id', $id)
                 ->update([
-                    'status' => $input
+                    'status' => $input,
+                    'payment_proof' => implode('^', $payment_proof_paths),
+                    'receipt_proof' => implode('^', $receipt_proof_paths),
+                    'item_photo' => implode('^', $item_photo_paths),
                 ]);
-            foreach($array_id_barang AS $a){
+
+            // Jika status menjadi 5, insert data ke tabel logistik
+            if ($input == 6) {
+                foreach ($array_id_barang as $a) {
+                    // Ambil data barang terkait untuk dimasukkan ke logistik
+                    $barang_data = DB::table('pengajuan_barangs')->where('id', $a)->first();
+                    $id_barang = $barang_data->id_barang;  // ID Barang dari pengajuan_barangs
+                    
+                    // Mendapatkan nama barang berdasarkan ID
+                    $pengajuanBarang = new PengajuanBarang();
+                    $namaBarang = $pengajuanBarang->getNamaBarang($id_barang);  // Memanggil method untuk mendapatkan nama barang
+
+                    // Mengecek apakah barang sudah ada di logistik
+                    $cek_barang = DB::table('logistiks')->where('id_master_barang', $id_barang)->first();
+
+                    // Menghitung jumlah barang yang akan dimasukkan
+                    if (!empty($cek_barang)) {
+                        $jumlah = $cek_barang->jumlah + $barang_data->jumlah;  // Jika barang ada, tambah jumlahnya
+                    } else {
+                        $jumlah = $barang_data->jumlah;  // Jika barang belum ada, pakai jumlah yang baru
+                    }
+
+                    // Jika data barang ditemukan, masukkan ke tabel logistik
+                    if ($barang_data) {
+                        DB::table('logistiks')->insert([
+                            'nama_barang' => $namaBarang,  // Nama barang yang diambil dari master_barangs
+                            'jumlah_barang' => $jumlah,  // Jumlah barang
+                            'id_master_barang' => $id_barang,  // ID Barang yang sesuai dengan master_barangs
+                            'merk_barang' => $namaBarang,  // Menggunakan nama barang yang sama untuk merk
+                            'status' => 'baru',  // Status barang baru
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+                    }
+
+                }
+                
+            }
+                $no = 0;
+                foreach ($request->id_barang as $id){
+                    $data_barang = $request->harga;
+                    DB::table('pengajuan_barangs')
+                        ->where('id', $id)
+                        ->update([
+                            'harga_barang' => $data_barang[$no],
+                        ]);
+                    $no = $no +1;
+                }
+
+            // Mengupdate status pengajuan barang per ID barang
+            foreach ($array_id_barang as $a) {
                 DB::table('pengajuan_barangs')
                     ->where('id', $a)
                     ->update([
-                        'status' => $input
+                        'status' => $input,
                     ]);
             }
 
@@ -262,6 +440,8 @@ public function proses_tambah_barang_master(Request $request)
             return redirect()->back()->with('error', 'Password salah. Aksi tidak dapat dilanjutkan.');
         }
     }
+
+
 
     // Method untuk menghapus barang
     public function hapus_pengajuan_barang($id, $id_home)
@@ -381,6 +561,43 @@ public function proses_tambah_barang_master(Request $request)
 
         return redirect()->route('logistik.pengajuan_barang')
                          ->with('success', 'Pengajuan stok barang berhasil!');
+    }
+
+    public function reject_pengajuan_barang($id)
+    {
+        // Cari barang berdasarkan ID menggunakan query builder
+        $barang = DB::table('list_pengajuans')->where('id', $id)->first();
+        if(empty($barang)){
+            return redirect()->route('pengajuan_bahan');
+        }
+
+        // Cek apakah barang ditemukan
+        if ($barang) {
+            $array = explode('^', $barang->id_barang);
+
+            // Update kolom deleted_at menjadi tanggal sekarang
+            foreach($array as $a){
+                DB::table('pengajuan_bahans')
+                    ->where('id', $a)
+                    ->update(
+                        [
+                            'status' => 6,
+                            'deleted_at' => Carbon::now()
+                        ],
+                    );
+            }
+            DB::table('list_pengajuans')
+                    ->where('id', $id)
+                    ->update(
+                        [
+                            'status' => 6,
+                            'deleted_at' => Carbon::now()
+                        ]
+                    );
+            return redirect()->back()->with('success', 'Barang berhasil Reject.');
+        }
+
+        return redirect()->back()->with('error', 'Bahan tidak ditemukan.');
     }
 
     public function create()

@@ -20,6 +20,9 @@ return new class extends Migration
             $table->integer('id_pengaju');              // lebih tepat integer
             $table->text('deskripsi')->nullable();         // opsional
             $table->text('foto')->nullable();         // opsional
+            $table->text('payment_proof')->nullable();         // opsional
+            $table->text('receipt_proof')->nullable();         // opsional
+            $table->text('item_photo')->nullable();         // opsional
             $table->timestamps();                          // created_at & updated_at
             $table->softDeletes();                         // deleted_at (soft delete)
         });

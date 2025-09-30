@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('logistiks', function (Blueprint $table) {
+        Schema::create('olahan_dapurs', function (Blueprint $table) {
             $table->id();                                  // primary key
-            $table->string('nama_barang');
-            $table->integer('jumlah_barang');              // lebih tepat integer
-            $table->integer('id_master_barang');              // lebih tepat integer
-            $table->string('merk_barang');
+            $table->string('nama_bahan');
+            $table->integer('jumlah_bahan');              // lebih tepat integer
+            $table->integer('id_master_bahan');              // lebih tepat integer
+            $table->string('merk_bahan');
             $table->enum('status', ['baru', 'bekas'])->default('baru'); // contoh enum
             $table->text('deskripsi')->nullable();         // opsional
             $table->text('foto')->nullable();         // opsional
@@ -35,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('logistiks');
+        Schema::dropIfExists('olahan_dapurs');
     }
 };

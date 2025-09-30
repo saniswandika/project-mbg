@@ -1,12 +1,13 @@
 @extends('layouts.masterTemplate')
 
-@section('title', 'Pengajuan Barang')
+@section('title', 'Pengajuan Bahan')
 
 @section('content')
+
 <div class="container mx-auto py-8">
     <div class="row">
         <div class="ms-3">
-            <h1 class="text-3xl font-semibold mb-4">Pengajuan Stok Barang</h1>
+            <h1 class="text-3xl font-semibold mb-4">Pengajuan Stok Bahan</h1>
             @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
             @endif
@@ -15,17 +16,17 @@
             <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
 
-            <form action="{{ route('logistik.proses_pengajuan_barang') }}" method="POST" class="p-6 bg-white shadow-md rounded-lg border border-gray-200">
+            <form action="{{ route('bahan_olahan.proses_pengajuan_bahan') }}" method="POST" class="p-6 bg-white shadow-md rounded-lg border border-gray-200">
                 @csrf
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-                    <!-- Pilih Barang dan Masukkan Jumlah -->
+                    <!-- Pilih Bahan dan Masukkan Jumlah -->
                     <div class="col-span-1">
                         <div class="form-group">
-                            <label for="barang" class="block text-sm font-medium text-gray-700 mb-2">Pilih Bahan:</label>
-                            <select name="barang_ids[]" id="barang" class="form-control mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                @foreach ($masterBarang as $item)
-                                    <option value="{{ $item->id }}">{{ $item->nama_barang }} ({{ $item->merk_barang }})</option>
+                            <label for="bahan" class="block text-sm font-medium text-gray-700 mb-2">Pilih Bahan:</label>
+                            <select name="bahan_ids[]" id="bahan" class="form-control mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                @foreach ($masterbahan as $item)
+                                    <option value="{{ $item->id }}">{{ $item->nama_bahan }} ({{ $item->merk_bahan }})</option>
                                 @endforeach
                             </select>
                         </div>
@@ -34,26 +35,27 @@
 
                     <div class="col-span-1">
                         <div class="form-group">
-                            <label for="jumlah" class="block text-sm font-medium text-gray-700">Jumlah Stok:</label>
-                            <input type="number" name="jumlah_stok" class="form-control mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" id="jumlah" min="1" placeholder="Masukkan jumlah stok" />
+                            <label for="jumlah" class="block text-sm font-medium text-gray-700">Jumlah Stok:</label><br>
+                            <span style="color:red">* Dalam Hitungan Gram</span>
+                            <input type="number" name="jumlah_stok" class="form-control mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" id="jumlah" min="1" placeholder="Masukkan jumlah stok dalam hitungan gram" />
                         </div>
                     </div>
                 </div>
 
-                <!-- Button untuk Menambahkan Barang ke Daftar Pengajuan -->
+                <!-- Button untuk Menambahkan Bahan ke Daftar Pengajuan -->
                 <div class="col-span-1 text-center mb-4">
-                    <button type="button" class="btn btn-info bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-blue-600" id="addItemButton">Tambah Barang</button>
+                    <button type="button" class="btn btn-info bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-blue-600" id="addItemButton">Tambah Bahan</button>
                 </div>
 
-                <!-- Daftar Barang yang Diajukan -->
+                <!-- Daftar Bahan yang Diajukan -->
                 <div class="col-span-1">
-                    <h4 class="mt-4 text-xl font-semibold">Barang yang Diajukan:</h4>
+                    <h4 class="mt-4 text-xl font-semibold">Bahan yang Diajukan:</h4>
                     <!-- <table id="logistikTable" class="display table table-striped"> -->
-                    <table class="display table table-striped" id="barangTable">
+                    <table class="display table table-striped" id="BahanTable">
                         <thead>
                             <tr>
-                                <th class="border border-gray-300 py-2 px-4">Barang</th>
-                                <th class="border border-gray-300 py-2 px-4">Jumlah</th>
+                                <th class="border border-gray-300 py-2 px-4">Bahan</th>
+                                <th class="border border-gray-300 py-2 px-4">Jumlah (Gram)</th>
                                 <th class="border border-gray-300 py-2 px-4">Aksi</th>
                             </tr>
                         </thead>
@@ -69,9 +71,9 @@
                 </div>
             </form>
 
-            <h1 class="text-3xl font-semibold mb-4">Daftar Pengajuan Barang</h1>
+            <h1 class="text-3xl font-semibold mb-4">Daftar Pengajuan Bahan</h1>
             <div class="p-6 bg-white shadow-md rounded-lg border border-gray-200">
-                <table class="display table table-striped" id="barangTable">
+                <table class="display table table-striped" id="BahanTable">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -82,17 +84,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($pengajuanBarang as $row)
+                        @foreach($pengajuanbahan as $row)
                         @php
                         // Format tanggal
                         $date = $row->created_at;
                         $formattedDate = \Carbon\Carbon::parse($date)->format('d F Y G:i');
 
-                        // Membagi ID barang
-                        $array_barang = explode('^', $row->id_barang);
+                        // Membagi ID Bahan
+                        $array_Bahan = explode('^', $row->id_bahan);
 
                         // Status
-                        $show = false;
                         if($row->status == 1){
                         $status = 'Akutansi';
                         } elseif($row->status == 2) {
@@ -106,32 +107,39 @@
                         } elseif($row->status == 6) {
                         $status = 'selesai';
                         }
-                        if($row->deleted_at == NULL){
-
-                        $show = true;
-                        }
                         @endphp
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>
-                                <!-- Menampilkan tabel barang -->
+                                <!-- Menampilkan tabel Bahan -->
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th>Nama barang</th>
-                                            <th>Jumlah barang</th>
+                                            <th>Nama Bahan</th>
+                                            <th>Jumlah Bahan</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($array_barang as $barang)
+                                        @foreach($array_Bahan as $Bahan)
                                         @php
-                                        // Ambil data barang dan jumlahnya
-                                        $id_barang = (new App\Models\PengajuanBarang)->getIdBarang($barang);
-                                        $nama_barang = (new App\Models\PengajuanBarang)->getNamaBarang($id_barang->id_barang);
+                                        // Ambil data Bahan dan jumlahnya
+                                        $id_Bahan = '';
+                                        $nama_bahan = '';
+                                        if(!empty($Bahan)){
+                                            $id_Bahan = (new App\Models\PengajuanBahan)->getIdBahan($Bahan);
+                                            if(!empty($id_Bahan->id_bahan)){
+                                            $nama_Bahan = (new App\Models\PengajuanBahan)->getNamaBahan($id_Bahan->id_bahan);
+                                            }
+                                        }
+                                        if(!empty($id_Bahan->jumlah)){
+                                            $jumlah = $id_Bahan->jumlah;
+                                        }else{
+                                            $jumlah = 0;
+                                        }
                                         @endphp
                                         <tr>
-                                            <td>{{ $nama_barang }}</td>
-                                            <td>{{ $id_barang->jumlah }}</td>
+                                            <td>{{ $nama_Bahan }}</td>
+                                            <td>{{ $jumlah }} gram</td>
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -144,29 +152,29 @@
                                 // Menentukan kondisi untuk masing-masing status dan peran
                                 $canApprove = false;
                                 $canReject = false;
-                                $canDetail = true;
-                                if (($row->status == '1' && $id_barang->id_akutansi == $userid) || ($row->status == '1' && $id_barang->id_superadmin == $userid)) {
-                                $canDetail = true;
-                                $canApprove = true;
-                                $canReject = true;
-                                } elseif (($row->status == '2' && $id_barang->id_admin == $userid) || ($row->status == '2' && $id_barang->id_superadmin == $userid)) {
+                                $canDetail = false;
+                                if (($row->status == '1' && $id_Bahan->id_akutansi == $userid) || ($row->status == '1' && $id_Bahan->id_superadmin == $userid)) {
                                 $canDetail = true;
                                 $canApprove = true;
                                 $canReject = true;
-                                } elseif (($row->status == '3' && $id_barang->id_superadmin == $userid) || ($row->status == '3' && $id_barang->id_superadmin == $userid)) {
+                                } elseif (($row->status == '2' && $id_Bahan->id_admin == $userid) || ($row->status == '2' && $id_Bahan->id_superadmin == $userid)) {
                                 $canDetail = true;
                                 $canApprove = true;
                                 $canReject = true;
-                                } elseif (($row->status == '4' && $id_barang->id_admin == $userid) || ($row->status == '4' && $id_barang->id_superadmin == $userid)) {
+                                } elseif (($row->status == '3' && $id_Bahan->id_superadmin == $userid) || ($row->status == '3' && $id_Bahan->id_superadmin == $userid)) {
                                 $canDetail = true;
                                 $canApprove = true;
                                 $canReject = true;
-                                } elseif (($row->status == '5' && $id_barang->id_superadmin == $userid) || ($row->status == '5' && $id_barang->id_superadmin == $userid)) {
+                                } elseif (($row->status == '4' && $id_Bahan->id_admin == $userid) || ($row->status == '4' && $id_Bahan->id_superadmin == $userid)) {
+                                $canDetail = true;
+                                $canApprove = true;
+                                $canReject = true;
+                                } elseif (($row->status == '5' && $id_Bahan->id_superadmin == $userid) || ($row->status == '5' && $id_Bahan->id_superadmin == $userid)) {
                                 $canDetail = true;
                                 $canApprove = true;
                                 $canReject = true;
                                 } else {
-                                $canDetail = true;
+                                $canDetail = false;
                                 $canApprove = false;
                                 $canReject = false;
                                 }
@@ -174,7 +182,7 @@
 
                                 <!-- Tombol Detail -->
                                 @if($canDetail)
-                                <a href="{{ route('logistik.detail_pengajuan_barang', ['id' => $row->id]) }}">
+                                <a href="{{ route('bahan_olahan.detail_pengajuan_bahan', ['id' => $row->id]) }}">
                                     <button class="btn btn-primary">Detail</button>
                                 </a>
                                 @endif
@@ -204,40 +212,30 @@
                                                     </div>
 
                                                     @if($row->status == 4)
-                                                        @foreach($array_barang as $barang)
-                                                        @php
-                                                            $id_barang = (new App\Models\PengajuanBarang)->getIdBarang($barang);
-                                                            $nama_barang = (new App\Models\PengajuanBarang)->getNamaBarang($id_barang->id_barang);
-                                                        @endphp
-                                                            <h1 for="password">Informasi {{ $nama_barang }}</h1>
-                                                            <label for="password">Harga {{ $nama_barang }}</label>
-                                                            <input type="number" class="form-control" name="harga[]" id="harga" required>
-                                                            <input type="hidden" class="form-control" name="id_barang[]" value="{{ $barang }}"id="harga" required>
-                                                            <!-- Upload Bukti Pembayaran dan Struk Pembayaran -->
-                                                            <div class="form-group">
-                                                                <label for="payment_proof">Bukti Pembayaran</label>
-                                                                <input type="file" class="form-control" name="payment_proof[]" id="payment_proof" required>
-                                                                <div id="payment_proof_preview" style="margin-top: 10px;">
-                                                                    <!-- Preview bukti pembayaran -->
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="receipt_proof">Struk Pembayaran</label>
-                                                                <input type="file" class="form-control" name="receipt_proof[]" id="receipt_proof" required>
-                                                                <div id="receipt_proof_preview" style="margin-top: 10px;">
-                                                                    <!-- Preview struk pembayaran -->
-                                                                </div>
-                                                            </div>
+                                                    <!-- Upload Bukti Pembayaran dan Struk Pembayaran -->
+                                                    <div class="form-group">
+                                                        <label for="payment_proof">Bukti Pembayaran</label>
+                                                        <input type="file" class="form-control" name="payment_proof" id="payment_proof" required>
+                                                        <div id="payment_proof_preview" style="margin-top: 10px;">
+                                                            <!-- Preview bukti pembayaran -->
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="receipt_proof">Struk Pembayaran</label>
+                                                        <input type="file" class="form-control" name="receipt_proof" id="receipt_proof" required>
+                                                        <div id="receipt_proof_preview" style="margin-top: 10px;">
+                                                            <!-- Preview struk pembayaran -->
+                                                        </div>
+                                                    </div>
 
-                                                            <!-- Upload Foto Bukti Barang -->
-                                                            <div class="form-group">
-                                                                <label for="item_photo">Foto Bukti Barang</label>
-                                                                <input type="file" class="form-control" name="item_photo[]" id="item_photo" required>
-                                                                <div id="item_photo_preview" style="margin-top: 10px;">
-                                                                    <!-- Preview foto bukti barang -->
-                                                                </div>
-                                                            </div>
-                                                        @endforeach
+                                                    <!-- Upload Foto Bukti Bahan -->
+                                                    <div class="form-group">
+                                                        <label for="item_photo">Foto Bukti Bahan</label>
+                                                        <input type="file" class="form-control" name="item_photo" id="item_photo" required>
+                                                        <div id="item_photo_preview" style="margin-top: 10px;">
+                                                            <!-- Preview foto bukti Bahan -->
+                                                        </div>
+                                                    </div>
                                                     @endif
 
                                                     <button type="submit" class="btn btn-primary">Verifikasi</button>
@@ -253,7 +251,7 @@
 
                                 <!-- Tombol Reject -->
                                 @if($canReject)
-                                <a href="{{ route('logistik.reject_pengajuan_barang', ['id' => $row->id]) }}">
+                                <a href="{{ route('bahan_olahan.reject_pengajuan_bahan', ['id' => $row->id]) }}">
                                     <button class="btn btn-danger">Reject</button>
                                 </a>
                                 @endif
@@ -268,6 +266,7 @@
     </div>
 </div>
 
+
 <!-- Link CSS Select2 -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
 
@@ -276,18 +275,11 @@
 
 <!-- Script JS Select2 -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
-<!-- Bootstrap CSS -->
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-<!-- jQuery, Popper.js, and Bootstrap JS -->
 {{-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> --}}
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <style>
-    /* Membuat modal body scrollable */
-    .modal-body {
-        max-height: 400px; /* Tentukan tinggi maksimal */
-        overflow-y: auto;  /* Menambahkan scroll jika konten lebih tinggi */
-    }
     /* Memberikan jarak antara input pencarian dan dropdown */
     #searchBahan {
         margin-bottom: 10px;
@@ -313,16 +305,6 @@
     }
 </style>
 <script>
-    
-$(document).ready(function() {
-    $('#barang').select2({
-        placeholder: "Pilih Bahan",  // Placeholder saat dropdown kosong
-        allowClear: true,            // Opsi untuk membolehkan pengguna menghapus pilihan
-        width: '100%',               // Pastikan dropdown lebar 100% agar mudah terlihat
-        minimumInputLength: 1,       // Mulai mencari setelah 1 karakter dimasukkan
-        dropdownAutoWidth: true,     // Sesuaikan lebar dropdown
-    });
-});
     // Preview Bukti Pembayaran
     document.getElementById('payment_proof').addEventListener('change', function(event) {
         var file = event.target.files[0];
@@ -361,7 +343,7 @@ $(document).ready(function() {
         }
     });
 
-    // Preview Foto Bukti Barang
+    // Preview Foto Bukti Bahan
     document.getElementById('item_photo').addEventListener('change', function(event) {
         var file = event.target.files[0];
         var preview = document.getElementById('item_photo_preview');
@@ -382,38 +364,47 @@ $(document).ready(function() {
 </script>
 
 <script>
-    // Menambahkan barang yang dipilih ke tabel pengajuan
+$(document).ready(function() {
+    $('#bahan').select2({
+        placeholder: "Pilih Bahan",  // Placeholder saat dropdown kosong
+        allowClear: true,            // Opsi untuk membolehkan pengguna menghapus pilihan
+        width: '100%',               // Pastikan dropdown lebar 100% agar mudah terlihat
+        minimumInputLength: 1,       // Mulai mencari setelah 1 karakter dimasukkan
+        dropdownAutoWidth: true,     // Sesuaikan lebar dropdown
+    });
+});
+    // Menambahkan Bahan yang dipilih ke tabel pengajuan
     document.getElementById('addItemButton').addEventListener('click', function() {
-        const barangSelect = document.getElementById('barang');
+        const BahanSelect = document.getElementById('bahan');
         const jumlahInput = document.getElementById('jumlah');
-        const barangIds = Array.from(barangSelect.selectedOptions).map(option => option.value);
-        const barangNames = Array.from(barangSelect.selectedOptions).map(option => option.text);
+        const BahanIds = Array.from(BahanSelect.selectedOptions).map(option => option.value);
+        const BahanNames = Array.from(BahanSelect.selectedOptions).map(option => option.text);
         const jumlah = jumlahInput.value;
 
-        // Validasi jika tidak ada barang yang dipilih atau jumlah tidak diisi
-        if (barangIds.length === 0 || jumlah === '') {
-            alert('Pilih barang dan masukkan jumlah stok');
+        // Validasi jika tidak ada Bahan yang dipilih atau jumlah tidak diisi
+        if (BahanIds.length === 0 || jumlah === '') {
+            alert('Pilih Bahan dan masukkan jumlah stok');
             return;
         }
 
-        const tableBody = document.getElementById('barangTable').getElementsByTagName('tbody')[0];
+        const tableBody = document.getElementById('BahanTable').getElementsByTagName('tbody')[0];
 
-        // Menambahkan setiap barang yang dipilih
-        barangIds.forEach((id, index) => {
+        // Menambahkan setiap Bahan yang dipilih
+        BahanIds.forEach((id, index) => {
             const row = tableBody.insertRow();
 
             const cell1 = row.insertCell(0);
             const cell2 = row.insertCell(1);
             const cell3 = row.insertCell(2);
 
-            cell1.innerHTML = barangNames[index];
+            cell1.innerHTML = BahanNames[index];
             cell2.innerHTML = jumlah;
             cell3.innerHTML = `<button type="button" class="btn btn-danger" onclick="removeItem(this)">Hapus</button>`;
 
-            // Menambahkan input tersembunyi untuk mengirim data barang dan jumlahnya
+            // Menambahkan input tersembunyi untuk mengirim data Bahan dan jumlahnya
             const hiddenInput1 = document.createElement('input');
             hiddenInput1.type = 'hidden';
-            hiddenInput1.name = 'barang_ids[]';
+            hiddenInput1.name = 'bahan_ids[]';
             hiddenInput1.value = id;
             row.appendChild(hiddenInput1);
 
@@ -424,8 +415,8 @@ $(document).ready(function() {
             row.appendChild(hiddenInput2);
         });
 
-        // Reset form setelah menambah barang
-        barangSelect.value = '';
+        // Reset form setelah menambah Bahan
+        BahanSelect.value = '';
         jumlahInput.value = '';
     });
 

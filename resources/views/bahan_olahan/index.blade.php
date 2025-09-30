@@ -32,21 +32,21 @@
                 <tbody>
                     @foreach ($logistik as $item)
                     <?php
-                        $nama_foto = (new App\Models\PengajuanBarang)->getFotoBarang($item->id_master_barang);
+                        $nama_foto = (new App\Models\PengajuanBahan)->getFotoBahan($item->id_master_bahan);
                     ?>
                         <tr>
                             <td>{{ $item->id }}</td>
-                            <td>{{ $item->nama_barang }}</td>
-                            <td>{{ $item->jumlah_barang }}</td>
-                            <td>{{ $item->merk_barang }}</td>
+                            <td>{{ $item->nama_bahan }}</td>
+                            <td>{{ $item->jumlah_bahan }}</td>
+                            <td>{{ $item->merk_bahan }}</td>
                             <td>
-                                <img src="{{ asset('storage/master_barang/' . $nama_foto) }}" alt="Foto Barang" class="img-fluid" style="max-width: 100px; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#imageModal{{ $item->id }}">
+                                <img src="{{ asset('storage/bahan_olahan/' . $nama_foto) }}" alt="Foto Barang" class="img-fluid" style="max-width: 100px; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#imageModal{{ $item->id }}">
                             </td>
                             <td>{{ $item->updated_at->format('d-m-Y H:i') }}</td>
                             <td>
                                 @if($role_id == 'superadmin')
-                                    <a href="{{ route('logistik.edit_master_barang', $item->id_master_barang) }}" class="btn btn-warning btn-sm me-2">Edit</a>
-                                    <form action="{{ route('logistik.update_master_barang', $item->id_master_barang) }}" method="POST" class="d-inline" onsubmit="return confirmDelete()">
+                                    <a href="{{ route('bahan_olahan.edit_master_bahan', $item->id_master_bahan) }}" class="btn btn-warning btn-sm me-2">Edit</a>
+                                    <form action="{{ route('bahan_olahan.update_bahan_olahan', $item->id_master_bahan) }}" method="POST" class="d-inline" onsubmit="return confirmDelete()">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
@@ -66,7 +66,7 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body text-center">
-                                        <img src="{{ asset('storage/master_barang/' . $nama_foto) }}" alt="Foto Barang" class="img-fluid" style="max-width: 100%; height: auto;">
+                                        <img src="{{ asset('storage/bahan_olahan/' . $nama_foto) }}" alt="Foto Barang" class="img-fluid" style="max-width: 100%; height: auto;">
                                     </div>
                                 </div>
                             </div>
@@ -81,24 +81,24 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                    <form action="{{ route('logistik.add_to_cart') }}" method="POST">
+                                    <form action="{{ route('bahan_olahan.add_to_cart') }}" method="POST">
                                         @csrf
                                         <div class="mb-3">
-                                            <label for="itemName{{ $item->id }}" class="form-label">Nama Barang</label>
-                                            <input type="text" class="form-control" value="{{ $item->nama_barang }}" disabled>
+                                            <label for="itemName{{ $item->id }}" class="form-label">Nama Bahan</label>
+                                            <input type="text" class="form-control" value="{{ $item->nama_bahan }}" disabled>
                                         </div>
                                         <div class="mb-3">
                                             <label for="itemStock{{ $item->id }}" class="form-label">Stok Tersedia</label>
-                                            <input type="number" class="form-control" value="{{ $item->jumlah_barang }}" disabled>
+                                            <input type="number" class="form-control" value="{{ $item->jumlah_bahan }}" disabled>
                                         </div>
                                         <div class="mb-3">
                                             <label for="quantity{{ $item->id }}" class="form-label">Jumlah yang akan dimasukkan</label>
                                             
                                             <!-- Form Hidden Inputs (for item info) -->
                                             <input type="hidden" name="id" value="{{ $item->id }}">
-                                            <input type="hidden" name="id_master_barang" value="{{ $item->id_master_barang }}">
-                                            <input type="hidden" name="id_barang" value="{{ $item->id }}">
-                                            <input type="hidden" name="stok" value="{{ $item->jumlah_barang }}">
+                                            <input type="hidden" name="id_master_bahan" value="{{ $item->id_master_bahan }}">
+                                            <input type="hidden" name="id_bahan" value="{{ $item->id }}">
+                                            <input type="hidden" name="stok" value="{{ $item->jumlah_bahan }}">
                                             
                                             <!-- Quantity Input -->
                                             <input type="number" name="jumlahAmbil" class="form-control" id="quantity{{ $item->id }}" min="1">
