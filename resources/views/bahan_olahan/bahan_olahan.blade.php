@@ -18,7 +18,7 @@
                         <tr>
                             <th>No</th>
                             <th>Nama bahan</th>
-                            <th>Merk bahan</th>
+                            <th>Golongan bahan</th>
                             <th>Deskripsi</th>
                             <th>Foto</th>
                             <th>Aksi</th>

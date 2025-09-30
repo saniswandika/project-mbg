@@ -100,10 +100,11 @@ Route::prefix('logistik')->name('logistik.')->group(function () {
     Route::get('/list_barang', [LogistikController::class, 'index'])->name('list_barang');
     Route::get('/pengajuan_barang', [LogistikController::class, 'pengajuan_barang'])->name('pengajuan_barang');
     Route::post('/pengajuan_barang', [LogistikController::class, 'proses_pengajuan_barang'])->name('proses_pengajuan_barang');
+    Route::get('/log_pengajuan_barang', [LogistikController::class, 'log_pengajuan_barang'])->name('log_pengajuan_barang');
     Route::get('/detail_pengajuan_barang/{id}', [LogistikController::class, 'detail_pengajuan_barang'])->name('detail_pengajuan_barang');
     Route::put('/revisi_pengajuan_barang/{id}', [LogistikController::class, 'revisi_pengajuan_barang'])->name('revisi_pengajuan_barang');
     Route::put('/approve_pengajuan_barang/{id}', [LogistikController::class, 'approve_pengajuan_barang'])->name('approve_pengajuan_barang');
-    Route::put('/reject_pengajuan_barang/{id}', [LogistikController::class, 'reject_pengajuan_barang'])->name('reject_pengajuan_barang');
+    Route::get('/reject_pengajuan_barang/{id}', [LogistikController::class, 'reject_pengajuan_barang'])->name('reject_pengajuan_barang');
     Route::post('/logistik/verify-approve/{id}', [LogistikController::class, 'verifyApprove'])->name('verify_approve');
     Route::delete('/hapus_pengajuan_barang/{id}/{id_home}', [LogistikController::class, 'hapus_pengajuan_barang'])->name('hapus_pengajuan_barang');
     // edit

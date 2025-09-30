@@ -203,27 +203,116 @@
                         <tr>
                             <td>
                                 @if($barang->payment_proof)
-                                <button class="btn btn-info" data-toggle="modal" data-target="#paymentProofModal{{ $barang->id }}">
-                                    Lihat Bukti Pembayaran
-                                </button>
+                                @php 
+                                    $payment_proof = explode('^', $barang->payment_proof);
+                                    $no = 1;
+                                @endphp
+                                @foreach($payment_proof as $b)
+                                    <button class="btn btn-info" data-toggle="modal" data-target="#paymentProofModal{{ $barang->id }}-{{ $no }}">
+                                        {{ $no }}Lihat Bukti Pembayaran
+                                    </button>
+                                    <!-- Modal untuk Lihat Bukti Pembayaran -->
+                                    @if($barang->payment_proof)
+                                    <div class="modal fade" id="paymentProofModal{{ $barang->id }}-{{ $no }}" tabindex="-1" role="dialog" aria-labelledby="paymentProofModalLabel{{ $barang->id }}-{{ $no }}" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="paymentProofModalLabel{{ $barang->id }}-{{ $no }}">Bukti Pembayaran</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <img src="{{ asset('storage/' . $b) }}" class="img-fluid" alt="Bukti Pembayaran">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    @endif
+                                    <?php 
+                                         $no = $no +1;
+                                    ?>
+                                @endforeach
                                 @else
                                 <span>Belum Ada</span>
                                 @endif
                             </td>
                             <td>
                                 @if($barang->receipt_proof)
-                                <button class="btn btn-info" data-toggle="modal" data-target="#receiptProofModal{{ $barang->id }}">
-                                    Lihat Struk Pembayaran
-                                </button>
+                                
+                                @php 
+                                    $receipt_proof = explode('^', $barang->receipt_proof);
+                                    $no = 1;
+                                @endphp
+                                @foreach($receipt_proof as $c)
+                                    <button class="btn btn-info" data-toggle="modal" data-target="#receiptProofModal{{ $barang->id }}-{{ $no }}">
+                                        Lihat Struk Pembayaran
+                                    </button>
+                                    
+
+                                    <!-- Modal untuk Lihat Struk Pembayaran -->
+                                    @if($barang->receipt_proof)
+                                    <div class="modal fade" id="receiptProofModal{{ $barang->id }}-{{ $no }}" tabindex="-1" role="dialog" aria-labelledby="receiptProofModalLabel{{ $barang->id }}-{{ $no }}" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="receiptProofModalLabel{{ $barang->id }}-{{ $no }}">Struk Pembayaran</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <img src="{{ asset('storage/' . $c) }}" class="img-fluid" alt="Struk Pembayaran">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    @endif
+                                    <?php 
+                                         $no = $no +1;
+                                    ?>
+                                @endforeach
                                 @else
                                 <span>Belum Ada</span>
                                 @endif
                             </td>
                             <td>
                                 @if($barang->item_photo)
-                                <button class="btn btn-info" data-toggle="modal" data-target="#itemPhotoModal{{ $barang->id }}">
-                                    Lihat Foto Bukti Barang
-                                </button>
+                                
+                                @php 
+                                    $item_photo = explode('^', $barang->item_photo);
+                                    $no = 1;
+                                @endphp
+                                @foreach($item_photo as $d)
+                                    <button class="btn btn-info" data-toggle="modal" data-target="#itemPhotoModal{{ $barang->id }}-{{ $no }}">
+                                        Lihat Foto Bukti Bahan
+                                    </button>
+                                    
+                                    <!-- Modal untuk Lihat Foto Bukti Bahan -->
+                                    @if($barang->item_photo)
+                                    <div class="modal fade" id="itemPhotoModal{{ $barang->id }}-{{ $no }}" tabindex="-1" role="dialog" aria-labelledby="itemPhotoModalLabel{{ $barang->id }}-{{ $no }}" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="itemPhotoModalLabel{{ $barang->id }}-{{ $no }}">Foto Bukti Bahan</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <img src="{{ asset('storage/' . $d) }}" class="img-fluid" alt="Foto Bukti Bahan">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    @endif
+                                    <?php 
+                                         $no = $no +1;
+                                    ?>
+                                @endforeach
                                 @else
                                 <span>Belum Ada</span>
                                 @endif
@@ -332,63 +421,6 @@
 
                             </td>
                         </tr>
-
-                        <!-- Modal untuk Lihat Bukti Pembayaran -->
-                        @if($barang->payment_proof)
-                        <div class="modal fade" id="paymentProofModal{{ $barang->id }}" tabindex="-1" role="dialog" aria-labelledby="paymentProofModalLabel{{ $barang->id }}" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="paymentProofModalLabel{{ $barang->id }}">Bukti Pembayaran</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <img src="{{ asset('storage/' . $barang->payment_proof) }}" class="img-fluid" alt="Bukti Pembayaran">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @endif
-
-                        <!-- Modal untuk Lihat Struk Pembayaran -->
-                        @if($barang->receipt_proof)
-                        <div class="modal fade" id="receiptProofModal{{ $barang->id }}" tabindex="-1" role="dialog" aria-labelledby="receiptProofModalLabel{{ $barang->id }}" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="receiptProofModalLabel{{ $barang->id }}">Struk Pembayaran</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <img src="{{ asset('storage/' . $barang->receipt_proof) }}" class="img-fluid" alt="Struk Pembayaran">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @endif
-
-                        <!-- Modal untuk Lihat Foto Bukti Barang -->
-                        @if($barang->item_photo)
-                        <div class="modal fade" id="itemPhotoModal{{ $barang->id }}" tabindex="-1" role="dialog" aria-labelledby="itemPhotoModalLabel{{ $barang->id }}" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="itemPhotoModalLabel{{ $barang->id }}">Foto Bukti Barang</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <img src="{{ asset('storage/' . $barang->item_photo) }}" class="img-fluid" alt="Foto Bukti Barang">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @endif
                         @endforeach
                     </tbody>
                 </table>
