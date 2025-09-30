@@ -52,7 +52,7 @@
 
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
-                    <strong>Merk Bahan:</strong>
+                    <strong>Golongan Bahan:</strong>
                     <div class="input-group input-group-outline mb-3">
                         {!! Form::text('merk', null, ['placeholder' => 'Merk Barang', 'class' => 'form-control']) !!}
                     </div>

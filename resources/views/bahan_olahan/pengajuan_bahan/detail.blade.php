@@ -101,7 +101,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
+                                                        @if($role_id == 'admin' || $role_id == 'superadmin')
                                                         <!-- Tombol Hapus Bahan -->
                                                         <button class="btn btn-danger" data-toggle="modal" data-target="#hapusModal{{ $id_bahan->id }}">Hapus</button>
 
@@ -129,6 +129,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                                 @endforeach
@@ -203,27 +204,102 @@
                         <tr>
                             <td>
                                 @if($bahan->payment_proof)
-                                <button class="btn btn-info" data-toggle="modal" data-target="#paymentProofModal{{ $bahan->id }}">
-                                    Lihat Bukti Pembayaran
-                                </button>
+                                @php 
+                                    $payment_proof = explode('^', $bahan->payment_proof);
+                                    var_dump($payment_proof);die();
+                                @endphp
+                                @foreach($payment_proof as $b)
+                                    <button class="btn btn-info" data-toggle="modal" data-target="#paymentProofModal{{ $bahan->id }}">
+                                        Lihat Bukti Pembayaran
+                                    </button>
+                                    <!-- Modal untuk Lihat Bukti Pembayaran -->
+                                    @if($bahan->payment_proof)
+                                    <div class="modal fade" id="paymentProofModal{{ $bahan->id }}" tabindex="-1" role="dialog" aria-labelledby="paymentProofModalLabel{{ $bahan->id }}" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="paymentProofModalLabel{{ $bahan->id }}">Bukti Pembayaran</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <img src="{{ asset('storage/' . $b) }}" class="img-fluid" alt="Bukti Pembayaran">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endif
+                                @endforeach
                                 @else
                                 <span>Belum Ada</span>
                                 @endif
                             </td>
                             <td>
                                 @if($bahan->receipt_proof)
-                                <button class="btn btn-info" data-toggle="modal" data-target="#receiptProofModal{{ $bahan->id }}">
-                                    Lihat Struk Pembayaran
-                                </button>
+                                
+                                @php 
+                                    $receipt_proof = explode('^', $bahan->receipt_proof);
+                                @endphp
+                                @foreach($receipt_proof as $c)
+                                    <button class="btn btn-info" data-toggle="modal" data-target="#receiptProofModal{{ $bahan->id }}">
+                                        Lihat Struk Pembayaran
+                                    </button>
+                                    
+
+                                    <!-- Modal untuk Lihat Struk Pembayaran -->
+                                    @if($bahan->receipt_proof)
+                                    <div class="modal fade" id="receiptProofModal{{ $bahan->id }}" tabindex="-1" role="dialog" aria-labelledby="receiptProofModalLabel{{ $bahan->id }}" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="receiptProofModalLabel{{ $bahan->id }}">Struk Pembayaran</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <img src="{{ asset('storage/' . $c) }}" class="img-fluid" alt="Struk Pembayaran">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endif
+                                @endforeach
                                 @else
                                 <span>Belum Ada</span>
                                 @endif
                             </td>
                             <td>
                                 @if($bahan->item_photo)
-                                <button class="btn btn-info" data-toggle="modal" data-target="#itemPhotoModal{{ $bahan->id }}">
-                                    Lihat Foto Bukti Bahan
-                                </button>
+                                
+                                @php 
+                                    $item_photo = explode('^', $bahan->item_photo);
+                                @endphp
+                                @foreach($item_photo as $d)
+                                    <button class="btn btn-info" data-toggle="modal" data-target="#itemPhotoModal{{ $bahan->id }}">
+                                        Lihat Foto Bukti Bahan
+                                    </button>
+                                    
+                                    <!-- Modal untuk Lihat Foto Bukti Bahan -->
+                                    @if($bahan->item_photo)
+                                    <div class="modal fade" id="itemPhotoModal{{ $bahan->id }}" tabindex="-1" role="dialog" aria-labelledby="itemPhotoModalLabel{{ $bahan->id }}" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="itemPhotoModalLabel{{ $bahan->id }}">Foto Bukti Bahan</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <img src="{{ asset('storage/' . $d) }}" class="img-fluid" alt="Foto Bukti Bahan">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endif
+                                @endforeach
                                 @else
                                 <span>Belum Ada</span>
                                 @endif
@@ -333,70 +409,15 @@
                             </td>
                         </tr>
 
-                        <!-- Modal untuk Lihat Bukti Pembayaran -->
-                        @if($bahan->payment_proof)
-                        <div class="modal fade" id="paymentProofModal{{ $bahan->id }}" tabindex="-1" role="dialog" aria-labelledby="paymentProofModalLabel{{ $bahan->id }}" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="paymentProofModalLabel{{ $bahan->id }}">Bukti Pembayaran</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <img src="{{ asset('storage/' . $bahan->payment_proof) }}" class="img-fluid" alt="Bukti Pembayaran">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @endif
 
-                        <!-- Modal untuk Lihat Struk Pembayaran -->
-                        @if($bahan->receipt_proof)
-                        <div class="modal fade" id="receiptProofModal{{ $bahan->id }}" tabindex="-1" role="dialog" aria-labelledby="receiptProofModalLabel{{ $bahan->id }}" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="receiptProofModalLabel{{ $bahan->id }}">Struk Pembayaran</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <img src="{{ asset('storage/' . $bahan->receipt_proof) }}" class="img-fluid" alt="Struk Pembayaran">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @endif
-
-                        <!-- Modal untuk Lihat Foto Bukti Bahan -->
-                        @if($bahan->item_photo)
-                        <div class="modal fade" id="itemPhotoModal{{ $bahan->id }}" tabindex="-1" role="dialog" aria-labelledby="itemPhotoModalLabel{{ $bahan->id }}" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="itemPhotoModalLabel{{ $bahan->id }}">Foto Bukti Bahan</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <img src="{{ asset('storage/' . $bahan->item_photo) }}" class="img-fluid" alt="Foto Bukti Bahan">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @endif
                         @endforeach
                     </tbody>
                 </table>
 
 
                 @if($role_id == 'superadmin')
-                <label for="">Menunggu Approve</label>
-                <span style="color:green">{{ $approve }}</span>
+                    <label for="">Menunggu Approve</label>
+                    <span style="color:green">{{ $approve }}</span>
                 @endif
             </div>
         </div>

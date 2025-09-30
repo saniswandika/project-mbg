@@ -91,6 +91,14 @@
         </a>
       </li>
     </div>
+    <div class="collapse sm-2" id="collapseExample">
+      <li class="nav-item">
+        <a class="nav-link text-dark {{ request()->routeIs('logistik.log_pengajuan_barang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('logistik.log_pengajuan_barang') }}" style="margin-left: 30px;">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Log Pengajuan Barang</span>
+        </a>
+      </li>
+    </div>
 <!-- All Role -->
     <div class="collapse sm-2" id="collapseExample">
       <li class="nav-item">
