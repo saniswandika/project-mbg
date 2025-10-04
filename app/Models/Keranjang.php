@@ -13,10 +13,10 @@ class Keranjang extends Model
     protected $table = 'keranjang';
 
     // Tentukan kolom yang bisa diisi
-    protected $fillable = [
-        'id_barang',
-        'id_master_barang',
-        'jumlah_barang',
-        'id_user',
-    ];
+    // protected $fillable = [
+    //     'id_barang',
+    //     'id_master_barang',
+    //     'jumlah_barang',
+    //     'id_user',
+    // ];
 }

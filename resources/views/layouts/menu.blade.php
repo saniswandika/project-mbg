@@ -9,14 +9,14 @@
     <hr class="horizontal dark mt-0">
 
     <li class="nav-item mt-3">
-      <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Barang & Peminjaman</h6>
+      <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Keuangan</h6>
     </li>
 
     <!-- Barang Section -->
    <li class="nav-item">
       <a class="nav-link text-dark {{ request()->is('Barang') ? 'active bg-gradient-dark text-white' : '' }} " href="#collapseExample" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample">
          <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Logistik</span>
+            <span class="nav-link-text ms-1">Keuangan Masuk</span>
       </a>
     </li>
     <div class="collapse sm-2" id="collapseExample">

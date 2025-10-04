@@ -21,9 +21,9 @@
                 <thead class="thead-dark">
                     <tr>
                         <th>ID</th>
-                        <th>Nama Barang</th>
-                        <th>Jumlah Barang</th>
-                        <th>Merk Barang</th>
+                        <th>Nama Bahan</th>
+                        <th>Jumlah Bahan</th>
+                        <th>Merk Bahan</th>
                         <th>Foto</th>
                         <th>Tanggal Diperbarui</th>
                         <th>Aksi</th>
@@ -33,14 +33,30 @@
                     @foreach ($logistik as $item)
                     <?php
                         $nama_foto = (new App\Models\PengajuanBahan)->getFotoBahan($item->id_master_bahan);
+                        
+                        $jumlah = (float) $item->jumlah_bahan;
+
+                        if ($jumlah >= 1000) {
+                            $nilai = $jumlah / 1000;
+                            $satuan = 'Kg';
+                            $desimal = 1; // biar bisa keluar 4.2 kg
+                        } elseif ($jumlah >= 100) {
+                            $nilai = $jumlah / 100;
+                            $satuan = 'Ons';
+                            $desimal = 2;
+                        } else {
+                            $nilai = $jumlah;
+                            $satuan = 'Gram';
+                            $desimal = 0;
+                        }
                     ?>
                         <tr>
                             <td>{{ $item->id }}</td>
                             <td>{{ $item->nama_bahan }}</td>
-                            <td>{{ $item->jumlah_bahan }}</td>
+                            <td>{{ number_format($nilai, $desimal, ',', '.') }} {{ $satuan }}</td>
                             <td>{{ $item->merk_bahan }}</td>
                             <td>
-                                <img src="{{ asset('storage/bahan_olahan/' . $nama_foto) }}" alt="Foto Barang" class="img-fluid" style="max-width: 100px; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#imageModal{{ $item->id }}">
+                                <img src="{{ asset('storage/bahan_olahan/' . $nama_foto) }}" alt="Foto Bahan" class="img-fluid" style="max-width: 100px; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#imageModal{{ $item->id }}">
                             </td>
                             <td>{{ $item->updated_at->format('d-m-Y H:i') }}</td>
                             <td>
@@ -62,11 +78,11 @@
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="imageModalLabel{{ $item->id }}">Foto Barang</h5>
+                                        <h5 class="modal-title" id="imageModalLabel{{ $item->id }}">Foto Bahan</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body text-center">
-                                        <img src="{{ asset('storage/bahan_olahan/' . $nama_foto) }}" alt="Foto Barang" class="img-fluid" style="max-width: 100%; height: auto;">
+                                        <img src="{{ asset('storage/bahan_olahan/' . $nama_foto) }}" alt="Foto Bahan" class="img-fluid" style="max-width: 100%; height: auto;">
                                     </div>
                                 </div>
                             </div>
@@ -77,7 +93,7 @@
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="addToCartModalLabel{{ $item->id }}">Masukkan Barang ke Keranjang</h5>
+                                        <h5 class="modal-title" id="addToCartModalLabel{{ $item->id }}">Masukkan Bahan ke Keranjang</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
@@ -100,8 +116,20 @@
                                             <input type="hidden" name="id_bahan" value="{{ $item->id }}">
                                             <input type="hidden" name="stok" value="{{ $item->jumlah_bahan }}">
                                             
-                                            <!-- Quantity Input -->
-                                            <input type="number" name="jumlahAmbil" class="form-control" id="quantity{{ $item->id }}" min="1">
+                                            <div style="position: relative; display: inline-block;">
+                                            <input type="number" name="jumlahAmbil" id="quantity{{ $item->id }}"
+                                                    class="form-control"
+                                                    style="padding-right: 45px; text-align: right; min-width: 120px;">
+                                            <span style="
+                                                position: absolute;
+                                                right: 10px;
+                                                top: 50%;
+                                                transform: translateY(-50%);
+                                                pointer-events: none;
+                                                color: #666;
+                                                font-size: 0.9em;
+                                            ">Gram</span>
+                                            </div>
                                             <small id="quantityError{{ $item->id }}" class="text-danger d-none">Jumlah yang dimasukkan melebihi stok.</small>
                                         </div>
                                         <button type="submit" class="btn btn-primary">Masukkan Keranjang</button>

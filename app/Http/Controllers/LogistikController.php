@@ -236,7 +236,7 @@ public function proses_tambah_barang_master(Request $request)
         }
         
         // Return ke view dengan data yang telah difilter
-        return view('logistik.pengajuan_barang.log_index', compact('barangPengajuan', 'masterBarang', 'pengajuanBarang', 'userid', 'role', 'startDate', 'endDate', 'old_start', 'old_end'));
+        return view('logistik.pengajuan_barang.log_index', compact('barangPengajuan', 'masterBarang', 'pengajuanBarang', 'userid', 'role_id', 'startDate', 'endDate', 'old_start', 'old_end'));
     }
 
 
@@ -288,18 +288,7 @@ public function proses_tambah_barang_master(Request $request)
         // Validasi file yang di-upload (Bukti Pembayaran, Struk Pembayaran, dan Foto Bukti Barang)
         $validated = $request->validate([
             'password' => 'required',
-            'id_barang' => 'required|array', // Validasi agar harga diterima dalam bentuk array
-            'id_barang.*' => 'required|numeric', // Setiap harga harus berupa angka
-            'harga' => 'required|array', // Validasi agar harga diterima dalam bentuk array
-            'harga.*' => 'required|numeric', // Setiap harga harus berupa angka
-            'payment_proof' => 'nullable|array',
-            'payment_proof.*' => 'nullable|image|mimes:jpg,jpeg,png,pdf|max:2048',
-            'receipt_proof' => 'nullable|array',
-            'receipt_proof.*' => 'nullable|image|mimes:jpg,jpeg,png,pdf|max:2048',
-            'item_photo' => 'nullable|array',
-            'item_photo.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
-
         // Verifikasi password (gunakan Auth untuk mendapatkan user saat ini)
         if (Hash::check($request->password, Auth::user()->password)) {
             $status = $barang->status;
@@ -376,7 +365,6 @@ public function proses_tambah_barang_master(Request $request)
                     'receipt_proof' => implode('^', $receipt_proof_paths),
                     'item_photo' => implode('^', $item_photo_paths),
                 ]);
-
             // Jika status menjadi 5, insert data ke tabel logistik
             if ($input == 6) {
                 foreach ($array_id_barang as $a) {
@@ -393,36 +381,55 @@ public function proses_tambah_barang_master(Request $request)
 
                     // Menghitung jumlah barang yang akan dimasukkan
                     if (!empty($cek_barang)) {
-                        $jumlah = $cek_barang->jumlah + $barang_data->jumlah;  // Jika barang ada, tambah jumlahnya
+                        $jumlah = $cek_barang->jumlah_barang + $barang_data->jumlah;  // Jika barang ada, tambah jumlahnya
+                        $insert = FALSE;
                     } else {
                         $jumlah = $barang_data->jumlah;  // Jika barang belum ada, pakai jumlah yang baru
+                        $insert = TRUE;
                     }
 
                     // Jika data barang ditemukan, masukkan ke tabel logistik
-                    if ($barang_data) {
-                        DB::table('logistiks')->insert([
-                            'nama_barang' => $namaBarang,  // Nama barang yang diambil dari master_barangs
-                            'jumlah_barang' => $jumlah,  // Jumlah barang
-                            'id_master_barang' => $id_barang,  // ID Barang yang sesuai dengan master_barangs
-                            'merk_barang' => $namaBarang,  // Menggunakan nama barang yang sama untuk merk
-                            'status' => 'baru',  // Status barang baru
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ]);
+                    if($insert){
+                        if (!empty($barang_data)) {
+                            $input = DB::table('logistiks')->insert([
+                                'nama_barang' => $namaBarang,  // Nama barang yang diambil dari master_barangs
+                                'jumlah_barang' => $jumlah,  // Jumlah barang
+                                'id_master_barang' => $id_barang,  // ID Barang yang sesuai dengan master_barangs
+                                'merk_barang' => $namaBarang,  // Menggunakan nama barang yang sama untuk merk
+                                'status' => 'baru',  // Status barang baru
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ]);
+                        }
+                    }else{
+                        if (!empty($barang_data)) {
+                            $input = DB::table('logistiks')
+                                ->where('id', $cek_barang->id)
+                                ->update([
+                                    'nama_barang' => $namaBarang,  // Nama barang yang diambil dari master_barangs
+                                    'jumlah_barang' => $jumlah,  // Jumlah barang
+                                    'id_master_barang' => $id_barang,  // ID Barang yang sesuai dengan master_barangs
+                                    'merk_barang' => $namaBarang,  // Menggunakan nama barang yang sama untuk merk
+                                    'status' => 'baru',  // Status barang baru
+                                    'updated_at' => now(),
+                            ]);
+                        }
                     }
 
                 }
                 
             }
                 $no = 0;
-                foreach ($request->id_barang as $id){
-                    $data_barang = $request->harga;
-                    DB::table('pengajuan_barangs')
-                        ->where('id', $id)
-                        ->update([
-                            'harga_barang' => $data_barang[$no],
-                        ]);
-                    $no = $no +1;
+                if(!empty($request->harga)){
+                    foreach ($array_id_barang as $id_b){
+                        $data_barang = $request->harga;
+                        DB::table('pengajuan_barangs')
+                            ->where('id', $id_b)
+                            ->update([
+                                'harga_barang' => $data_barang[$no],
+                            ]);
+                        $no = $no +1;
+                    }
                 }
 
             // Mengupdate status pengajuan barang per ID barang

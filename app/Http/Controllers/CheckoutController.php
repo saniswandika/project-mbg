@@ -56,24 +56,26 @@ class CheckoutController extends Controller
         // Ambil role pengguna berdasarkan ID
         $role = $this->get_role(Auth::id());
 
-        // Ambil data keranjang berdasarkan role pengguna
+        // Ambil data keranjang berdasarkan role pengguna menggunakan Eloquent
         if ($role != 'admin' && $role != 'superadmin') {
-            // Jika pengguna adalah kepala dapur, ambil semua keranjang pengguna tersebut dengan status != 2
-            $cartItems = Keranjang::where('id_user', Auth::id())
-                                ->where('status', '!=', 4)  // Menggunakan where untuk status != 2
-                                ->get();
-        } elseif ($role == 'admin' || $role == 'superadmin') {
-            // Jika pengguna adalah admin atau superadmin, ambil keranjang dengan status yang sesuai
-            $cartItems = Keranjang::where('status', '!=', 4)  // Kondisi pertama: status != 2
-                                ->get();
+            $cartItems = Keranjang::where('id_user', Auth::id())  // Menggunakan Eloquent Model Keranjang
+                                ->where(function($query) {
+                                    $query->where('status', '!=', 4)  // status bukan 4
+                                            ->orWhereNull('status');  // status bisa null
+                                })
+                                ->get();  // Mengambil data menggunakan Eloquent
+        } else {
+            $cartItems = Keranjang::where(function($query) {
+                                    $query->where('status', '!=', 4)  // status bukan 4
+                                            ->orWhereNull('status');  // status bisa null
+                                })
+                                ->get();  // Mengambil data menggunakan Eloquent
         }
-        // dd($cartItems)->All();
+
         // Pastikan ada data keranjang
         if ($cartItems->isNotEmpty()) {
-            // Ambil status dari item keranjang pertama
-            $status = $cartItems[0]->status;
+            $status = $cartItems->first()->status;  // Ambil status item pertama
 
-            // Tentukan status berdasarkan nilai status
             if (is_null($status)) {
                 $user = TRUE;
             } 
@@ -91,6 +93,7 @@ class CheckoutController extends Controller
         // Kirim data ke view
         return view('keranjang.index', compact('cartItems', 'user', 'admin', 'approve', 'role', 'serahkan', 'terima'));
     }
+
 
     public function history_keranjang(Request $request)
     {
@@ -156,14 +159,19 @@ class CheckoutController extends Controller
     // Menghapus barang dari keranjang
     public function ajukan_pengambilan(Request $request)
     {
-        if($request->id_user != Auth::id()){
+        // dd($request)->All();
+        if((int)$request->id_user != Auth::id()){
             return redirect()->route('logistik.ambil_barang')
                             ->with('error', 'Gagal Mengajukan');
         }else{
             $data = [
                     'status' => 1,
             ];
-            $save = Keranjang::where('id_user', Auth::id())->update($data);
+            // Melakukan update pada data keranjang berdasarkan kondisi
+            $save = Keranjang::where('id_user', Auth::id())
+                                    ->where('status', '!=', 4)  // status bukan 4
+                                    ->orWhereNull('status')  // status bisa null
+                                    ->update($data);
             if($save){
                 return redirect()->route('logistik.ambil_barang')
                                 ->with('success', 'Keranjang berhasil diajukan!');

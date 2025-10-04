@@ -3,6 +3,12 @@
 @section('title', 'Pengajuan Bahan')
 
 @section('content')
+<style>
+        .modal-body {
+        max-height: 400px; /* Tentukan tinggi maksimal */
+        overflow-y: auto;  /* Menambahkan scroll jika konten lebih tinggi */
+    }
+</style>
 <div class="container mx-auto py-8">
     <div class="row">
         <div class="ms-3">
@@ -101,7 +107,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        @if($role_id == 'admin' || $role_id == 'superadmin')
+
                                                         <!-- Tombol Hapus Bahan -->
                                                         <button class="btn btn-danger" data-toggle="modal" data-target="#hapusModal{{ $id_bahan->id }}">Hapus</button>
 
@@ -129,7 +135,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        @endif
                                                     </td>
                                                 </tr>
                                                 @endforeach
@@ -206,19 +211,19 @@
                                 @if($bahan->payment_proof)
                                 @php 
                                     $payment_proof = explode('^', $bahan->payment_proof);
-                                    var_dump($payment_proof);die();
+                                    $no = 1;
                                 @endphp
                                 @foreach($payment_proof as $b)
-                                    <button class="btn btn-info" data-toggle="modal" data-target="#paymentProofModal{{ $bahan->id }}">
-                                        Lihat Bukti Pembayaran
+                                    <button class="btn btn-info" data-toggle="modal" data-target="#paymentProofModal{{ $bahan->id }}-{{ $no }}">
+                                        {{ $no }}Lihat Bukti Pembayaran
                                     </button>
                                     <!-- Modal untuk Lihat Bukti Pembayaran -->
                                     @if($bahan->payment_proof)
-                                    <div class="modal fade" id="paymentProofModal{{ $bahan->id }}" tabindex="-1" role="dialog" aria-labelledby="paymentProofModalLabel{{ $bahan->id }}" aria-hidden="true">
+                                    <div class="modal fade" id="paymentProofModal{{ $bahan->id }}-{{ $no }}" tabindex="-1" role="dialog" aria-labelledby="paymentProofModalLabel{{ $bahan->id }}-{{ $no }}" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="paymentProofModalLabel{{ $bahan->id }}">Bukti Pembayaran</h5>
+                                                    <h5 class="modal-title" id="paymentProofModalLabel{{ $bahan->id }}-{{ $no }}">Bukti Pembayaran</h5>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
@@ -229,7 +234,11 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <br>
                                     @endif
+                                    <?php 
+                                         $no = $no +1;
+                                    ?>
                                 @endforeach
                                 @else
                                 <span>Belum Ada</span>
@@ -240,20 +249,21 @@
                                 
                                 @php 
                                     $receipt_proof = explode('^', $bahan->receipt_proof);
+                                    $no = 1;
                                 @endphp
                                 @foreach($receipt_proof as $c)
-                                    <button class="btn btn-info" data-toggle="modal" data-target="#receiptProofModal{{ $bahan->id }}">
+                                    <button class="btn btn-info" data-toggle="modal" data-target="#receiptProofModal{{ $bahan->id }}-{{ $no }}">
                                         Lihat Struk Pembayaran
                                     </button>
                                     
 
                                     <!-- Modal untuk Lihat Struk Pembayaran -->
                                     @if($bahan->receipt_proof)
-                                    <div class="modal fade" id="receiptProofModal{{ $bahan->id }}" tabindex="-1" role="dialog" aria-labelledby="receiptProofModalLabel{{ $bahan->id }}" aria-hidden="true">
+                                    <div class="modal fade" id="receiptProofModal{{ $bahan->id }}-{{ $no }}" tabindex="-1" role="dialog" aria-labelledby="receiptProofModalLabel{{ $bahan->id }}-{{ $no }}" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="receiptProofModalLabel{{ $bahan->id }}">Struk Pembayaran</h5>
+                                                    <h5 class="modal-title" id="receiptProofModalLabel{{ $bahan->id }}-{{ $no }}">Struk Pembayaran</h5>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
@@ -264,7 +274,11 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <br>
                                     @endif
+                                    <?php 
+                                         $no = $no +1;
+                                    ?>
                                 @endforeach
                                 @else
                                 <span>Belum Ada</span>
@@ -275,19 +289,20 @@
                                 
                                 @php 
                                     $item_photo = explode('^', $bahan->item_photo);
+                                    $no = 1;
                                 @endphp
                                 @foreach($item_photo as $d)
-                                    <button class="btn btn-info" data-toggle="modal" data-target="#itemPhotoModal{{ $bahan->id }}">
+                                    <button class="btn btn-info" data-toggle="modal" data-target="#itemPhotoModal{{ $bahan->id }}-{{ $no }}">
                                         Lihat Foto Bukti Bahan
                                     </button>
                                     
                                     <!-- Modal untuk Lihat Foto Bukti Bahan -->
                                     @if($bahan->item_photo)
-                                    <div class="modal fade" id="itemPhotoModal{{ $bahan->id }}" tabindex="-1" role="dialog" aria-labelledby="itemPhotoModalLabel{{ $bahan->id }}" aria-hidden="true">
+                                    <div class="modal fade" id="itemPhotoModal{{ $bahan->id }}-{{ $no }}" tabindex="-1" role="dialog" aria-labelledby="itemPhotoModalLabel{{ $bahan->id }}-{{ $no }}" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="itemPhotoModalLabel{{ $bahan->id }}">Foto Bukti Bahan</h5>
+                                                    <h5 class="modal-title" id="itemPhotoModalLabel{{ $bahan->id }}-{{ $no }}">Foto Bukti Bahan</h5>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
@@ -298,7 +313,11 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <br>
                                     @endif
+                                    <?php 
+                                         $no = $no +1;
+                                    ?>
                                 @endforeach
                                 @else
                                 <span>Belum Ada</span>
@@ -362,30 +381,40 @@
                                                     </div>
 
                                                     @if($row->status == 4)
-                                                    <!-- Upload Bukti Pembayaran dan Struk Pembayaran -->
-                                                    <div class="form-group">
-                                                        <label for="payment_proof">Bukti Pembayaran</label>
-                                                        <input type="file" class="form-control" name="payment_proof" id="payment_proof" required>
-                                                        <div id="payment_proof_preview" style="margin-top: 10px;">
-                                                            <!-- Preview bukti pembayaran -->
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="receipt_proof">Struk Pembayaran</label>
-                                                        <input type="file" class="form-control" name="receipt_proof" id="receipt_proof" required>
-                                                        <div id="receipt_proof_preview" style="margin-top: 10px;">
-                                                            <!-- Preview struk pembayaran -->
-                                                        </div>
-                                                    </div>
+                                                        @foreach($array_bahan as $bahan)
+                                                        @php
+                                                            $id_bahan = (new App\Models\PengajuanBahan)->getIdBahan($bahan);
+                                                            $nama_bahan = (new App\Models\PengajuanBahan)->getNamaBahan($id_bahan->id_bahan);
+                                                        @endphp
+                                                            <h1 for="password">Informasi {{ $nama_bahan }}</h1>
+                                                            <label for="password">Harga {{ $nama_bahan }}</label>
+                                                            <input type="number" class="form-control" name="harga[]" id="harga" required>
+                                                            <input type="hidden" class="form-control" name="id_bahan[]" value="{{ $bahan }}"id="harga" required>
+                                                            <!-- Upload Bukti Pembayaran dan Struk Pembayaran -->
+                                                            <div class="form-group">
+                                                                <label for="payment_proof">Bukti Pembayaran</label>
+                                                                <input type="file" class="form-control" name="payment_proof[]" id="payment_proof" required>
+                                                                <div id="payment_proof_preview" style="margin-top: 10px;">
+                                                                    <!-- Preview bukti pembayaran -->
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="receipt_proof">Struk Pembayaran</label>
+                                                                <input type="file" class="form-control" name="receipt_proof[]" id="receipt_proof" required>
+                                                                <div id="receipt_proof_preview" style="margin-top: 10px;">
+                                                                    <!-- Preview struk pembayaran -->
+                                                                </div>
+                                                            </div>
 
-                                                    <!-- Upload Foto Bukti Bahan -->
-                                                    <div class="form-group">
-                                                        <label for="item_photo">Foto Bukti Bahan</label>
-                                                        <input type="file" class="form-control" name="item_photo" id="item_photo" required>
-                                                        <div id="item_photo_preview" style="margin-top: 10px;">
-                                                            <!-- Preview foto bukti bahan -->
-                                                        </div>
-                                                    </div>
+                                                            <!-- Upload Foto Bukti Barang -->
+                                                            <div class="form-group">
+                                                                <label for="item_photo">Foto Bukti Barang</label>
+                                                                <input type="file" class="form-control" name="item_photo[]" id="item_photo" required>
+                                                                <div id="item_photo_preview" style="margin-top: 10px;">
+                                                                    <!-- Preview foto bukti bahan -->
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
                                                     @endif
 
                                                     <button type="submit" class="btn btn-primary">Verifikasi</button>
@@ -408,16 +437,14 @@
 
                             </td>
                         </tr>
-
-
                         @endforeach
                     </tbody>
                 </table>
 
 
                 @if($role_id == 'superadmin')
-                    <label for="">Menunggu Approve</label>
-                    <span style="color:green">{{ $approve }}</span>
+                <label for="">Menunggu Approve</label>
+                <span style="color:green">{{ $approve }}</span>
                 @endif
             </div>
         </div>

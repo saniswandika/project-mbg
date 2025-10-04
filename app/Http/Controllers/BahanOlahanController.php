@@ -81,9 +81,9 @@ class BahanOlahanController extends Controller
 
     public function edit_bahan_olahan($id)
     {
-        $bahan = DB::table('bahan_olahans')->where('id', $id)->first(); // Ambil data barang berdasarkan ID
-        // dd($barang)->All();
-        return view('bahan_olahan.edit', compact('bahan')); // Tampilkan form edit dengan data barang
+        $bahan = DB::table('bahan_olahans')->where('id', $id)->first(); // Ambil data bahan berdasarkan ID
+        // dd($bahan)->All();
+        return view('bahan_olahan.edit', compact('bahan')); // Tampilkan form edit dengan data bahan
     }
 
     public function update_bahan_olahan(Request $request, $id)
@@ -96,8 +96,8 @@ class BahanOlahanController extends Controller
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Ambil data barang berdasarkan ID
-        $barang = DB::table('bahan_olahans')->where('id', $id)->first();
+        // Ambil data bahan berdasarkan ID
+        $bahan = DB::table('bahan_olahans')->where('id', $id)->first();
 
         // Persiapkan data yang akan diperbarui
         $data = [
@@ -110,8 +110,8 @@ class BahanOlahanController extends Controller
         // Handle file upload jika ada foto baru
         if ($request->hasFile('foto')) {
             // Hapus foto lama jika ada
-            if ($barang->foto) {
-                $oldImagePath = public_path('storage/bahan_olahan/' . $barang->foto);
+            if ($bahan->foto) {
+                $oldImagePath = public_path('storage/bahan_olahan/' . $bahan->foto);
                 if (file_exists($oldImagePath)) {
                     unlink($oldImagePath); // Hapus foto lama dari storage
                 }
@@ -125,7 +125,7 @@ class BahanOlahanController extends Controller
             $data['foto'] = $filename; // Masukkan nama file foto baru
         }
 
-        // Update data barang di database
+        // Update data bahan di database
         $save = DB::table('bahan_olahans')->where('id', $id)->update($data);
 
         if($save){
@@ -136,29 +136,29 @@ class BahanOlahanController extends Controller
         }
     }
 
-        // Fungsi untuk menghapus barang berdasarkan ID
+        // Fungsi untuk menghapus bahan berdasarkan ID
     public function destroy_master_bahan($id)
     {
-        // Ambil data barang berdasarkan ID
-        $barang = DB::table('bahan_olahans')->where('id', $id)->first();
+        // Ambil data bahan berdasarkan ID
+        $bahan = DB::table('bahan_olahans')->where('id', $id)->first();
 
-        if ($barang) {
+        if ($bahan) {
             // Menghapus file gambar dari storage jika ada
-            if ($barang->foto) {
-                $imagePath = public_path('storage/bahan_olahan/' . $barang->foto);
+            if ($bahan->foto) {
+                $imagePath = public_path('storage/bahan_olahan/' . $bahan->foto);
                 if (file_exists($imagePath)) {
                     unlink($imagePath); // Menghapus gambar dari server
                 }
             }
 
-            // Menghapus data barang dari database
+            // Menghapus data bahan dari database
             DB::table('bahan_olahans')->where('id', $id)->delete();
 
             // Redirect dengan pesan sukses
             return redirect()->route('bahan_olahan.bahan_olahan')
                              ->with('success', 'Master bahan berhasil dihapus!');
         } else {
-            // Jika barang tidak ditemukan
+            // Jika bahan tidak ditemukan
             return redirect()->route('bahan_olahan.bahan_olahan')
                              ->with('error', 'bahan tidak ditemukan!');
         }
@@ -210,11 +210,11 @@ class BahanOlahanController extends Controller
     public function revisi_pengajuan_bahan(Request $request, $id)
     {
         // Menggunakan query builder untuk menemukan data berdasarkan ID
-        $barang = DB::table('pengajuan_bahans')->where('id', $id)->first();
+        $bahan = DB::table('pengajuan_bahans')->where('id', $id)->first();
 
-        // Cek apakah data barang ditemukan
-        if ($barang) {
-            // Update jumlah barang menggunakan query builder
+        // Cek apakah data bahan ditemukan
+        if ($bahan) {
+            // Update jumlah bahan menggunakan query builder
             DB::table('pengajuan_bahans')
                 ->where('id', $id)
                 ->update([
@@ -230,15 +230,15 @@ class BahanOlahanController extends Controller
 
     public function hapus_pengajuan_bahan($id, $id_home)
     {
-        // Cari barang berdasarkan ID menggunakan query builder
-        $barang = DB::table('pengajuan_bahans')->where('id', $id)->first();
-        if(empty($barang)){
+        // Cari bahan berdasarkan ID menggunakan query builder
+        $bahan = DB::table('pengajuan_bahans')->where('id', $id)->first();
+        if(empty($bahan)){
             return redirect()->route('pengajuan_bahan');
         }
 
-        // Cek apakah barang ditemukan
-        if ($barang) {
-            // Hapus barang berdasarkan ID menggunakan query builder
+        // Cek apakah bahan ditemukan
+        if ($bahan) {
+            // Hapus bahan berdasarkan ID menggunakan query builder
             $delete = DB::table('pengajuan_bahans')->where('id', $id)->delete();
             if($delete){
             $cek_list = DB::table('list_pengajuan_bahans')->where('id', $id_home)->first();
@@ -269,7 +269,7 @@ class BahanOlahanController extends Controller
             'jumlah_stok' => 'required|array',
         ]);
         $jumlahStok = $request->input('jumlah_stok');
-        $barangIds = $request->input('bahan_ids');
+        $bahanIds = $request->input('bahan_ids');
         $userid = Auth::id();
         $kepaladapur_id = DB::table('model_has_roles')
                         ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
@@ -310,10 +310,10 @@ class BahanOlahanController extends Controller
         }
         $ambil_id = [];
         foreach ($jumlahStok as $index => $stok) {
-            $barangId = $barangIds[$index];
+            $bahanId = $bahanIds[$index];
             // Perbaiki data input untuk memasukkan hanya satu 'jumlah'
             $id = DB::table('pengajuan_bahans')->insertGetId([
-                'id_bahan'     => $barangId,
+                'id_bahan'     => $bahanId,
                 'id_pengaju'    => $userid,
                 'id_akutansi'   => $akutansi,
                 'id_admin'      => $admin,
@@ -330,7 +330,7 @@ class BahanOlahanController extends Controller
 
             $ambil_id[] = $id;
             // Ambil ID yang baru saja dimasukkan
-            // echo "ID Pengajuan Barang yang baru: " . $id;
+            // echo "ID Pengajuan Bahan yang baru: " . $id;
 
         }
             $array = $ambil_id;
@@ -356,7 +356,7 @@ class BahanOlahanController extends Controller
 
     public function verifyApprove(Request $request, $id)
     {
-        // Ambil data pengajuan barang berdasarkan ID
+        // Ambil data pengajuan bahan berdasarkan ID
         $bahan = DB::table('list_pengajuan_bahans')->where('id', $id)->first();
         
         // Cek apakah bahan ditemukan
@@ -364,14 +364,11 @@ class BahanOlahanController extends Controller
             return redirect()->back()->with('error', 'Bahan tidak ditemukan.');
         }
 
-        // Validasi file yang di-upload (Bukti Pembayaran, Struk Pembayaran, dan Foto Bukti Barang)
+        // Validasi file yang di-upload (Bukti Pembayaran, Struk Pembayaran, dan Foto Bukti Bahan)
         $validated = $request->validate([
             'password' => 'required',
-            'payment_proof' => 'nullable|image|mimes:jpg,jpeg,png,pdf|max:2048', // Validasi gambar atau PDF
-            'receipt_proof' => 'nullable|image|mimes:jpg,jpeg,png,pdf|max:2048', // Validasi gambar atau PDF
-            'item_photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // Validasi gambar
         ]);
-
+        // dd($validated)->All();
         // Verifikasi password (gunakan Auth untuk mendapatkan user saat ini)
         if (Hash::check($request->password, Auth::user()->password)) {
             $status = $bahan->status;
@@ -379,7 +376,7 @@ class BahanOlahanController extends Controller
             $userid = Auth::id();
             $role_id = $this->get_role($userid);
             $input = 1;
-            
+
             // Menentukan status berdasarkan role
             if ($role_id == 'akutansi') {
                 $input = 2;
@@ -393,31 +390,49 @@ class BahanOlahanController extends Controller
             if($input == 7){
                 $input = 6;
             }
-            
+
             // Proses upload file (hanya jika ada file baru)
-            $payment_proof_path = $bahan->payment_proof; // Gunakan file lama jika tidak ada file baru
-            $receipt_proof_path = $bahan->receipt_proof; // Gunakan file lama jika tidak ada file baru
-            $item_photo_path = $bahan->item_photo; // Gunakan file lama jika tidak ada file baru
+            $payment_proof_paths = $bahan->payment_proof ? explode(',', $bahan->payment_proof) : []; // Menggunakan file lama jika tidak ada file baru
+            $receipt_proof_paths = $bahan->receipt_proof ? explode(',', $bahan->receipt_proof) : []; // Menggunakan file lama jika tidak ada file baru
+            $item_photo_paths = $bahan->item_photo ? explode(',', $bahan->item_photo) : []; // Menggunakan file lama jika tidak ada file baru
 
             // Jika ada file Bukti Pembayaran baru
             if ($request->hasFile('payment_proof')) {
                 // Hapus file lama jika ada
-                Storage::delete('public/' . $bahan->payment_proof);
-                $payment_proof_path = $request->file('payment_proof')->store('uploads/payment_proofs', 'public');
+                foreach ($payment_proof_paths as $oldFile) {
+                    Storage::delete('public/' . $oldFile);
+                }
+
+                $payment_proof_paths = []; // Reset array untuk menyimpan file baru
+                foreach ($request->file('payment_proof') as $file) {
+                    $payment_proof_paths[] = $file->store('uploads/payment_proofs', 'public');
+                }
             }
 
             // Jika ada file Struk Pembayaran baru
             if ($request->hasFile('receipt_proof')) {
                 // Hapus file lama jika ada
-                Storage::delete('public/' . $bahan->receipt_proof);
-                $receipt_proof_path = $request->file('receipt_proof')->store('uploads/receipt_proofs', 'public');
+                foreach ($receipt_proof_paths as $oldFile) {
+                    Storage::delete('public/' . $oldFile);
+                }
+
+                $receipt_proof_paths = []; // Reset array untuk menyimpan file baru
+                foreach ($request->file('receipt_proof') as $file) {
+                    $receipt_proof_paths[] = $file->store('uploads/receipt_proofs', 'public');
+                }
             }
 
-            // Jika ada file Foto Bukti Barang baru
+            // Jika ada file Foto Bukti Bahan baru
             if ($request->hasFile('item_photo')) {
                 // Hapus file lama jika ada
-                Storage::delete('public/' . $bahan->item_photo);
-                $item_photo_path = $request->file('item_photo')->store('uploads/item_photos', 'public');
+                foreach ($item_photo_paths as $oldFile) {
+                    Storage::delete('public/' . $oldFile);
+                }
+
+                $item_photo_paths = []; // Reset array untuk menyimpan file baru
+                foreach ($request->file('item_photo') as $file) {
+                    $item_photo_paths[] = $file->store('uploads/item_photos', 'public');
+                }
             }
 
             // Mengupdate status pengajuan bahan
@@ -426,43 +441,76 @@ class BahanOlahanController extends Controller
                 ->where('id', $id)
                 ->update([
                     'status' => $input,
-                    'payment_proof' => $payment_proof_path,
-                    'receipt_proof' => $receipt_proof_path,
-                    'item_photo' => $item_photo_path,
+                    'payment_proof' => implode('^', $payment_proof_paths),
+                    'receipt_proof' => implode('^', $receipt_proof_paths),
+                    'item_photo' => implode('^', $item_photo_paths),
                 ]);
-
+            // Jika status menjadi 5, insert data ke tabel logistik
             if ($input == 6) {
                 foreach ($array_id_bahan as $a) {
+                    // Ambil data bahan terkait untuk dimasukkan ke logistik
                     $bahan_data = DB::table('pengajuan_bahans')->where('id', $a)->first();
-                    $id_bahan = $bahan_data->id_bahan;  // ID Barang dari pengajuan_bahans
+                    $id_bahan = $bahan_data->id_bahan;  // ID Bahan dari pengajuan_bahans
                     
                     // Mendapatkan nama bahan berdasarkan ID
-                    $pengajuanBarang = new PengajuanBahan();
-                    $namaBarang = $pengajuanBarang->getNamaBahan($id_bahan);  // Memanggil method untuk mendapatkan nama bahan
+                    $pengajuanBahan = new PengajuanBahan();
+                    $namaBahan = $pengajuanBahan->getNamaBahan($id_bahan);  // Memanggil method untuk mendapatkan nama bahan
 
+                    // Mengecek apakah bahan sudah ada di logistik
                     $cek_bahan = DB::table('olahan_dapurs')->where('id_master_bahan', $id_bahan)->first();
 
                     // Menghitung jumlah bahan yang akan dimasukkan
                     if (!empty($cek_bahan)) {
-                        $jumlah = $cek_bahan->jumlah + $bahan_data->jumlah;  // Jika bahan ada, tambah jumlahnya
+                        $jumlah = $cek_bahan->jumlah_bahan + $bahan_data->jumlah;  // Jika bahan ada, tambah jumlahnya
+                        $insert = FALSE;
                     } else {
                         $jumlah = $bahan_data->jumlah;  // Jika bahan belum ada, pakai jumlah yang baru
+                        $insert = TRUE;
                     }
 
-                    if ($bahan_data) {
-                        DB::table('olahan_dapurs')->insert([
-                            'nama_bahan' => $namaBarang,  // Nama bahan yang diambil dari master_bahans
-                            'jumlah_bahan' => $jumlah,  // Jumlah bahan
-                            'id_master_bahan' => $id_bahan,  // ID Barang yang sesuai dengan master_bahans
-                            'merk_bahan' => $namaBarang,  // Menggunakan nama bahan yang sama untuk merk
-                            'status' => 'baru',  // Status bahan baru
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ]);
+                    // Jika data bahan ditemukan, masukkan ke tabel logistik
+                    if($insert){
+                        if (!empty($bahan_data)) {
+                            $input = DB::table('olahan_dapurs')->insert([
+                                'nama_bahan' => $namaBahan,  // Nama bahan yang diambil dari master_bahans
+                                'jumlah_bahan' => $jumlah,  // Jumlah bahan
+                                'id_master_bahan' => $id_bahan,  // ID Bahan yang sesuai dengan master_bahans
+                                'merk_bahan' => $namaBahan,  // Menggunakan nama bahan yang sama untuk merk
+                                'status' => 'baru',  // Status bahan baru
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ]);
+                        }
+                    }else{
+                        if (!empty($bahan_data)) {
+                            $input = DB::table('olahan_dapurs')
+                                ->where('id', $cek_bahan->id)
+                                ->update([
+                                    'nama_bahan' => $namaBahan,  // Nama bahan yang diambil dari master_bahans
+                                    'jumlah_bahan' => $jumlah,  // Jumlah bahan
+                                    'id_master_bahan' => $id_bahan,  // ID Bahan yang sesuai dengan master_bahans
+                                    'merk_bahan' => $namaBahan,  // Menggunakan nama bahan yang sama untuk merk
+                                    'status' => 'baru',  // Status bahan baru
+                                    'updated_at' => now(),
+                            ]);
+                        }
+                    }
+
+                }
+                
+            }
+                $no = 0;
+                if(!empty($request->harga)){
+                    foreach ($array_id_bahan as $id_b){
+                        $data_bahan = $request->harga;
+                        DB::table('pengajuan_bahans')
+                            ->where('id', $id_b)
+                            ->update([
+                                'harga_bahan' => $data_bahan[$no],
+                            ]);
+                        $no = $no +1;
                     }
                 }
-            }
-
 
             // Mengupdate status pengajuan bahan per ID bahan
             foreach ($array_id_bahan as $a) {

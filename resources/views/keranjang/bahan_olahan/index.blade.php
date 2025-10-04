@@ -22,8 +22,8 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Nama Barang</th>
-                    <th>Jumlah Barang</th>
+                    <th>Nama Bahan</th>
+                    <th>Jumlah Bahan</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -31,6 +31,26 @@
                 @foreach ($cartItems as $item)
                 @php 
                     $nama_bahan = (new App\Models\PengajuanBahan)->getNamaBahan($item->id_master_bahan);
+
+                                $status = $item->status;  // Ambil status item pertama
+
+                                $user = FALSE;
+                                $admin = FALSE;
+                                $approve = FALSE;
+                                $serahkan = FALSE;
+                                $terima = FALSE;
+                                if (is_null($status)) {
+                                    $user = TRUE;
+                                } 
+                                if ($status == 1) {
+                                    $admin = TRUE;
+                                }
+                                if ($status == 2) {
+                                    $serahkan = TRUE;
+                                }
+                                if ($status == 3) {
+                                    $terima = TRUE;
+                                }
                 @endphp 
                     <tr>
                         <td>{{ $item->id }}</td>

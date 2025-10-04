@@ -3,6 +3,12 @@
 @section('title', 'Pengajuan Barang')
 
 @section('content')
+<style>
+        .modal-body {
+        max-height: 400px; /* Tentukan tinggi maksimal */
+        overflow-y: auto;  /* Menambahkan scroll jika konten lebih tinggi */
+    }
+</style>
 <div class="container mx-auto py-8">
     <div class="row">
         <div class="ms-3">
@@ -375,30 +381,40 @@
                                                     </div>
 
                                                     @if($row->status == 4)
-                                                    <!-- Upload Bukti Pembayaran dan Struk Pembayaran -->
-                                                    <div class="form-group">
-                                                        <label for="payment_proof">Bukti Pembayaran</label>
-                                                        <input type="file" class="form-control" name="payment_proof" id="payment_proof" required>
-                                                        <div id="payment_proof_preview" style="margin-top: 10px;">
-                                                            <!-- Preview bukti pembayaran -->
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="receipt_proof">Struk Pembayaran</label>
-                                                        <input type="file" class="form-control" name="receipt_proof" id="receipt_proof" required>
-                                                        <div id="receipt_proof_preview" style="margin-top: 10px;">
-                                                            <!-- Preview struk pembayaran -->
-                                                        </div>
-                                                    </div>
+                                                        @foreach($array_barang as $barang)
+                                                        @php
+                                                            $id_barang = (new App\Models\PengajuanBarang)->getIdBarang($barang);
+                                                            $nama_barang = (new App\Models\PengajuanBarang)->getNamaBarang($id_barang->id_barang);
+                                                        @endphp
+                                                            <h1 for="password">Informasi {{ $nama_barang }}</h1>
+                                                            <label for="password">Harga {{ $nama_barang }}</label>
+                                                            <input type="number" class="form-control" name="harga[]" id="harga" required>
+                                                            <input type="hidden" class="form-control" name="id_barang[]" value="{{ $barang }}"id="harga" required>
+                                                            <!-- Upload Bukti Pembayaran dan Struk Pembayaran -->
+                                                            <div class="form-group">
+                                                                <label for="payment_proof">Bukti Pembayaran</label>
+                                                                <input type="file" class="form-control" name="payment_proof[]" id="payment_proof" required>
+                                                                <div id="payment_proof_preview" style="margin-top: 10px;">
+                                                                    <!-- Preview bukti pembayaran -->
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="receipt_proof">Struk Pembayaran</label>
+                                                                <input type="file" class="form-control" name="receipt_proof[]" id="receipt_proof" required>
+                                                                <div id="receipt_proof_preview" style="margin-top: 10px;">
+                                                                    <!-- Preview struk pembayaran -->
+                                                                </div>
+                                                            </div>
 
-                                                    <!-- Upload Foto Bukti Barang -->
-                                                    <div class="form-group">
-                                                        <label for="item_photo">Foto Bukti Barang</label>
-                                                        <input type="file" class="form-control" name="item_photo" id="item_photo" required>
-                                                        <div id="item_photo_preview" style="margin-top: 10px;">
-                                                            <!-- Preview foto bukti barang -->
-                                                        </div>
-                                                    </div>
+                                                            <!-- Upload Foto Bukti Barang -->
+                                                            <div class="form-group">
+                                                                <label for="item_photo">Foto Bukti Barang</label>
+                                                                <input type="file" class="form-control" name="item_photo[]" id="item_photo" required>
+                                                                <div id="item_photo_preview" style="margin-top: 10px;">
+                                                                    <!-- Preview foto bukti barang -->
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
                                                     @endif
 
                                                     <button type="submit" class="btn btn-primary">Verifikasi</button>

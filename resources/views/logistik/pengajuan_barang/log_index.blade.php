@@ -50,6 +50,9 @@
                             <th>Pengajuan</th>
                             <th>Tanggal</th>
                             <th>Status</th>
+                            @if($role_id == 'admin' || $role_id == 'superadmin')
+                            <th>Pengaju</th>
+                            @endif
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -131,6 +134,7 @@
                         if($row->deleted_at != NULL){
                             $rejected = true;
                         }
+                        $pengaju = (new App\Models\PengajuanBarang)->getNamaUser($row->id_pengaju);
                         @endphp
                         <tr>
                             <td>{{ $loop->iteration }}</td>
@@ -141,6 +145,7 @@
                                         <tr>
                                             <th>Nama barang</th>
                                             <th>Jumlah barang</th>
+                                            <th>Harga barang</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -153,6 +158,7 @@
                                         <tr>
                                             <td>{{ $nama_barang }}</td>
                                             <td>{{ $id_barang->jumlah }}</td>
+                                            <td>{{ number_format((int) $id_barang->harga_barang, 0, ',', '.') }}</td>
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -166,6 +172,11 @@
                                     <span style="color:green">{{ $approve }}</span>
                                 @endif
                             </td>
+                            @if($role_id == 'admin' || $role_id == 'superadmin')
+                            <td>
+                                {{ $pengaju }}
+                            </td>
+                            @endif
                             <td>
 
                             </td>

@@ -204,7 +204,7 @@
                                             </div>
                                             <div class="modal-body">
                                                 <!-- Form untuk memverifikasi password -->
-                                                <form action="{{ route('logistik.verify_approve', ['id' => $row->id]) }}" method="POST" enctype="multipart/form-data">
+                                                <form action="{{ route('bahan_olahan.verify_approve', ['id' => $row->id]) }}" method="POST" enctype="multipart/form-data">
                                                     @csrf
                                                     <div class="form-group">
                                                         <label for="password">Masukkan Password</label>
