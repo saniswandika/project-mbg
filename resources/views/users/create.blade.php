@@ -28,47 +28,43 @@
         {!! Form::open(array('route' => 'users.store','method'=>'POST')) !!}
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
                     <strong>Name:</strong>
+
+                <div class="input-group input-group-outline mb-3">
                     {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                    <strong>Email:</strong>
+                <strong>Email:</strong>
+
+                <div class="input-group input-group-outline mb-3">
                     {!! Form::text('email', null, array('placeholder' => 'Email','class' => 'form-control')) !!}
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                    <strong>Password:</strong>
+                <strong>Password:</strong>
+
+                <div class="input-group input-group-outline mb-3">
                     {!! Form::password('password', array('placeholder' => 'Password','class' => 'form-control')) !!}
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                    <strong>Confirm Password:</strong>
+                <strong>Confirm Password:</strong>
+
+                <div class="input-group input-group-outline mb-3">
                     {!! Form::password('confirm-password', array('placeholder' => 'Confirm Password','class' => 'form-control')) !!}
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                    <strong>Role:</strong>
-                    <select class="form-control" name="roles" id="exampleFormControlSelect1">
-                      <option selected>
-                        {{-- @if(!empty($user->getRoleNames()))
-                          @foreach($user->getRoleNames() as $v)
-                              <label class="badge badge-success">{{ $v }}</label>
-                          @endforeach
-                        @endif --}}
-                      </option>
-                      @foreach ($roles as $role )
+               <div class="input-group input-group-outline mb-3">
+                    <select class="form-control" name="roles" id="roles">
+                        <option disabled selected>Pilih Role</option>
+                        @foreach ($roles as $role)
                         <option value="{{ $role->name }}">{{ $role->name }}</option>
-                      @endforeach
-                  </select> 
-                    
-                    {{-- {!! Form::select('roles[]', $roles,[], array('class' => 'form-control','option')) !!} --}}
+                        @endforeach
+                    </select>
                 </div>
+
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
                 <button type="submit" class="btn btn-primary">Submit</button>

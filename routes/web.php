@@ -4,9 +4,6 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\GrafikController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LogistikController;
 use App\Http\Controllers\BahanOlahanController;
@@ -38,6 +35,7 @@ use App\Models\rekomendasi_pengumpulan_undian_berhadiah;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Contracts\Role;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CheckoutBahanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,15 +48,19 @@ use App\Http\Controllers\CheckoutController;
 |
 */
 
+
 Route::get('/', function () {
     return view('auth.login');
 });
+
 Route::get('pengaduans', function () {
     return view('pengaduans.index');
 });
+
 Route::get('pengaduans/dashboard', function () {
     return view('pengaduans.dashboard');
 });
+
 Auth::routes();
 Route::group(['middleware' => ['prevent-back-history', 'auth', 'TimeOutLogin']], function () {
 
@@ -66,7 +68,7 @@ Route::group(['middleware' => ['prevent-back-history', 'auth', 'TimeOutLogin']],
     Route::resource('roles', RoleController::class);
 });
 
-//wilayah
+// Wilayah
 Route::post('/get-kota', [PengaturanWilayahController::class, 'getKota'])->name('getKota');
 Route::get('/kecamatan/getByRegency/{regencyId}', [PengaturanWilayahController::class, 'getKecamatanByRegency']);
 Route::get('/kelurahan/getByRegency/{kelurahanId}', [PengaturanWilayahController::class, 'getKelurahanByRegency']);
@@ -74,15 +76,15 @@ Route::get('/Pengaturan_wilayah', [PengaturanWilayahController::class, 'listwila
 Route::get('/tambah-wilayah', [PengaturanWilayahController::class, 'create'])->name('rubahwilayah');
 Route::get('/status/update', [PengaturanWilayahController::class, 'updateStatus'])->name('users.update.status');
 Route::post('/add-wilayah', [PengaturanWilayahController::class, 'store'])->name('add_wilayah.store');
-//tutup wilayah
-// Route::post('/calendar', [App\Http\Controllers\CalendarController::class, 'index']);
+
+// Events
 Route::post('/events', [App\Http\Controllers\CalendarController::class, 'index']);
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::resource('roles', RoleController::class);
     Route::resource('users', App\Http\Controllers\UserController::class);
 
-    Route::resource('profile', App\Http\Controllers\ProfileController::class);
+    Route::resource('profile', ProfileController::class);
     Route::post('profilepassword', [ProfileController::class, 'password_action'])->name('password.action');
     Route::post('profilenama', [ProfileController::class, 'name_action'])->name('nama.action');
     Route::post('profileemail', [ProfileController::class, 'email_action'])->name('email.action');
@@ -98,10 +100,11 @@ Route::prefix('logistik')->name('logistik.')->group(function () {
     Route::get('/list_barang', [LogistikController::class, 'index'])->name('list_barang');
     Route::get('/pengajuan_barang', [LogistikController::class, 'pengajuan_barang'])->name('pengajuan_barang');
     Route::post('/pengajuan_barang', [LogistikController::class, 'proses_pengajuan_barang'])->name('proses_pengajuan_barang');
+    Route::get('/log_pengajuan_barang', [LogistikController::class, 'log_pengajuan_barang'])->name('log_pengajuan_barang');
     Route::get('/detail_pengajuan_barang/{id}', [LogistikController::class, 'detail_pengajuan_barang'])->name('detail_pengajuan_barang');
     Route::put('/revisi_pengajuan_barang/{id}', [LogistikController::class, 'revisi_pengajuan_barang'])->name('revisi_pengajuan_barang');
     Route::put('/approve_pengajuan_barang/{id}', [LogistikController::class, 'approve_pengajuan_barang'])->name('approve_pengajuan_barang');
-    Route::put('/reject_pengajuan_barang/{id}', [LogistikController::class, 'reject_pengajuan_barang'])->name('reject_pengajuan_barang');
+    Route::get('/reject_pengajuan_barang/{id}', [LogistikController::class, 'reject_pengajuan_barang'])->name('reject_pengajuan_barang');
     Route::post('/logistik/verify-approve/{id}', [LogistikController::class, 'verifyApprove'])->name('verify_approve');
     Route::delete('/hapus_pengajuan_barang/{id}/{id_home}', [LogistikController::class, 'hapus_pengajuan_barang'])->name('hapus_pengajuan_barang');
     // edit
@@ -141,14 +144,14 @@ Route::prefix('bahan_olahan')->name('bahan_olahan.')->group(function () {
     Route::delete('/hapus_pengajuan_bahan/{id}/{id_home}', [BahanOlahanController::class, 'hapus_pengajuan_bahan'])->name('hapus_pengajuan_bahan');
     // edit
     // Route::get('/', [BahanOlahanController::class, 'index'])->name('index');
-    Route::post('/keranjang/add', [CheckoutController::class, 'addToCart'])->name('add_to_cart');
-    Route::get('/keranjang', [CheckoutController::class, 'showCart'])->middleware('auth')->name('ambil_barang');
-    Route::delete('/keranjang/{id}', [CheckoutController::class, 'removeFromCart'])->name('hapus_keranjang');
-    Route::post('/keranjang/ajukan_pengambilan', [CheckoutController::class, 'ajukan_pengambilan'])->name('ajukan_pengambilan');
-    Route::post('/keranjang/approve_keranjang', [CheckoutController::class, 'approve_keranjang'])->name('approve_keranjang');
-    Route::post('/keranjang/reject_keranjang', [CheckoutController::class, 'reject_keranjang'])->name('reject_keranjang');
-    Route::post('/keranjang/terima_keranjang', [CheckoutController::class, 'terima_keranjang'])->name('terima_keranjang');
-    Route::post('/keranjang/status_change', [CheckoutController::class, 'status_change'])->name('status_change');
-    Route::get('/history_keranjang', [CheckoutController::class, 'history_keranjang'])->middleware('auth')->name('history_keranjang');
+    Route::post('/keranjang/add', [CheckoutBahanController::class, 'addToCart'])->name('add_to_cart');
+    Route::get('/keranjang', [CheckoutBahanController::class, 'showCart'])->middleware('auth')->name('ambil_bahan');
+    Route::delete('/keranjang/{id}', [CheckoutBahanController::class, 'removeFromCart'])->name('hapus_keranjang');
+    Route::post('/keranjang/ajukan_pengambilan', [CheckoutBahanController::class, 'ajukan_pengambilan'])->name('ajukan_pengambilan');
+    Route::post('/keranjang/approve_keranjang', [CheckoutBahanController::class, 'approve_keranjang'])->name('approve_keranjang');
+    Route::post('/keranjang/reject_keranjang', [CheckoutBahanController::class, 'reject_keranjang'])->name('reject_keranjang');
+    Route::post('/keranjang/terima_keranjang', [CheckoutBahanController::class, 'terima_keranjang'])->name('terima_keranjang');
+    Route::post('/keranjang/status_change', [CheckoutBahanController::class, 'status_change'])->name('status_change');
+    Route::get('/history_keranjang', [CheckoutBahanController::class, 'history_keranjang'])->middleware('auth')->name('history_keranjang');
     //delete
 });

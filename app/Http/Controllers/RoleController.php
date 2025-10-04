@@ -44,15 +44,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $permissions = [
-            // 'pengaduan' => Permission::where('name', 'LIKE', 'pengaduan-%')->get(),
-            'rekomendasi-dtks' => Permission::where('name', 'LIKE', 'rekomendasi-dtks-%')->get(),
-            // 'rekomendasi-biaya-perawatans' => Permission::where('name', 'LIKE', 'rekomendasi-biaya-perawatans-%')->get(),
-            'role' => Permission::where('name', 'LIKE', 'role-%')->get(),
-            'user' => Permission::where('name', 'LIKE', 'user-%')->get(),
-            'rekomendasi-bantuan-pendidikan' => Permission::where('name', 'LIKE', 'rekomendasi-bantuan-pendidikan-%')->get()
-        ];
-    
+         $permissions = Permission::all()->groupBy('name'); 
         return view('roles.create', compact('permissions'));
     }
     

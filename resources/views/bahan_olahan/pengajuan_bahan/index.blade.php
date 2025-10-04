@@ -3,6 +3,7 @@
 @section('title', 'Pengajuan Bahan')
 
 @section('content')
+
 <div class="container mx-auto py-8">
     <div class="row">
         <div class="ms-3">
@@ -25,7 +26,7 @@
                             <label for="bahan" class="block text-sm font-medium text-gray-700 mb-2">Pilih Bahan:</label>
                             <select name="bahan_ids[]" id="bahan" class="form-control mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                 @foreach ($masterbahan as $item)
-                                <option value="{{ $item->id }}">{{ $item->nama_bahan }} ({{ $item->merk_bahan }})</option>
+                                    <option value="{{ $item->id }}">{{ $item->nama_bahan }} ({{ $item->merk_bahan }})</option>
                                 @endforeach
                             </select>
                         </div>
@@ -34,8 +35,9 @@
 
                     <div class="col-span-1">
                         <div class="form-group">
-                            <label for="jumlah" class="block text-sm font-medium text-gray-700">Jumlah Stok:</label>
-                            <input type="number" name="jumlah_stok" class="form-control mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" id="jumlah" min="1" placeholder="Masukkan jumlah stok" />
+                            <label for="jumlah" class="block text-sm font-medium text-gray-700">Jumlah Stok:</label><br>
+                            <span style="color:red">* Dalam Hitungan Gram</span>
+                            <input type="number" name="jumlah_stok" class="form-control mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" id="jumlah" min="1" placeholder="Masukkan jumlah stok dalam hitungan gram" />
                         </div>
                     </div>
                 </div>
@@ -53,7 +55,7 @@
                         <thead>
                             <tr>
                                 <th class="border border-gray-300 py-2 px-4">Bahan</th>
-                                <th class="border border-gray-300 py-2 px-4">Jumlah</th>
+                                <th class="border border-gray-300 py-2 px-4">Jumlah (Gram)</th>
                                 <th class="border border-gray-300 py-2 px-4">Aksi</th>
                             </tr>
                         </thead>
@@ -137,7 +139,7 @@
                                         @endphp
                                         <tr>
                                             <td>{{ $nama_Bahan }}</td>
-                                            <td>{{ $jumlah }}</td>
+                                            <td>{{ $jumlah }} gram</td>
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -202,7 +204,7 @@
                                             </div>
                                             <div class="modal-body">
                                                 <!-- Form untuk memverifikasi password -->
-                                                <form action="{{ route('logistik.verify_approve', ['id' => $row->id]) }}" method="POST" enctype="multipart/form-data">
+                                                <form action="{{ route('bahan_olahan.verify_approve', ['id' => $row->id]) }}" method="POST" enctype="multipart/form-data">
                                                     @csrf
                                                     <div class="form-group">
                                                         <label for="password">Masukkan Password</label>
@@ -264,13 +266,24 @@
     </div>
 </div>
 
-<!-- Bootstrap CSS -->
+
+<!-- Link CSS Select2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Script JS jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Script JS Select2 -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-<!-- jQuery, Popper.js, and Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+{{-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> --}}
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <style>
+    /* Memberikan jarak antara input pencarian dan dropdown */
+    #searchBahan {
+        margin-bottom: 10px;
+    }
     /* Menambahkan margin untuk memastikan modal berada di tengah */
     .modal-dialog {
         max-width: 500px;
@@ -351,6 +364,15 @@
 </script>
 
 <script>
+$(document).ready(function() {
+    $('#bahan').select2({
+        placeholder: "Pilih Bahan",  // Placeholder saat dropdown kosong
+        allowClear: true,            // Opsi untuk membolehkan pengguna menghapus pilihan
+        width: '100%',               // Pastikan dropdown lebar 100% agar mudah terlihat
+        minimumInputLength: 1,       // Mulai mencari setelah 1 karakter dimasukkan
+        dropdownAutoWidth: true,     // Sesuaikan lebar dropdown
+    });
+});
     // Menambahkan Bahan yang dipilih ke tabel pengajuan
     document.getElementById('addItemButton').addEventListener('click', function() {
         const BahanSelect = document.getElementById('bahan');
