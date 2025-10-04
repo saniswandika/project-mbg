@@ -21,23 +21,23 @@
 
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('/assets/img/apple-icon.png') }}">
-  <link rel="icon" type="image/png" href="{{ asset('/assets/img/favicon.png') }}">
+  <link rel="apple-touch-icon" sizes="76x76" href="{{ secure_asset('/assets/img/apple-icon.png') }}">
+  <link rel="icon" type="image/png" href="{{ secure_asset('/assets/img/favicon.png') }}">
   <title>
     MBG - Indihiang
   </title>
   <!--     Fonts and icons     -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
   <!-- Nucleo Icons -->
-  <link href="{{ asset('/assets/css/nucleo-icons.css') }}" rel="stylesheet" />
-  <link href="{{ asset('/assets/css/nucleo-svg.css') }}" rel="stylesheet" />
+  <link href="{{ secure_asset('/assets/css/nucleo-icons.css') }}" rel="stylesheet" />
+  <link href="{{ secure_asset('/assets/css/nucleo-svg.css') }}" rel="stylesheet" />
   
   <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
   <!-- Material Icons -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
   <!-- CSS Files -->
-  <link id="pagestyle" href="{{ asset('/assets/css/material-dashboard.css?v=3.2.0') }}" rel="stylesheet" />
+  <link id="pagestyle" href="{{ secure_asset('/assets/css/material-dashboard.css?v=3.2.0') }}" rel="stylesheet" />
   <link id="pagestyle" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.css" rel="stylesheet" />
 </head>
 
@@ -45,145 +45,19 @@
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-      <a class="navbar-brand px-4 py-3 m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard " target="_blank">
-        <img src="{{ asset('assets/img/logo-ct-dark.png') }}" class="navbar-brand-img" width="26" height="26" alt="Creative Tim logo, stylized CT letters in white on a dark background, used as the main logo in the sidebar navigation. The logo appears friendly and modern.">
-        <span class="ms-1 text-sm text-dark">Creative Tim</span>
+      <a class="navbar-brand px-4 py-3 m-0" href="https://demos.creative-tim.com/material-dashboard/pages/dashboard " target="_blank">
+        <img src="{{ secure_asset('assets/img/OIP.jpeg') }}" class="navbar-brand-img" width="140" height="120" alt="Creative Tim logo, stylized CT letters in white on a dark background, used as the main logo in the sidebar navigation. The logo appears friendly and modern.">
       </a>
     </div>
     <hr class="horizontal dark mt-0 mb-2">
-<div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
-  <ul class="navbar-nav">
-    <!-- Dashboard Menu -->
-    <li class="nav-item">
-        <a class="nav-link  text-dark {{ request()->is('home') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('home') }}">
-          <i class="material-symbols-rounded opacity-5">dashboard</i>
-        <span class="nav-link-text ms-1">Dashboard</span>
-      </a>
-    </li>
 
-    <hr class="horizontal dark mt-0">
 
-    <li class="nav-item mt-3">
-      <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Barang & Peminjaman</h6>
-    </li>
-
-    <!-- Barang Section -->
-    <li class="nav-item">
-      <a class="nav-link text-dark {{ request()->is('Barang') ? 'active bg-gradient-dark text-white' : '' }} " href="#collapseExample" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample">
-         <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Barang</span>
-      </a>
-    </li>    
-    <div class="collapse sm-2" id="collapseExample">
-      <!-- admin dan superadmin -->
-      <li class="nav-item">
-        <a class="nav-link text-dark {{ request()->routeIs('logistik.master_barang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('logistik.master_barang') }}" style="margin-left: 30px;">
-            <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Master Barang</span>
-        </a>
-      </li>
-    </div>
-<!-- All Role -->
-    <div class="collapse sm-2" id="collapseExample">
-      <li class="nav-item">
-        <a class="nav-link text-dark {{ request()->routeIs('logistik.pengajuan_barang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('logistik.pengajuan_barang') }}" style="margin-left: 30px;">
-            <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Pengajuan Barang</span>
-        </a>
-      </li>
-    </div>
-    <div class="collapse sm-2" id="collapseExample">
-      <li class="nav-item">
-        <a class="nav-link text-dark {{ request()->routeIs('logistik.log_pengajuan_barang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('logistik.log_pengajuan_barang') }}" style="margin-left: 30px;">
-            <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Log Pengajuan Barang</span>
-        </a>
-      </li>
-    </div>
-<!-- All Role -->
-    <div class="collapse sm-2" id="collapseExample">
-      <li class="nav-item">
-        <a class="nav-link text-dark {{ request()->routeIs('logistik.list_barang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('logistik.list_barang') }}" style="margin-left: 30px;">
-            <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">List Barang</span>
-        </a>
-      </li>
-    </div>
-    <div class="collapse sm-2" id="collapseExample">
-      <li class="nav-item">
-        <a class="nav-link text-dark {{ request()->routeIs('logistik.ambil_barang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('logistik.ambil_barang') }}" style="margin-left: 30px;">
-            <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Pengambilan Barang</span>
-        </a>
-      </li>
-    </div>
-    <div class="collapse sm-2" id="collapseExample">
-      <li class="nav-item">
-        <a class="nav-link text-dark {{ request()->routeIs('logistik.history_keranjang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('logistik.history_keranjang') }}" style="margin-left: 30px;">
-            <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">History pengambilan barang</span>
-        </a>
-      </li>
-    </div>
-<!-- All Role -->
-    <li class="nav-item">
-      <a class="nav-link text-dark {{ request()->is('Barang') ? 'active bg-gradient-dark text-white' : '' }} " href="#collapseExample1" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample">
-         <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Bahan Olahan</span>
-      </a>
-    </li>
-    <div class="collapse sm-2" id="collapseExample1">
-      <li class="nav-item">
-        <a class="nav-link text-dark {{ request()->routeIs('bahan_olahan.bahan_olahan') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('bahan_olahan.bahan_olahan') }}" style="margin-left: 30px;">
-            <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Bahan Olahan</span>
-        </a>
-      </li>
-    </div>
-    <div class="collapse sm-2" id="collapseExample1">
-      <li class="nav-item">
-        <a class="nav-link text-dark {{ request()->routeIs('bahan_olahan.pengajuan_bahan') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('bahan_olahan.pengajuan_bahan') }}" style="margin-left: 30px;">
-            <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Pengajuan pembelian</span>
-        </a>
-      </li>
-    </div>
-    <div class="collapse sm-2" id="collapseExample1">
-      <li class="nav-item">
-        <a class="nav-link text-dark {{ request()->routeIs('bahan_olahan.list_bahan') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('bahan_olahan.list_bahan') }}" style="margin-left: 30px;">
-            <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">List Bahan Olahan</span>
-        </a>
-      </li>
-    </div>
-    <div class="collapse sm-2" id="collapseExample1">
-      <li class="nav-item">
-        <a class="nav-link text-dark {{ request()->routeIs('bahan_olahan.ambil_bahan') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('bahan_olahan.ambil_bahan') }}" style="margin-left: 30px;">
-            <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Pengambilan Bahan</span>
-        </a>
-      </li>
-    </div>
-    <div class="collapse sm-2" id="collapseExample1">
-      <li class="nav-item">
-        <a class="nav-link text-dark {{ request()->routeIs('bahan_olahan.history_keranjang') ? 'active bg-gradient-dark text-white' : '' }}" href="{{ route('bahan_olahan.history_keranjang') }}" style="margin-left: 30px;">
-            <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">History pengambilan Bahan</span>
-        </a>
-      </li>
-    </div>
+   
     <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
       <ul class="navbar-nav">
           {{-- file tampilan menu ada di layouts/menu.blade.php --}}
          @include('layouts.menu')
       </ul>
-    </div>
-
-    <div class="sidenav-footer position-absolute w-100 bottom-0 ">
-      <div class="mx-3">
-        <a class="btn btn-outline-dark mt-4 w-100" href="https://www.creative-tim.com/learning-lab/bootstrap/overview/material-dashboard?ref=sidebarfree" type="button">Documentation</a>
-        <a class="btn bg-gradient-dark w-100" href="https://www.creative-tim.com/product/material-dashboard-pro?ref=sidebarfree" type="button">Upgrade to pro</a>
-      </div>
     </div>
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
@@ -269,252 +143,12 @@
     </div>
   </div>
   <!--   Core JS Files   -->
-  <script src="{{ asset('assets/js/core/popper.min.js') }}"></script>
-  <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
-  <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
-  <script src="{{ asset('assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
-  <script src="{{ asset('assets/js/plugins/chartjs.min.js') }}"></script>
+  <script src="{{ secure_asset('assets/js/core/popper.min.js') }}"></script>
+  <script src="{{ secure_asset('assets/js/core/bootstrap.min.js') }}"></script>
+  <script src="{{ secure_asset('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
+  <script src="{{ secure_asset('assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
+  <script src="{{ secure_asset('assets/js/plugins/chartjs.min.js') }}"></script>
 
-
-  <script>
-    var canvas = document.getElementById('canvasId');
-    if (canvas) {
-        var ctx = canvas.getContext('2d');
-        // Lakukan operasi pada canvas
-    }
-    // var ctx = document.getElementById("chart-bars").getContext("2d");
-    var ctx = document.getElementById("chart-bars").getContext("2d");
-
-    new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: ["M", "T", "W", "T", "F", "S", "S"],
-        datasets: [{
-          label: "Views",
-          tension: 0.4,
-          borderWidth: 0,
-          borderRadius: 4,
-          borderSkipped: false,
-          backgroundColor: "#43A047",
-          data: [50, 45, 22, 28, 50, 60, 76],
-          barThickness: 'flex'
-        }, ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false,
-          }
-        },
-        interaction: {
-          intersect: false,
-          mode: 'index',
-        },
-        scales: {
-          y: {
-            grid: {
-              drawBorder: false,
-              display: true,
-              drawOnChartArea: true,
-              drawTicks: false,
-              borderDash: [5, 5],
-              color: '#e5e5e5'
-            },
-            ticks: {
-              suggestedMin: 0,
-              suggestedMax: 500,
-              beginAtZero: true,
-              padding: 10,
-              font: {
-                size: 14,
-                lineHeight: 2
-              },
-              color: "#737373"
-            },
-          },
-          x: {
-            grid: {
-              drawBorder: false,
-              display: false,
-              drawOnChartArea: false,
-              drawTicks: false,
-              borderDash: [5, 5]
-            },
-            ticks: {
-              display: true,
-              color: '#737373',
-              padding: 10,
-              font: {
-                size: 14,
-                lineHeight: 2
-              },
-            }
-          },
-        },
-      },
-    });
-
-
-    var ctx2 = document.getElementById("chart-line").getContext("2d");
-
-    new Chart(ctx2, {
-      type: "line",
-      data: {
-        labels: ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"],
-        datasets: [{
-          label: "Sales",
-          tension: 0,
-          borderWidth: 2,
-          pointRadius: 3,
-          pointBackgroundColor: "#43A047",
-          pointBorderColor: "transparent",
-          borderColor: "#43A047",
-          backgroundColor: "transparent",
-          fill: true,
-          data: [120, 230, 130, 440, 250, 360, 270, 180, 90, 300, 310, 220],
-          maxBarThickness: 6
-
-        }],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false,
-          },
-          tooltip: {
-            callbacks: {
-              title: function(context) {
-                const fullMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-                return fullMonths[context[0].dataIndex];
-              }
-            }
-          }
-        },
-        interaction: {
-          intersect: false,
-          mode: 'index',
-        },
-        scales: {
-          y: {
-            grid: {
-              drawBorder: false,
-              display: true,
-              drawOnChartArea: true,
-              drawTicks: false,
-              borderDash: [4, 4],
-              color: '#e5e5e5'
-            },
-            ticks: {
-              display: true,
-              color: '#737373',
-              padding: 10,
-              font: {
-                size: 12,
-                lineHeight: 2
-              },
-            }
-          },
-          x: {
-            grid: {
-              drawBorder: false,
-              display: false,
-              drawOnChartArea: false,
-              drawTicks: false,
-              borderDash: [5, 5]
-            },
-            ticks: {
-              display: true,
-              color: '#737373',
-              padding: 10,
-              font: {
-                size: 12,
-                lineHeight: 2
-              },
-            }
-          },
-        },
-      },
-    });
-
-    var ctx3 = document.getElementById("chart-line-tasks").getContext("2d");
-
-    new Chart(ctx3, {
-      type: "line",
-      data: {
-        labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-        datasets: [{
-          label: "Tasks",
-          tension: 0,
-          borderWidth: 2,
-          pointRadius: 3,
-          pointBackgroundColor: "#43A047",
-          pointBorderColor: "transparent",
-          borderColor: "#43A047",
-          backgroundColor: "transparent",
-          fill: true,
-          data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
-          maxBarThickness: 6
-
-        }],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false,
-          }
-        },
-        interaction: {
-          intersect: false,
-          mode: 'index',
-        },
-        scales: {
-          y: {
-            grid: {
-              drawBorder: false,
-              display: true,
-              drawOnChartArea: true,
-              drawTicks: false,
-              borderDash: [4, 4],
-              color: '#e5e5e5'
-            },
-            ticks: {
-              display: true,
-              padding: 10,
-              color: '#737373',
-              font: {
-                size: 14,
-                lineHeight: 2
-              },
-            }
-          },
-          x: {
-            grid: {
-              drawBorder: false,
-              display: false,
-              drawOnChartArea: false,
-              drawTicks: false,
-              borderDash: [4, 4]
-            },
-            ticks: {
-              display: true,
-              color: '#737373',
-              padding: 10,
-              font: {
-                size: 14,
-                lineHeight: 2
-              },
-            }
-          },
-        },
-      },
-    });
-  </script> --}}
   <script>
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
@@ -527,7 +161,7 @@
   <!-- Github buttons -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="{{ asset('assets/js/material-dashboard.min.js?v=3.2.0') }}"></script>
+  <script src="{{ secure_asset('assets/js/material-dashboard.min.js?v=3.2.0') }}"></script>
   <script src="https://cdn.datatables.net/2.3.4/js/dataTables.js"></script>
   {{-- user datatable --}}
     <script>
@@ -576,8 +210,8 @@
             // Kamu bisa menambahkan AJAX untuk menampilkan data dan mengisi form edit di sini jika diperlukan
         });
     </script>
-    {{-- user datatatable --}}
-    {{-- Role datatable --}}
+  {{-- user datatatable --}}
+  {{-- Role datatable --}}
     <script>
       // Inisialisasi DataTables
       var table = new DataTable('#RoleTable', {
@@ -625,8 +259,8 @@
         ]
       });
     </script>
-    {{-- Role datatable --}}
-        {{-- Role datatable --}}
+  {{-- Role datatable --}}
+  {{-- pegawai datatable --}}
     <script>
       // Inisialisasi DataTables
       var table = new DataTable('#PegawaiTable', {
@@ -660,7 +294,92 @@
         ]
       });
     </script>
-    {{-- Role datatable --}}
+  {{-- pegawai datatable --}}
+  {{-- Absen Pegawi datatable --}}
+    <script>
+      function base64ToArrayBuffer(base64) {
+          const binaryString = window.atob(base64.replace(/-/g, '+').replace(/_/g, '/'));
+          const len = binaryString.length;
+          const bytes = new Uint8Array(len);
+          for (let i = 0; i < len; i++) {
+              bytes[i] = binaryString.charCodeAt(i);
+          }
+          return bytes.buffer;
+      }
+
+      document.getElementById('fingerprintButton').addEventListener('click', async () => {
+          if (!window.PublicKeyCredential) {
+              alert('Browser tidak mendukung fingerprint WebAuthn');
+              return;
+          }
+
+          const options = await fetch('/webauthn/generate', {
+              method: 'POST',
+              headers: {
+                  'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                  'Content-Type': 'application/json'
+              }
+          }).then(r => r.json());
+
+          // ✅ Perbaikan di sini
+          options.challenge = base64ToArrayBuffer(options.challenge);
+          options.user.id = base64ToArrayBuffer(options.user.id);
+
+          const credential = await navigator.credentials.create({ publicKey: options });
+          console.log(credential);
+          
+          const response = await fetch('/webauthn/register', {
+              method: 'POST',
+              headers: {
+                  'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ credential })
+          });
+
+          const result = await response.json();
+          if (result.success) {
+              alert('Fingerprint berhasil diverifikasi!');
+          } else {
+              alert('Gagal verifikasi fingerprint.');
+          }
+      });
+    </script>
+  {{-- Absen Pegawi datatable --}}
+   {{-- data absen pegawai datatable --}}
+    <script>
+      // Inisialisasi DataTables
+      var table = new DataTable('#AbsenPegawaiTable', {
+        ajax: {
+          url: 'http://127.0.0.1:8000/api/absen-pegawai', // Endpoint untuk API pegawai
+          dataSrc: 'data' // Ambil data dari key "data"
+        },
+        processing: true,
+        serverSide: true,
+        columns: [
+          { data: 'id' },  // Menampilkan kolom ID
+          { data: 'user_id' },  // Menampilkan kolom Name
+          { data: 'status' },  // Menampilkan kolom NIK
+          { data: 'waktu_absen' },  // Menampilkan kolom No Kartu Keluarga
+          {
+            data: null,
+            render: function(data, type, row) {
+              return `
+                <a class="btn btn-info" href="/pegawai/${data.id}/show">Show</a>
+                  <a class="btn btn-primary" href="/pegawai/${data.id}/edit">Edit</a>
+                  <a class="btn btn-primary" href="/pegawai/${data.id}/tambah_akun">Tambah akun</a>
+                  <form action="/pegawai/${data.id}" method="POST" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                  </form>
+              `;
+            }
+          } // Tombol Show, Edit, Delete
+        ]
+      });
+    </script>
+  {{-- pegawai datatable --}}
 
 </body>
 </html>

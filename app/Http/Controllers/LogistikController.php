@@ -70,7 +70,7 @@ public function proses_tambah_barang_master(Request $request)
         $file = $request->file('foto');
         $filename = time() . '.' . $file->getClientOriginalExtension(); // Menggunakan ekstensi asli
         // Simpan file di storage dan simpan nama file ke data
-        $path = $file->storeAs('public/master_barang', $filename);
+        
         $data['foto'] = $filename; // Masukkan nama file dengan ekstensi ke array data
     }
 

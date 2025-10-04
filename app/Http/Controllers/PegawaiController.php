@@ -51,6 +51,7 @@ class PegawaiController extends Controller
             $file = $request->file('foto_ktp');
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->storeAs('public/ktp', $filename);
+            
             $data['foto_ktp'] = $filename;
         }
 
@@ -62,7 +63,7 @@ class PegawaiController extends Controller
     // 🟡 Tampilkan form edit profil pegawai
     public function edit($id)
     {
-        $pegawai = Pegawai::where('user_id', $id)->first();
+        $pegawai = Pegawai::where('id', $id)->first();
         return view('pegawai.edit', compact('pegawai'));
     }
     public function show($id)
@@ -73,7 +74,7 @@ class PegawaiController extends Controller
     // 🟠 Update data pegawai
     public function update(Request $request, $id)
     {
-        $pegawai = Pegawai::where('user_id', $id)->firstOrFail();
+        $pegawai = Pegawai::where('id', $id)->firstOrFail();
 
         $request->validate([
             'nama_lengkap' => 'required|string|max:100',

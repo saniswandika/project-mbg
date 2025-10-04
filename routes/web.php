@@ -7,36 +7,14 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LogistikController;
 use App\Http\Controllers\BahanOlahanController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\PengaduanController;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\PengaturanWilayahController;
-use App\Http\Controllers\pdfController;
-use App\Http\Controllers\pdfrekativasiController;
-use App\Http\Controllers\pdfyayasanController;
-use App\Http\Controllers\rekomendasi_admin_kependudukanController;
-use App\Http\Controllers\rekomendasi_bantuan_pendidikanController;
-use App\Http\Controllers\rekomendasi_biaya_perawatanController;
-use App\Http\Controllers\rekomendasi_daftar_ulang_yayasanController;
-use App\Http\Controllers\rekomendasi_keringanan_pbbController;
-use App\Http\Controllers\rekomendasi_pelaporan_pubController;
-use App\Http\Controllers\rekomendasi_pengangkatan_anakController;
-use App\Http\Controllers\rekomendasi_rehabilitasi_sosialController;
-use App\Http\Controllers\rekomendasi_rekativasi_pbi_jkController;
-use App\Http\Controllers\rekomendasi_terdaftar_dtksController;
-use App\Models\Pengaduan;
-use App\Models\rekomendasi_terdaftar_yayasan;
-use Dompdf\Adapter\PDFLib;
-use Symfony\Component\HttpKernel\Profiler\Profile;
-use App\Http\Controllers\rekomendasi_terdaftar_yayasanController;
-use App\Http\Controllers\rekomendasi_yayasan_provinsiController;
-use App\Models\rekomendasi_pengumpulan_undian_berhadiah;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Contracts\Role;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CheckoutBahanController;
 use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\WebAuthnController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -98,6 +76,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/pegawai/{id}/show', [PegawaiController::class, 'show'])->name('pegawai.show');
     Route::put('/pegawai/{id}', [PegawaiController::class, 'update'])->name('pegawai.update');
     Route::delete('/pegawai/{id}', [PegawaiController::class, 'destroy'])->name('pegawai.destroy');
+
+    Route::get('/webauthn/index', [WebAuthnController::class, 'index'])->name('webauthn.index');
+    Route::get('/webauthn/absensi', [WebAuthnController::class, 'absensi'])->name('webauthn.absensi');
+    Route::post('/webauthn/generate', [WebAuthnController::class, 'generate'])->name('webauthn.generate');
+    Route::post('/webauthn/register', [WebAuthnController::class, 'register'])->name('webauthn.register');
 
 });
 

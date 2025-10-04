@@ -18,5 +18,6 @@ use App\Http\Controllers\api\PegawaiController;
 Route::get('users', [UserController::class, 'index']);
 Route::get('roles', [RoleController::class, 'index']);
 Route::get('pegawai', [PegawaiController::class, 'index']);
+Route::get('absen-pegawai', [PegawaiController::class, 'absenpegawai']);
 
 

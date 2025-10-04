@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\absenPegawai;
 use App\Models\Pegawai;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -42,6 +43,38 @@ class PegawaiController extends Controller
             'recordsTotal' => $totalData,
             'recordsFiltered' => $totalFiltered,
             'data' => $Pegawai
+        ]);
+    }
+    public function absenpegawai(Request $request)
+    {
+        $totalData = absenPegawai::count(); // Total data tanpa filter
+        $totalFiltered = $totalData; // Total data yang difilter (bisa berbeda dengan totalData)
+
+        $absenPegawai = absenPegawai::orderBy('id', 'ASC');
+
+        // Filter berdasarkan pencarian jika ada
+        if ($request->has('search') && $request->input('search.value') != '') {
+            $search = $request->input('search.value');
+            $absenPegawai = $absenPegawai->where(function($query) use ($search) {
+                $query->where('user_id', 'like', "%$search%")
+                    ->orWhere('waktu_absen', 'like', "%$search%")
+                    ->orWhere('status', 'like', "%$search%");
+            });
+        }
+
+        // Ambil data berdasarkan limit dan offset (pagination)
+        $absenPegawai = $absenPegawai->offset($request->input('start'))
+                    ->limit($request->input('length'))
+                    ->get();
+
+        $totalFiltered = $absenPegawai->count(); // Filtered count (setelah pencarian)
+
+        // Kembalikan data dalam format yang sesuai dengan DataTables
+        return response()->json([
+            'draw' => intval($request->input('draw')),
+            'recordsTotal' => $totalData,
+            'recordsFiltered' => $totalFiltered,
+            'data' => $absenPegawai
         ]);
     }
 

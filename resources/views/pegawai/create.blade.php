@@ -2,9 +2,10 @@
 
 @section('content')
 <div class="container">
-     <div class="card mt-4">
+     <div class="card mt-4 p-4">
         <div class="row">
-                <h3>Tambah Pegawai</h3>
+                <h3 class="text-center mb-4">Tambah Pegawai</h3>
+
                 <form action="{{ route('pegawai.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     {{-- <div class="col-xs-12 col-sm-12 col-md-12">
@@ -71,7 +72,11 @@
                             <input type="text" name="atas_nama_rekening" id="atas_nama_rekening" class="form-control">
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-success">Simpan</button>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <a href="{{ url('/pegawai') }}" class="btn btn-secondary">Kembali</a>
+
+                    </div>
                 </form>
         </div>
      </div>

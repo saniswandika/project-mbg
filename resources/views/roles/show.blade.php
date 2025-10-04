@@ -5,7 +5,7 @@
                 <div class="card-body box-profile ">
                     <div class="text-center">
                         <img class="profile-user-img img-fluid img-circle"
-                        src="{{asset('images/pp.png')}}"
+                        src="{{asset('assets/img/pp.jpeg')}}"
                         alt="User profile picture">
                     </div>
                     <h3 class="profile-username text-center"> Role {{ $role->name }}</h3>

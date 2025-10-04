@@ -42,12 +42,19 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-         $permissions = Permission::all()->groupBy('name'); 
-        return view('roles.create', compact('permissions'));
-    }
-    
+public function create()
+{
+    $permissions = Permission::all();
+
+    // Group berdasarkan prefix (sebelum tanda "-")
+    $groupedPermissions = $permissions->groupBy(function ($permission) {
+        return explode('-', $permission->name)[0]; // contoh: user-create => user
+    });
+
+    return view('roles.create', ['groupedPermissions' => $groupedPermissions]);
+}
+
+
     
     /**
      * Store a newly created resource in storage.
@@ -58,10 +65,9 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required|unique:roles,name',
+            'name' => 'required',
             'permission' => 'required',
         ]);
-    
         $role = Role::create(['name' => $request->input('name')]);
         $role->syncPermissions($request->input('permission'));
     
@@ -90,17 +96,18 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        $role = Role::findOrFail($id);
-        $permissions = Permission::all();
-        $groupedPermissions = $permissions->groupBy(function ($permission) {
-            return Str::beforeLast($permission->name, '-');
-        });
-        $rolePermissions = $role->permissions->pluck('id')->toArray();
-    
-        return view('roles.edit', compact('role', 'groupedPermissions', 'rolePermissions'));
-    }
+public function edit($id)
+{
+    $role = Role::findOrFail($id);
+    $rolePermissions = $role->permissions->pluck('id')->toArray();
+
+    $permissions = Permission::all();
+    $groupedPermissions = $permissions->groupBy(function ($permission) {
+        return explode('-', $permission->name)[0];
+    });
+
+    return view('roles.edit', compact('role', 'rolePermissions', 'groupedPermissions'));
+}
     
     
     /**
@@ -112,19 +119,17 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'permission' => 'required',
+        $request->validate([
+            'Name' => 'required|string|max:255',
         ]);
-    
-        $role = Role::find($id);
-        $role->name = $request->input('name');
+
+        $role = Role::findOrFail($id);
+        $role->name = $request->Name;
         $role->save();
-    
-        $role->syncPermissions($request->input('permission'));
-    
-        return redirect()->route('roles.index')
-                        ->with('success','Role updated successfully');
+
+        $role->syncPermissions($request->permission ?? []);
+
+        return redirect()->route('roles.index')->with('masuk', 'Role berhasil diperbarui!');
     }
     /**
      * Remove the specified resource from storage.
